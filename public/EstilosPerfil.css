@@ -1,0 +1,127 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7; /* Fondo amarillo claro */
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.container {
+    background-color: rgb(211, 211, 211); /* Vinotinto */
+    width: 100%;
+    max-width: 900px; /* Mayor ancho para vista en PC */
+    border-radius: 15px;
+    padding: 40px; /* Mayor padding para que haya más espacio */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    color: #000; /* Texto en negro */
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.save-btn {
+    background-color: rgb(64, 77, 44); /* Verde */
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.logo-section {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo-placeholder {
+    background-color: rgb(255, 255, 255); /* Amarillo */
+    color: #5A1A27;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column; /* Ahora los campos están en cascada */
+    gap: 10px; /* Espacio entre cada campo */
+    padding: 10px; /* Espaciado interior para igualar los márgenes */
+}
+
+.profile-form label, .team-section h3 {
+    color: #000; /* Texto en negro */
+    margin-bottom: 5px;
+    display: block;
+}
+
+input, select {
+    width: 100%;
+    background-color: rgb(255, 255, 255); /* Amarillo */
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    color: #5A1A27; /* Vinotinto */
+    text-transform: uppercase;
+}
+
+#identificacion {
+    grid-column: unset; /* Elimina la ampliación del campo Identificación */
+}
+
+select#tipo-identificacion option[value="T.I"],
+select#tipo-identificacion option[value="TARJETA_IDENTIDAD"] {
+    display: none; /* Oculta la opción de Tarjeta de Identidad */
+}
+
+.team-member {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.remove-btn, .add-btn {
+    background-color:rgb(64, 77, 44); /* Verde */
+    border: none;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+/** NUEVA SECCIÓN PARA GESTIÓN DE PERMISOS **/
+.permissions-section {
+    margin-top: 20px;
+}
+
+.member-list {
+    list-style: none;
+    padding: 0;
+}
+
+.member-list li {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 12px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+@media (max-width: 600px) {
+    .profile-form {
+        flex-direction: column;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 15px;
+    }
+}

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil Empresa - ProductTrack</title>
+    <link rel="stylesheet" href="EstilosPerfil.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="#" class="back">&larr; Empresa</a>
+            <button class="save-btn">Guardar</button>
+        </header>
+
+        <div class="logo-section">
+            <div class="logo-placeholder">Logo de tu empresa</div>
+        </div>
+
+        <form class="profile-form">
+            
+            <select id="userType" name="userType" required>Identificacion
+                <option value="" disabled selected>Tipo de Usuario</option>
+                <option value="persona">Cédula de ciudadanía</option>
+                <option value="empresa">Identificación extranjera</option>
+            </select>
+
+            <label>Identificación
+                <input type="text" value="2348734649" disabled>
+            </label>
+
+            <label> NIT
+                <input type="text" value="23487349" disabled>
+            </label>
+
+            <label>Email
+                <input type="email" value="JUANITOPERES09@GMAIL.COM" disabled>
+            </label>
+
+            <label>Sitio Web
+                <input type="url" value="WWW.JUANPERES.COM">
+            </label>
+
+            <label>Teléfono
+                <input type="tel" value="348275498934">
+            </label>
+
+            <label>Dirección
+                <input type="text" value="CR 46 #47-40">
+            </label>
+
+            <label>Departamento
+                <input type="text" value="ANTIOQUIA">
+            </label>
+        </form>
+
+        <div class="team-section">
+            <h3>Equipo de Trabajo</h3>
+            <div class="team-member">
+                <span>SARA</span>
+                <select>
+                    <option>ADMIN</option>
+                    <option>EDITOR</option>
+                    <option>COMENTARISTA</option>
+                    <option>LECTOR</option>
+                </select>
+                <button class="remove-btn">Eliminar</button>
+            </div>
+            <button class="add-btn">+ Agregar Usuario</button>
+        </div>
+    </div>
+
+    <script src="Perfil.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProductTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="shortcut icon" href="./images/loguito.jpeg" type="image/x-icon">
+    <link rel="stylesheet" href="EstilosRegistro.css">
+</head>
+<body>
+    <div class="container-form register">
+        <div class="information">
+            <div class="info-childs">
+                <h2>Bienvenidos</h2>
+                <p>Para unirte por favor Inicia Sesión con tus datos.</p>
+                <input type="button" value="Iniciar Sesión" id="sign-in">
+            </div>
+        </div>
+        <div class="form-information">
+            <div class="form-information-childs">
+                <h2>Crear Una Cuenta</h2>
+                <div class="icons">
+                    <i class='bx bxl-google-plus-circle'></i>
+                </div>
+                <p>Utiliza tu email</p>
+                <form class="form">
+                    <!-- Tipo de Usuario -->
+                    <label>
+                        <i class='bx bxs-user'></i>
+                        <select id="userType" name="userType" required>
+                            <option value="" disabled selected>Tipo de Usuario</option>
+                            <option value="persona">Persona</option>
+                            <option value="empresa">Empresa</option>
+                            <option value="equipoTrabajo">Equipo de Trabajo</option>
+                        </select>
+                    </label>
+
+                    <!-- Campos adicionales para Persona -->
+                    <div id="personaFields" class="extra-fields">
+                        <label>
+                            <i class='bx bxs-user-pin'></i>
+                            <input type="text" id="nombreUsuario" name="nombreUsuario" placeholder="Nombre de Usuario">
+                        </label>
+                    </div>
+
+                    <!-- Campos adicionales para Empresa -->
+                    <div id="empresaFields" class="extra-fields">
+                        <label>
+                            <i class='bx bxs-building'></i>
+                            <input type="text" id="nombreEmpresa" name="nombreEmpresa" placeholder="Nombre de la Empresa">
+                        </label>
+                        <label>
+                            <i class='bx bxs-building'></i>
+                            <input type="text" id="nit" name="nit" placeholder="Nit de su empresa">
+                        </label>
+                    </div>
+
+                    <!-- Campos adicionales para Equipo de Trabajo -->
+                    <div id="equipoFields" class="extra-fields">
+                        <label>
+                            <i class='bx bxs-building'></i>
+                            <input type="text" id="nombreEmpresaEquipo" name="nombreEmpresaEquipo" placeholder="Nombre de la Empresa">
+                        </label>
+                        <label>
+                            <i class='bx bxs-user-pin'></i>
+                            <input type="text" id="nombreUsuarioEquipo" name="nombreUsuarioEquipo" placeholder="Nombre de Usuario">
+                        </label>
+                    </div>
+
+                    <!-- Correo y Contraseña -->
+                    <label>
+                        <i class='bx bxs-envelope'></i>
+                        <input type="email" id="correo" name="correo" placeholder="Correo Electrónico" required>
+                    </label>
+                    <label>
+                        <i class='bx bxs-lock'></i>
+                        <input type="password" id="contrasena" name="contrasena" placeholder="Contraseña" required>
+                    </label>
+                    <input type="submit" value="Registrarme">
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="container-form login hide">
+        <div class="information">
+            <div class="info-childs">
+                <h2>¡Bienvenido Nuevamente!</h2>
+                <p>Para unirte por favor Inicia Sesión con tus datos.</p>
+                <input type="button" value="Registrarse" id="sign-up">
+            </div>
+        </div>
+        <div class="form-information">
+            <div class="form-information-childs">
+                <h2>Iniciar Sesión</h2>
+                <div class="icons">
+                    <i class='bx bxl-google-plus-circle'></i>
+                </div>
+                <p>Iniciar Sesión Con Su Cuenta</p>
+                <form class="form">
+                    <label>
+                        <i class='bx bxs-envelope'></i>
+                        <input type="email" id="loginCorreo" name="loginCorreo" placeholder="Correo Electrónico" required>
+                    </label>
+                    <label>
+                        <i class='bx bxs-lock'></i>
+                        <input type="password" id="loginContrasena" name="loginContrasena" placeholder="Contraseña" required>
+                    </label>
+                    <input type="submit" value="Iniciar Sesión">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="Registro.js"></script>
+</body>
+</html>

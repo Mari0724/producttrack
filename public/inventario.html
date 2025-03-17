@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>visualizar Inventario</title>
+    <link rel="stylesheet" href="estilosVisualizar.css">
+</head>
+<body>
+    <header>
+        <button class="menu-btn">☰</button>
+        <h1>Inventario</h1>
+        <div class="profile-icon">👤</div>
+    </header>
+
+    <main class="inventory-container">
+        <input type="text" class="search-bar" placeholder="Buscar productos...">
+        <table class="inventory-table">
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Cantidad</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><img src="./images/frijol.png" alt="Producto 1" class="product-img"></td>
+                    <td data-label="Nombre">Frijol</td>
+                    <td data-label="Categoría">Granos</td>
+                    <td data-label="Cantidad">50</td>
+                    <td data-label="Estado" class="status in-stock">Disponible</td>
+                </tr>
+                <tr>
+                    <td><img src="./images/arroz.jpg" alt="Producto 2" class="product-img"></td>
+                    <td data-label="Nombre">Arroz</td>
+                    <td data-label="Categoría">Cereales</td>
+                    <td data-label="Cantidad">20</td>
+                    <td data-label="Estado" class="status low-stock">Pocas unidades</td>
+                </tr>
+                <tr>
+                    <td><img src="./images/aceita.jpg" alt="Producto 3" class="product-img"></td>
+                    <td data-label="Nombre">Aceite</td>
+                    <td data-label="Categoría">Comestibles</td>
+                    <td data-label="Cantidad">0</td>
+                    <td data-label="Estado" class="status out-of-stock">Agotado</td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>
