@@ -79,9 +79,6 @@ public async getById(id: string): Promise<any> {
   return user;
 }
 
-
-
-
    // 🆕 Crear usuario
   @SuccessResponse("201", "Usuario creado correctamente")
   @Response("400", "Datos inválidos")

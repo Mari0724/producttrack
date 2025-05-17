@@ -37,7 +37,6 @@ Este proyecto es una API construida con **Node.js**, **Express** y **TypeScript*
 │   ├── 📄 app.ts            # Configuración de Express y middlewares
 │   ├── 📄 index.ts          # Punto de entrada del servidor (listener)
 │   ├── 📁 controllers/      # Controladores de TSOA (lógica de endpoints)
-│   │   └── 📄 UserController.ts
 │   ├── 📁 models/           # Validaciones y tipos (Zod, DTOs)
 │   ├── 📁 middleware/       # Middlewares personalizados
 │   ├── 📁 services/         # Lógica de negocio compleja separada de controllers
