@@ -30,35 +30,18 @@ Este proyecto es una API construida con **Node.js**, **Express** y **TypeScript*
 📦 raíz/
 ├── 📁 docs/                 # Documentación Swagger generada por TSOA
 │   └── 📄 swagger.json      # Especificación OpenAPI generada
-│
 ├── 📁 prisma/               # Esquema de base de datos Prisma y migraciones
 │   ├── 📁 migrations/       # Historial de migraciones Prisma
 │   └── 📄 schema.prisma     # Modelo de datos de Prisma
-│
 ├── 📁 src/                  # Código fuente principal
 │   ├── 📄 app.ts            # Configuración de Express y middlewares
 │   ├── 📄 index.ts          # Punto de entrada del servidor (listener)
-│
-│   ├── 📁 prisma/           
-│   │   └── 📄 prismaClient.ts   # Instancia global de Prisma Client
-│
 │   ├── 📁 controllers/      # Controladores de TSOA (lógica de endpoints)
 │   │   └── 📄 UserController.ts
-│
-│   ├── 📁 models/           # Validaciones y tipos
-│   │   ├── 📁 dto/          # Esquemas de entrada (Data Transfer Objects)
-│   │   │   └── 📄 UserDTO.ts
-│   │   └── 📁 schemas/      # Validaciones con Zod
-│   │       └── 📄 UserModel.ts
-│
-│   ├── 📁 middleware/       # Middlewares personalizados (auth, errores)
-│
+│   ├── 📁 models/           # Validaciones y tipos (Zod, DTOs)
+│   ├── 📁 middleware/       # Middlewares personalizados
 │   ├── 📁 services/         # Lógica de negocio compleja separada de controllers
-│
-│   ├── 📁 uploads/          # Carpeta temporal para archivos subidos (ej. fotos)
-│
-│   └── 📁 routes/           # Rutas registradas manualmente (no usado con TSOA)
-│
+│   └── 📁 routes/           # Rutas de la API
 ├── 📄 .env                  # Variables de entorno (ocultas al subir)
 ├── 📄 .gitignore            # Ignora carpetas y archivos innecesarios (como node_modules)
 ├── 📄 package.json          # Scripts y dependencias del proyecto
@@ -79,17 +62,8 @@ Este proyecto es una API construida con **Node.js**, **Express** y **TypeScript*
 | `middleware/`  | Middlewares para validaciones, autenticación y control de acceso |
 | `services/`    | Lógica de negocio reutilizable, separada del controlador |
 | `utils/`       | Funciones auxiliares como `zodValidate`, `prismaClient`, etc. |
-| `uploads/`     | Carpeta temporal para imágenes o archivos subidos (ej. por Multer) |
 | `prisma/`      | Archivo `schema.prisma` y migraciones generadas por Prisma |
 | `docs/`        | Archivo Swagger JSON generado por TSOA |
-
----
-## ✨ Estado del proyecto
- - Crear y buscar usuarios
- - Validaciones estrictas con Zod
- - Actualizar y eliminar usuarios
- - Carga de imagen a Cloudinary
- - Autenticación y roles
 
 ---
 
