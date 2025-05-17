@@ -131,17 +131,3 @@ Una vez que el servidor esté corriendo, accede a la documentación en:
 ```
 http://localhost:3000/docs
 ```
-
----
-
-## 🧑‍💻 Autora
-
-**Ximena**  
-Estudiante de Análisis y Desarrollo de Software y Contaduría Pública  
-💡 Apasionada por el frontend, backend y crear soluciones útiles
-
----
-
-## 🛡️ Licencia
-
-Este proyecto está bajo la licencia MIT.
