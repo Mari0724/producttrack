@@ -1,0 +1,269 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"UserDTO": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"correo": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"nombreCompleto": {
+						"type": "string"
+					},
+					"telefono": {
+						"type": "string"
+					},
+					"direccion": {
+						"type": "string"
+					},
+					"fotoPerfil": {
+						"type": "string"
+					},
+					"tipoUsuario": {
+						"type": "string",
+						"enum": [
+							"INDIVIDUAL",
+							"EMPRESARIAL"
+						]
+					},
+					"nombreEmpresa": {
+						"type": "string"
+					},
+					"nit": {
+						"type": "string"
+					},
+					"rol": {
+						"type": "string",
+						"enum": [
+							"USUARIO",
+							"EQUIPO",
+							"ADMIN",
+							"DESARROLLADOR"
+						]
+					},
+					"rolEquipo": {
+						"type": "string",
+						"enum": [
+							"LECTOR",
+							"COMENTARISTA",
+							"EDITOR",
+							"ADMIN"
+						]
+					},
+					"estado": {
+						"type": "string",
+						"enum": [
+							"activo",
+							"inactivo"
+						]
+					}
+				},
+				"required": [
+					"username",
+					"correo",
+					"password",
+					"nombreCompleto",
+					"telefono",
+					"direccion",
+					"fotoPerfil",
+					"tipoUsuario",
+					"rol"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "producttrack",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "@mariaximena0724 y emilia"
+		}
+	},
+	"paths": {
+		"/usuarios": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "correo",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "nombreCompleto",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "telefono",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "nit",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "estado",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "rol",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "tipoUsuario",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"INDIVIDUAL",
+								"EMPRESARIAL"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "rolEquipo",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"LECTOR",
+								"COMENTARISTA",
+								"EDITOR",
+								"ADMIN"
+							]
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "Usuario creado correctamente",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"400": {
+						"description": "Datos inválidos"
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/usuarios/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
