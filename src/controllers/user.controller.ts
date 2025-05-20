@@ -1,9 +1,8 @@
-import { Body, Controller, Get, Post, Route, Response, Tags, Query, SuccessResponse } from "tsoa";
+import { Body, Delete,Controller, Get, Post, Route, Response, Tags, Query, SuccessResponse, Put, Path } from "tsoa";
 import { userSchema } from "../models/UserModel";
 import { zodValidate } from "../utils/zodValidate";
-import { getAllUsers, getUserById, createUser } from "../services/user.service";
+import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from "../services/user.service";
 import { UserDTO } from "../models/UserDTO";
-
 
 
 @Route("usuarios")//Todas las rutas dentro del controlador comenzarán con /usuarios.
@@ -15,69 +14,68 @@ export class UserController extends Controller {
 
 
   // 🔍 Obtener 
-@Get("/")
-public async getAll(
-  @Query() username?: string,
-  @Query() correo?: string,
-  @Query() nombreCompleto?: string,
-  @Query() telefono?: string,
-  @Query() nit?: string,
-  @Query() estado?: string,
-  @Query() rol?: string,
-  @Query() tipoUsuario?: "INDIVIDUAL" | "EMPRESARIAL",
-  @Query() rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR" | "ADMIN"
-): Promise<any> {
-  const filters: Partial<UserDTO> = {};
+  @Get("/")
+  public async getAll(
+    @Query() username?: string,
+    @Query() correo?: string,
+    @Query() nombreCompleto?: string,
+    @Query() telefono?: string,
+    @Query() nit?: string,
+    @Query() estado?: string,
+    @Query() rol?: string,
+    @Query() tipoUsuario?: "INDIVIDUAL" | "EMPRESARIAL",
+    @Query() rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR" | "ADMIN"
+  ): Promise<any> {
+    const filters: Partial<UserDTO> = {};
 
-  if (username) filters.username = username;
-  if (correo) filters.correo = correo;
-  if (nombreCompleto) filters.nombreCompleto = nombreCompleto;
-  if (telefono) filters.telefono = telefono;
-  if (nit) filters.nit = nit;
+    if (username) filters.username = username;
+    if (correo) filters.correo = correo;
+    if (nombreCompleto) filters.nombreCompleto = nombreCompleto;
+    if (telefono) filters.telefono = telefono;
+    if (nit) filters.nit = nit;
 
-  if (estado && ["activo", "inactivo"].includes(estado)) {
-    filters.estado = estado as "activo" | "inactivo";
+    if (estado && ["activo", "inactivo"].includes(estado)) {
+      filters.estado = estado as "activo" | "inactivo";
+    }
+
+    if (rol && ["USUARIO", "EQUIPO", "ADMIN", "DESARROLLADOR"].includes(rol)) {
+      filters.rol = rol as UserDTO["rol"];
+    }
+
+    if (tipoUsuario && ["INDIVIDUAL", "EMPRESARIAL"].includes(tipoUsuario)) {
+      filters.tipoUsuario = tipoUsuario;
+    }
+
+    if (rolEquipo && ["LECTOR", "COMENTARISTA", "EDITOR", "ADMIN"].includes(rolEquipo)) {
+      filters.rolEquipo = rolEquipo;
+    }
+
+    const users = await getAllUsers(filters);
+    return users;
   }
 
-  if (rol && ["USUARIO", "EQUIPO", "ADMIN", "DESARROLLADOR"].includes(rol)) {
-    filters.rol = rol as UserDTO["rol"];
+
+  // 🔍 Obtener un usuario por ID
+  @Get("/{id}")
+  public async getById(id: string): Promise<any> {
+    // Intentar convertir el id a número entero
+    const numericId = Number(id);
+
+    // Validar si no es número o es NaN o menor o igual a 0 (opcional)
+    if (isNaN(numericId) || numericId <= 0) {
+      this.setStatus(400);
+      return { message: "ID inválido" };
+    }
+
+    // Llamar servicio con id numérico
+    const user = await getUserById(numericId);
+
+    if (!user) {
+      this.setStatus(404);
+      return { message: "Usuario no encontrado" };
+    }
+    return user;
   }
-
-  if (tipoUsuario && ["INDIVIDUAL", "EMPRESARIAL"].includes(tipoUsuario)) {
-    filters.tipoUsuario = tipoUsuario;
-  }
-
-  if (rolEquipo && ["LECTOR", "COMENTARISTA", "EDITOR", "ADMIN"].includes(rolEquipo)) {
-    filters.rolEquipo = rolEquipo;
-  }
-
-  const users = await getAllUsers(filters);
-  return users;
-}
-
-
-// 🔍 Obtener un usuario por ID
-@Get("/{id}")
-public async getById(id: string): Promise<any> {
-  // Intentar convertir el id a número entero
-  const numericId = Number(id);
-
-  // Validar si no es número o es NaN o menor o igual a 0 (opcional)
-  if (isNaN(numericId) || numericId <= 0) {
-    this.setStatus(400);
-    return { message: "ID inválido" };
-  }
-
-  // Llamar servicio con id numérico
-  const user = await getUserById(numericId);
-
-  if (!user) {
-    this.setStatus(404);
-    return { message: "Usuario no encontrado" };
-  }
-
-  return user;
-}
 
    // 🆕 Crear usuario
   @SuccessResponse("201", "Usuario creado correctamente")
@@ -91,9 +89,9 @@ public async getById(id: string): Promise<any> {
       this.setStatus(400);
       return {
         message: "Datos inválidos",
-        detalles: parsed.error, // Esto es el ZodError transformado, ya lo manejas
-    };
-}
+        detalles: parsed.error, 
+      };
+    }
 
     await createUser(parsed.data);
     this.setStatus(201);
@@ -101,4 +99,53 @@ public async getById(id: string): Promise<any> {
   }
 
 
+  //🐉 Modificar usuaro con su
+  @Put("{id}")
+  @SuccessResponse("200", "Usuario actualizado")
+  @Response("404", "Usuario no encontrado")
+  @Response("500", "Error del servidor")
+  public async updateUsuario(
+    @Path() id: number,
+    @Body() body: Partial<UserDTO>
+  ): Promise<{ message: string }> {
+    try {
+      await updateUser(id, body);
+      return { message: "Usuario actualizado correctamente" };
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error && error.message.includes("no encontrado")) {
+        this.setStatus(404);
+        return { message: "Usuario no encontrado" };
+      }
+
+      this.setStatus(500);
+      return { message: "Error al actualizar usuario" };
+    }
+  }
+  
+  /**
+   * 🛑 Eliminar (soft delete) un usuario por su ID
+   */
+  @Delete("{id}")
+  @SuccessResponse("200", "Usuario eliminado")
+  @Response("404", "Usuario no encontrado")
+  @Response("500", "Error del servidor")
+  public async deleteUsuario(@Path() id: number): Promise<{ message: string }> {
+    try {
+      await deleteUser(id);
+      return { message: "Usuario eliminado correctamente" };
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error && error.message.includes("no encontrado")) {
+        this.setStatus(404);
+        return { message: "Usuario no encontrado" };
+      }
+
+      this.setStatus(500);
+      return { message: "Error al eliminar usuario" };
+    }
+  }
+
+  
 }
+

@@ -20,7 +20,7 @@ Este proyecto es una API construida con **Node.js**, **Express** y **TypeScript*
 - **Zod** – Validación de datos segura
 - **Prisma** – ORM para PostgreSQL
 - **Swagger UI** – Documentación automática de la API
-- **Multer y Cloudinary** – Para gestión de imágenes (próximamente)
+- **Multer y Cloudinary** – Para gestión de imágenes 
 
 ---
 
