@@ -82,6 +82,71 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"Partial_UserDTO_": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"correo": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"nombreCompleto": {
+						"type": "string"
+					},
+					"telefono": {
+						"type": "string"
+					},
+					"direccion": {
+						"type": "string"
+					},
+					"fotoPerfil": {
+						"type": "string"
+					},
+					"tipoUsuario": {
+						"type": "string",
+						"enum": [
+							"INDIVIDUAL",
+							"EMPRESARIAL"
+						]
+					},
+					"nombreEmpresa": {
+						"type": "string"
+					},
+					"nit": {
+						"type": "string"
+					},
+					"rol": {
+						"type": "string",
+						"enum": [
+							"USUARIO",
+							"EQUIPO",
+							"ADMIN",
+							"DESARROLLADOR"
+						]
+					},
+					"rolEquipo": {
+						"type": "string",
+						"enum": [
+							"ADMIN",
+							"LECTOR",
+							"COMENTARISTA",
+							"EDITOR"
+						]
+					},
+					"estado": {
+						"type": "string",
+						"enum": [
+							"activo",
+							"inactivo"
+						]
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
 			}
 		},
 		"securitySchemes": {}
@@ -255,6 +320,105 @@
 						"required": true,
 						"schema": {
 							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateUsuario",
+				"responses": {
+					"200": {
+						"description": "Usuario actualizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuario no encontrado"
+					},
+					"500": {
+						"description": "Error del servidor"
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_UserDTO_"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteUsuario",
+				"responses": {
+					"200": {
+						"description": "Usuario eliminado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuario no encontrado"
+					},
+					"500": {
+						"description": "Error del servidor"
+					}
+				},
+				"description": "🛑 Eliminar (soft delete) un usuario por su ID",
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]
