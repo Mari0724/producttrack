@@ -31,17 +31,28 @@ export async function getUserById(id: number) {
 
 // 🆕 Crear usuario
 export async function createUser(data: UserDTO) {
+  if (data.rol === "EQUIPO") {
+    if (!data.empresaId) throw new Error("empresaId es obligatorio para rol EQUIPO");
+
+    const empresa = await prisma.users.findUnique({
+      where: { idUsuario: data.empresaId },
+    });
+
+    if (!empresa || empresa.tipoUsuario !== "EMPRESARIAL") {
+      throw new Error("La empresa especificada no existe o no es de tipo EMPRESARIAL");
+    }
+  }
+
   return await prisma.users.create({
     data: {
       ...data,
-      estado: "activo", // Asignación directa desde backend
+      estado: "activo",
     },
   });
 }
 
+
 // 🆙 Actualizar usuario
-
-
 export async function updateUser(id: number, data: Partial<UserDTO>) {
   const user = await prisma.users.findUnique({
     where: { idUsuario: id },
@@ -49,17 +60,19 @@ export async function updateUser(id: number, data: Partial<UserDTO>) {
 
   if (!user) throw new Error("Usuario no encontrado");
 
-  // Si hay una nueva fotoPerfil en data y la antigua existe, eliminarla de Cloudinary
+  // ❌ No permitir cambiar el rol
+  if (data.rol && data.rol !== user.rol) {
+    throw new Error("No está permitido cambiar el rol del usuario.");
+  }
+
+  // 🔄 Si hay una nueva fotoPerfil y la antigua existe, eliminarla de Cloudinary
   if (data.fotoPerfil && user.fotoPerfil) {
-    // Extraer public_id de la URL antigua
     const oldUrl = user.fotoPerfil;
-    
-    // Ejemplo para extraer la parte que sigue después de 'upload/' y quitar la extensión:
     const parts = oldUrl.split('/upload/');
-    if(parts.length > 1){
-      const pathWithExt = parts[1]; // Ejemplo: "producttrack/perfiles/filename.jpg"
-      const publicId = pathWithExt.replace(/\.[^/.]+$/, ""); // Quita la extensión (.jpg, .png, etc)
-      
+    if (parts.length > 1) {
+      const pathWithExt = parts[1];
+      const publicId = pathWithExt.replace(/\.[^/.]+$/, "");
+
       try {
         await cloudinary.uploader.destroy(publicId);
         console.log(`Imagen antigua eliminada: ${publicId}`);
@@ -69,8 +82,7 @@ export async function updateUser(id: number, data: Partial<UserDTO>) {
     }
   }
 
-  
-  // Actualizar el usuario con los nuevos datos
+  // ✅ Actualizar usuario
   return await prisma.users.update({
     where: { idUsuario: id },
     data: {

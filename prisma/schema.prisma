@@ -28,10 +28,14 @@ model users {
   nit             String?   @unique
   estado         String
   rol            String
-  
-  // Nuevo campo obligatorio para diferenciar usuarios
   tipoUsuario    TipoUsuario
   rolEquipo      rolEquipo?
+  
+  empresaId     Int?
+  jefe       users?   @relation("EmpresaMiembros", fields: [empresaId], references: [idUsuario])
+  miembros users[]  @relation("EmpresaMiembros")
+
+  
   createdAt      DateTime  @default(now())
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
@@ -65,7 +69,6 @@ enum rolEquipo {
   LECTOR
   COMENTARISTA
   EDITOR
-  ADMIN      // de la empresa
 }
 
 

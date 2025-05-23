@@ -7,6 +7,19 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"ResponseMessage": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"detalles": {}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"UserDTO": {
 				"properties": {
 					"username": {
@@ -57,8 +70,7 @@
 						"enum": [
 							"LECTOR",
 							"COMENTARISTA",
-							"EDITOR",
-							"ADMIN"
+							"EDITOR"
 						]
 					},
 					"estado": {
@@ -67,6 +79,10 @@
 							"activo",
 							"inactivo"
 						]
+					},
+					"empresaId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -131,7 +147,6 @@
 					"rolEquipo": {
 						"type": "string",
 						"enum": [
-							"ADMIN",
 							"LECTOR",
 							"COMENTARISTA",
 							"EDITOR"
@@ -143,6 +158,10 @@
 							"activo",
 							"inactivo"
 						]
+					},
+					"empresaId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"type": "object",
@@ -257,8 +276,7 @@
 							"enum": [
 								"LECTOR",
 								"COMENTARISTA",
-								"EDITOR",
-								"ADMIN"
+								"EDITOR"
 							]
 						}
 					}
@@ -271,7 +289,9 @@
 						"description": "Usuario creado correctamente",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"$ref": "#/components/schemas/ResponseMessage"
+								}
 							}
 						}
 					},
@@ -332,15 +352,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"message"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/ResponseMessage"
 								}
 							}
 						}
@@ -386,15 +398,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"message"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/ResponseMessage"
 								}
 							}
 						}
@@ -406,7 +410,6 @@
 						"description": "Error del servidor"
 					}
 				},
-				"description": "🛑 Eliminar (soft delete) un usuario por su ID",
 				"tags": [
 					"Usuarios"
 				],

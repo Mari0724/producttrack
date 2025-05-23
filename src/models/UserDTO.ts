@@ -10,7 +10,8 @@ export interface UserDTO {
     nombreEmpresa?: string; // opcional según tipoUsuario
     nit?: string;           // opcional según tipoUsuario
     rol: "USUARIO" | "EQUIPO" | "ADMIN" | "DESARROLLADOR";
-    rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR" | "ADMIN"; // opcional
+    rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR"; // se elimino admin
     estado?: "activo" | "inactivo";
+    empresaId?: number; // NUEVO
 }
 

@@ -58,32 +58,50 @@ export const userSchema = z.object({
         .enum(["USUARIO", "EQUIPO", "ADMIN", "DESARROLLADOR"]),
 
     rolEquipo: z
-        .enum(["LECTOR", "COMENTARISTA", "EDITOR", "ADMIN"])
+        .enum(["LECTOR", "COMENTARISTA", "EDITOR"])
         .optional(),
 
     // Campo para indicar si es un usuario individual o empresarial
     tipoUsuario: z
         .enum(["INDIVIDUAL", "EMPRESARIAL"]),
+
+    empresaId: z
+    .number()
+        .int("El ID de empresa debe ser un número entero")
+        .positive("El ID de empresa debe ser positivo")
+        .optional(),
+
 })
+
+// 1️⃣ Validación: Si es EMPRESARIAL, debe tener nombreEmpresa y nit
 .refine(
     (data) => {
-        // Validación adicional para asegurarse que el NIT y nombreEmpresa son obligatorios solo si el usuario es EMPRESARIAL
         if (data.tipoUsuario === "EMPRESARIAL") {
-            if (!data.nombreEmpresa || !data.nit) {
-                return false; // Si falta alguno, la validación fallará
-            }
+            return !!data.nombreEmpresa && !!data.nit;
         }
-        return true; // Si pasa la validación
+        return true;
     },
     {
         message: "El nombre de la empresa y el NIT son obligatorios para los usuarios empresariales.",
         path: ["nombreEmpresa", "nit"],
     }
+)
+
+  // 2️⃣ Validación: Si el rol es EQUIPO, debe tener empresaId
+.refine(
+    (data) => {
+        if (data.rol === "EQUIPO") {
+            return typeof data.empresaId === "number";
+        }
+        return true;
+    },
+    {
+        message: "El campo 'empresaId' es obligatorio para usuarios con rol EQUIPO.",
+        path: ["empresaId"],
+    }
 );
 
-export interface MensajeRespuesta {
-    message: string;
-}
+
 
 export type ValidatedUser = z.infer<typeof userSchema>;
 

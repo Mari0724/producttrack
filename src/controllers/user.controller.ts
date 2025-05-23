@@ -3,6 +3,7 @@ import { userSchema } from "../models/UserModel";
 import { zodValidate } from "../utils/zodValidate";
 import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from "../services/user.service";
 import { UserDTO } from "../models/UserDTO";
+import { ResponseMessage } from "../interfaces/ResponseMenssage";
 
 
 @Route("usuarios")//Todas las rutas dentro del controlador comenzarán con /usuarios.
@@ -24,7 +25,7 @@ export class UserController extends Controller {
     @Query() estado?: string,
     @Query() rol?: string,
     @Query() tipoUsuario?: "INDIVIDUAL" | "EMPRESARIAL",
-    @Query() rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR" | "ADMIN"
+    @Query() rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR"
   ): Promise<any> {
     const filters: Partial<UserDTO> = {};
 
@@ -46,7 +47,7 @@ export class UserController extends Controller {
       filters.tipoUsuario = tipoUsuario;
     }
 
-    if (rolEquipo && ["LECTOR", "COMENTARISTA", "EDITOR", "ADMIN"].includes(rolEquipo)) {
+    if (rolEquipo && ["LECTOR", "COMENTARISTA", "EDITOR"].includes(rolEquipo)) {
       filters.rolEquipo = rolEquipo;
     }
 
@@ -63,8 +64,8 @@ export class UserController extends Controller {
 
     // Validar si no es número o es NaN o menor o igual a 0 (opcional)
     if (isNaN(numericId) || numericId <= 0) {
-      this.setStatus(400);
-      return { message: "ID inválido" };
+      const res: ResponseMessage = { message: "ID inválido" };
+      return res;
     }
 
     // Llamar servicio con id numérico
@@ -72,7 +73,8 @@ export class UserController extends Controller {
 
     if (!user) {
       this.setStatus(404);
-      return { message: "Usuario no encontrado" };
+      const res: ResponseMessage = { message: "Usuario no encontrado" };
+      return res;
     }
     return user;
   }
@@ -81,8 +83,7 @@ export class UserController extends Controller {
   @SuccessResponse("201", "Usuario creado correctamente")
   @Response("400", "Datos inválidos")
   @Post("/")
-  public async create(@Body() requestBody: UserDTO): Promise<any> {
-    console.log("Request body recibido:", requestBody);
+  public async create(@Body() requestBody: UserDTO): Promise<ResponseMessage> {
     const parsed = zodValidate(userSchema, requestBody);
 
     if (!parsed.success) {
@@ -92,14 +93,29 @@ export class UserController extends Controller {
         detalles: parsed.error, 
       };
     }
+    // Validar empresaId solo si rol es EQUIPO
+    if (parsed.data.rol === "EQUIPO" && !parsed.data.empresaId) {
+      this.setStatus(400);
+      return {
+        message: "empresaId es obligatorio para usuarios con rol EQUIPO",
+      };
+    }
+    
+    // Validar que NO se permita empresaId si el rol no es EQUIPO
+    if (parsed.data.rol !== "EQUIPO" && parsed.data.empresaId) {
+      this.setStatus(400);
+      return {
+        message: "Solo se debe asignar empresaId a usuarios con rol EQUIPO",
+      };
+    }
 
     await createUser(parsed.data);
     this.setStatus(201);
     return { message: "Usuario creado correctamente" };
-  }
+    }
 
 
-  //🐉 Modificar usuaro con su
+  //🐉 Modificar usuaro con su ID
   @Put("{id}")
   @SuccessResponse("200", "Usuario actualizado")
   @Response("404", "Usuario no encontrado")
@@ -107,8 +123,14 @@ export class UserController extends Controller {
   public async updateUsuario(
     @Path() id: number,
     @Body() body: Partial<UserDTO>
-  ): Promise<{ message: string }> {
+  ): Promise<ResponseMessage> {
     try {
+      if (body.rol && body.rol !== "EQUIPO" && body.empresaId) {
+        this.setStatus(400);
+        return {
+          message: "No se puede asignar empresaId a usuarios que no son del rol EQUIPO",
+        };
+    }
       await updateUser(id, body);
       return { message: "Usuario actualizado correctamente" };
     } catch (error) {
@@ -123,14 +145,14 @@ export class UserController extends Controller {
     }
   }
   
-  /**
-   * 🛑 Eliminar (soft delete) un usuario por su ID
-   */
+  
+  //🛑 Eliminar (soft delete) un usuario por su ID
+
   @Delete("{id}")
   @SuccessResponse("200", "Usuario eliminado")
   @Response("404", "Usuario no encontrado")
   @Response("500", "Error del servidor")
-  public async deleteUsuario(@Path() id: number): Promise<{ message: string }> {
+  public async deleteUsuario(@Path() id: number): Promise<ResponseMessage> {
     try {
       await deleteUser(id);
       return { message: "Usuario eliminado correctamente" };
