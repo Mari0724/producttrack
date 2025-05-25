@@ -1,0 +1,431 @@
+{
+	"openapi": "3.0.0",
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"_36_Enums.EstadoProducto": {
+				"type": "string",
+				"enum": [
+					"DISPONIBLE",
+					"AGOTADO",
+					"RESERVADO",
+					"VENCIDO"
+				]
+			},
+			"EstadoProducto": {
+				"$ref": "#/components/schemas/_36_Enums.EstadoProducto"
+			},
+			"ProductosDTO": {
+				"properties": {
+					"codigoBarras": {
+						"type": "string"
+					},
+					"codigoQR": {
+						"type": "string"
+					},
+					"nombre": {
+						"type": "string"
+					},
+					"descripcion": {
+						"type": "string"
+					},
+					"cantidad": {
+						"type": "number",
+						"format": "double"
+					},
+					"precio": {
+						"type": "string"
+					},
+					"fechaAdquisicion": {
+						"type": "string"
+					},
+					"fechaVencimiento": {
+						"type": "string"
+					},
+					"usuarioId": {
+						"type": "number",
+						"format": "double"
+					},
+					"estado": {
+						"$ref": "#/components/schemas/EstadoProducto"
+					},
+					"imagen": {
+						"type": "string"
+					},
+					"categoria": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"codigoBarras",
+					"codigoQR",
+					"nombre",
+					"descripcion",
+					"cantidad",
+					"precio",
+					"fechaAdquisicion",
+					"fechaVencimiento",
+					"usuarioId",
+					"estado",
+					"imagen"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Partial_ProductosDTO_": {
+				"properties": {
+					"codigoBarras": {
+						"type": "string"
+					},
+					"codigoQR": {
+						"type": "string"
+					},
+					"nombre": {
+						"type": "string"
+					},
+					"descripcion": {
+						"type": "string"
+					},
+					"cantidad": {
+						"type": "number",
+						"format": "double"
+					},
+					"precio": {
+						"type": "string"
+					},
+					"fechaAdquisicion": {
+						"type": "string"
+					},
+					"fechaVencimiento": {
+						"type": "string"
+					},
+					"usuarioId": {
+						"type": "number",
+						"format": "double"
+					},
+					"estado": {
+						"$ref": "#/components/schemas/_36_Enums.EstadoProducto"
+					},
+					"imagen": {
+						"type": "string"
+					},
+					"categoria": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "producttrack",
+		"version": "1.0.0",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {}
+	},
+	"paths": {
+		"/Productos": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "nombre",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "categoria",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "estado",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "fechaAdquisicionDesde",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "fechaAdquisicionHasta",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "fechaVencimientoDesde",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "fechaVencimientoHasta",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "usuarioId",
+						"required": false,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "Producto creado correctamente",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"400": {
+						"description": "Datos inválidos"
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ProductosDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/Productos/categorias": {
+			"get": {
+				"operationId": "ObtenerCategorias",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/Productos/por-categoria": {
+			"get": {
+				"operationId": "GetByCategoria",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "categoria",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/Productos/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateProducto",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"detalles": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_ProductosDTO_"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteProducto",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
