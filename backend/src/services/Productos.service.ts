@@ -1,6 +1,7 @@
 import prisma from '../utils/prismaClient';
 import { ProductosDTO } from '../models/ProductosDTO';
 import { EstadoProducto } from "@prisma/client";
+import { v2 as cloudinary } from "cloudinary";
 
 // 🔍 Obtener productos con filtros
 export const getAllProductos = async (filters: any) => {
@@ -114,6 +115,16 @@ export async function getProductosPorCategoria(categoria: string) {
   }
 }
 
+// Función para subir imagen a Cloudinary
+export const subirImagenCloudinary = async (imagenBase64: string): Promise<string> => {
+  const uploadResult = await cloudinary.uploader.upload(imagenBase64, {
+    folder: "productos",
+    public_id: `${Date.now()}`,
+    resource_type: "image",
+  });
+  return uploadResult.secure_url;
+};
+
 // 🆕 Crear producto con conversiones de tipo
 export async function createProducto(data: ProductosDTO) {
   try {
@@ -128,7 +139,7 @@ export async function createProducto(data: ProductosDTO) {
         fechaAdquisicion: new Date(data.fechaAdquisicion),
         fechaVencimiento: new Date(data.fechaVencimiento),
         usuarioId: data.usuarioId,
-        estado: data.estado, // ✅ esto es lo correcto
+        estado: data.estado,
         imagen: data.imagen,
         categoria: data.categoria,
       },
@@ -146,6 +157,28 @@ export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
   });
 
   if (!producto) throw new Error("Producto no encontrado");
+
+  let imagenUrl = producto.imagen;
+  // Si hay una nueva imagen, subirla a Cloudinary
+  if (data.imagen) {
+    // Eliminar la imagen anterior de Cloudinary si existe
+    if (producto.imagen) {
+      const oldUrl = producto.imagen;
+      const parts = oldUrl.split('/upload/');
+      if (parts.length > 1) {
+        const pathWithExt = parts[1];
+        const publicId = pathWithExt.replace(/\.[^/.]+$/, "");
+        try {
+          await cloudinary.uploader.destroy(publicId);
+          console.log(`Imagen antigua eliminada: ${publicId}`);
+        } catch (error) {
+          console.error("Error eliminando imagen antigua:", error);
+        }
+      }
+    }
+    // Subir la nueva imagen a Cloudinary
+    imagenUrl = await subirImagenCloudinary(data.imagen);
+  }
 
   return await prisma.productos.update({
     where: { id: id },

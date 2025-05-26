@@ -1,10 +1,8 @@
-import { Body, Controller, Delete, Get, Path, Post, Put, Query, Route,SuccessResponse, Response, Tags } from "tsoa";
+import { Body, Controller, Delete, Get, Path, Put, Query, TsoaResponse, Request, Res, Route, Post, SuccessResponse, Response, Tags } from "tsoa";
 import { ProductosDTO } from "../models/ProductosDTO";
 import { zodValidate } from "../utils/zodValidate";
 import { productoSchema } from "../models/ProductosModel";
-import { getAllProductos, getProductoById, createProducto, updateProducto, deleteProducto, } from "../services/Productos.service";
-import { getCategoriasUnicas } from "../services/Productos.service";
-import {getProductosPorCategoria,} from "../services/Productos.service";
+import { getAllProductos, getProductoById, createProducto, updateProducto, deleteProducto, getCategoriasUnicas, getProductosPorCategoria } from "../services/Productos.service";
 
 @Route("/Productos")
 @Tags("Productos")
@@ -99,7 +97,7 @@ export class ProductosController extends Controller {
     return producto;
   }
 
-  // ✅ Crear producto
+    // ✅ Crear producto
   @SuccessResponse("201", "Producto creado correctamente")
   @Response("400", "Datos inválidos")
   @Post("/")

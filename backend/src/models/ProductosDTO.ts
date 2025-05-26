@@ -14,4 +14,3 @@ export interface ProductosDTO {
     imagen: string;
     categoria?: string;
 }
-  
