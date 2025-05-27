@@ -3,7 +3,7 @@ import { userSchema } from "../models/UserModel";
 import { zodValidate } from "../utils/zodValidate";
 import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from "../services/user.service";
 import { UserDTO } from "../models/UserDTO";
-import { ResponseMessage } from "../interfaces/ResponseMenssage";
+import { ResponseMessage, ResponseMessageWithToken } from "../interfaces/ResponseMenssage";
 
 
 @Route("usuarios")//Todas las rutas dentro del controlador comenzarán con /usuarios.
@@ -83,25 +83,24 @@ export class UserController extends Controller {
   @SuccessResponse("201", "Usuario creado correctamente")
   @Response("400", "Datos inválidos")
   @Post("/")
-  public async create(@Body() requestBody: UserDTO): Promise<ResponseMessage> {
+  public async create(@Body() requestBody: UserDTO): Promise<ResponseMessageWithToken> {
     const parsed = zodValidate(userSchema, requestBody);
 
     if (!parsed.success) {
       this.setStatus(400);
       return {
         message: "Datos inválidos",
-        detalles: parsed.error, 
+        detalles: parsed.error,
       };
     }
-    // Validar empresaId solo si rol es EQUIPO
+
     if (parsed.data.rol === "EQUIPO" && !parsed.data.empresaId) {
       this.setStatus(400);
       return {
         message: "empresaId es obligatorio para usuarios con rol EQUIPO",
       };
     }
-    
-    // Validar que NO se permita empresaId si el rol no es EQUIPO
+
     if (parsed.data.rol !== "EQUIPO" && parsed.data.empresaId) {
       this.setStatus(400);
       return {
@@ -109,10 +108,20 @@ export class UserController extends Controller {
       };
     }
 
-    await createUser(parsed.data);
-    this.setStatus(201);
-    return { message: "Usuario creado correctamente" };
+    try {
+      const { user, token } = await createUser(parsed.data);
+      this.setStatus(201);
+      return {
+        message: "Usuario creado correctamente",
+        token, // <--- devuelvo token aquí
+      };
+    } catch (error: any) {
+      this.setStatus(400);
+      return {
+        message: error.message || "Error al crear usuario",
+      };
     }
+  }
 
 
   //🐉 Modificar usuaro con su ID

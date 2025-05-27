@@ -1,4 +1,8 @@
 export interface ResponseMessage {
-    message: string;
-    detalles?: any; // opcional, para errores o información extra
+  message: string;
+  detalles?: any;
+}
+
+export interface ResponseMessageWithToken extends ResponseMessage {
+  token?: string;
 }

@@ -1,7 +1,10 @@
 import prisma from '../utils/prismaClient'; // cliente separado
 import { v2 as cloudinary } from 'cloudinary';
 import { UserDTO } from "../models/UserDTO"; 
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
+const JWT_SECRET = process.env.JWT_SECRET!;
 
 // 🔍 Obtener 
 export async function getAllUsers(filters: Partial<UserDTO>) {
@@ -43,13 +46,28 @@ export async function createUser(data: UserDTO) {
     }
   }
 
-  return await prisma.users.create({
+  const hashedPassword = await bcrypt.hash(data.password, 10);
+
+  const newUser = await prisma.users.create({
     data: {
       ...data,
+      password: hashedPassword,
       estado: "activo",
     },
   });
+
+  const token = jwt.sign(
+    { idUsuario: newUser.idUsuario, username: newUser.username, rol: newUser.rol },
+    JWT_SECRET,
+    { expiresIn: '24h' }
+  );
+
+  return { user: newUser, token };
 }
+
+
+
+
 
 
 // 🆙 Actualizar usuario
