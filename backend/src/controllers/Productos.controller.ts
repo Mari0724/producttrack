@@ -3,6 +3,7 @@ import { ProductosDTO } from "../models/ProductosDTO";
 import { zodValidate } from "../utils/zodValidate";
 import { productoSchema } from "../models/ProductosModel";
 import { getAllProductos, getProductoById, createProducto, updateProducto, deleteProducto, getCategoriasUnicas, getProductosPorCategoria } from "../services/Productos.service";
+import { ResponseMessage, ResponseMessageWithData } from "../interfaces/ResponseMenssage";
 
 @Route("/Productos")
 @Tags("Productos")
@@ -101,7 +102,7 @@ export class ProductosController extends Controller {
   @SuccessResponse("201", "Producto creado correctamente")
   @Response("400", "Datos inválidos")
   @Post("/")
-  public async create(@Body() requestBody: ProductosDTO): Promise<any> {
+  public async create(@Body() requestBody: ProductosDTO): Promise<ResponseMessageWithData<any> | ResponseMessage> {
     console.log("➡️ Request body recibido:", requestBody);
     const parsed = zodValidate(productoSchema, requestBody);
 
@@ -130,10 +131,8 @@ export class ProductosController extends Controller {
 
   // ✅ Actualizar producto
   @Put("/{id}")
-  public async updateProducto(
-    @Path() id: number,
-    @Body() body: Partial<ProductosDTO>
-  ): Promise<{ message: string; detalles?: any }> {
+  public async updateProducto( @Path() id: number,@Body() body: Partial<ProductosDTO>
+  ): Promise<ResponseMessage> {
     const parsed = zodValidate(productoSchema.partial(), body);
 
     if (!parsed.success) {
@@ -161,7 +160,7 @@ export class ProductosController extends Controller {
 
   // ✅ Eliminar producto
   @Delete("/{id}")
-  public async deleteProducto(@Path() id: number): Promise<{ message: string }> {
+  public async deleteProducto(@Path() id: number): Promise<ResponseMessage> {
     try {
       await deleteProducto(id);
       return { message: "Producto eliminado correctamente" };
