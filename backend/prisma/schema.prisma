@@ -21,7 +21,7 @@ model users {
   nombreCompleto String
   telefono       String
   direccion      String
-  fotoPerfil     String
+  fotoPerfil     String?
   
   // Campos opcionales porque solo aplican a EMPRESARIAL
   nombreEmpresa   String?
