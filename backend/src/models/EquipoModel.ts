@@ -7,7 +7,7 @@ export const equipoSchema = z.object({
   nombreCompleto: z.string().min(3),
   telefono: z.string().min(7).max(15),
   direccion: z.string().min(5),
-  fotoPerfil: z.string().url("La foto de perfil debe ser una URL válida").optional().nullable().default(null),
+  fotoPerfil: z.string().url("La foto de perfil debe ser una URL válida").optional(),
   rolEquipo: z.enum(["LECTOR", "COMENTARISTA", "EDITOR"]),
   estado: z .enum(["activo", "inactivo"]) .default("activo"),
 });

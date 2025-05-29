@@ -64,8 +64,12 @@ export class EquipoService {
   }
 
   // Actualizar usuario equipo
-  async actualizarEquipo(id: number, datosActualizados: Partial<EquipoDTO>) {
-    const equipoExistente = await this.obtenerEquipoPorId(id);
+  async actualizarEquipo(id: number, datosActualizados: Partial<EquipoDTO>, empresaId: number) {
+    const equipo = await prisma.users.findFirst({
+      where: { idUsuario: id, empresaId, rol: "EQUIPO" }
+    });
+
+    if (!equipo) throw new Error("Equipo no encontrado o no pertenece a esta empresa");
 
     equipoSchema.partial().parse(datosActualizados);
 
@@ -73,7 +77,8 @@ export class EquipoService {
       where: { idUsuario: id },
       data: datosActualizados,
     });
-  }
+}
+
 
   // Eliminar usuario equipo
   async eliminarEquipo(id: number) {

@@ -9,4 +9,5 @@ export interface LoginResponse {
   rol: string;
   tipoUsuario?: string;
   rolEquipo?: string;
+  requiereCompletarPerfil: boolean;
 }

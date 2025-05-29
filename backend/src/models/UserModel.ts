@@ -35,7 +35,8 @@ export const userSchema = z.object({
 
     fotoPerfil: z
         .string()
-        .url("La foto de perfil debe ser una URL válida"),
+        .url("La foto de perfil debe ser una URL válida")
+        .optional(),
 
     // Nombre de la empresa solo es obligatorio si tipoUsuario es EMPRESARIAL
     nombreEmpresa: z
