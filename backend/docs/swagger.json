@@ -7,6 +7,34 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"ResponseMessageWithData_any_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"detalles": {},
+					"data": {}
+				},
+				"required": [
+					"message",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ResponseMessage": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"detalles": {}
+				},
+				"required": [
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"_36_Enums.EstadoProducto": {
 				"type": "string",
 				"enum": [
@@ -121,7 +149,13 @@
 				"description": "Make all properties in T optional"
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"bearerAuth": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
 	},
 	"info": {
 		"title": "producttrack",
@@ -227,7 +261,16 @@
 						"description": "Producto creado correctamente",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/ResponseMessageWithData_any_"
+										},
+										{
+											"$ref": "#/components/schemas/ResponseMessage"
+										}
+									]
+								}
 							}
 						}
 					},
@@ -342,16 +385,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"detalles": {},
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"message"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/ResponseMessage"
 								}
 							}
 						}
@@ -391,15 +425,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"message": {
-											"type": "string"
-										}
-									},
-									"required": [
-										"message"
-									],
-									"type": "object"
+									"$ref": "#/components/schemas/ResponseMessage"
 								}
 							}
 						}

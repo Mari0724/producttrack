@@ -4,6 +4,8 @@ import { zodValidate } from "../utils/zodValidate";
 import { productoSchema } from "../models/ProductosModel";
 import { getAllProductos, getProductoById, createProducto, updateProducto, deleteProducto, getCategoriasUnicas, getProductosPorCategoria } from "../services/Productos.service";
 import { ResponseMessage, ResponseMessageWithData } from "../interfaces/ResponseMenssage";
+import { AuthenticatedRequest } from "../types/express"; // ajusta la ruta según tu estructura
+import { puede } from "../utils/checkPermissions";
 
 @Route("/Productos")
 @Tags("Productos")
@@ -98,14 +100,24 @@ export class ProductosController extends Controller {
     return producto;
   }
 
-    // ✅ Crear producto
+  // ✅ Crear producto
   @SuccessResponse("201", "Producto creado correctamente")
   @Response("400", "Datos inválidos")
   @Post("/")
-  public async create(@Body() requestBody: ProductosDTO): Promise<ResponseMessageWithData<any> | ResponseMessage> {
+  public async create(
+    @Request() req: AuthenticatedRequest,
+    @Body() requestBody: ProductosDTO
+  ): Promise<ResponseMessageWithData<any> | ResponseMessage> {
     console.log("➡️ Request body recibido:", requestBody);
-    const parsed = zodValidate(productoSchema, requestBody);
 
+    const rol = req.user?.rol;
+
+    if (!rol || !puede("crear", rol)) {
+      this.setStatus(403);
+      return { message: "No tienes permiso para crear productos." };
+    }
+
+    const parsed = zodValidate(productoSchema, requestBody);
     if (!parsed.success) {
       console.log("❌ Error de validación:", parsed.error);
       this.setStatus(400);
@@ -131,8 +143,18 @@ export class ProductosController extends Controller {
 
   // ✅ Actualizar producto
   @Put("/{id}")
-  public async updateProducto( @Path() id: number,@Body() body: Partial<ProductosDTO>
+  public async updateProducto(
+    @Request() req: AuthenticatedRequest,
+    @Path() id: number,
+    @Body() body: Partial<ProductosDTO>
   ): Promise<ResponseMessage> {
+    const rol = req.user?.rol;
+
+    if (!rol || !puede("editar", rol)) {
+      this.setStatus(403);
+      return { message: "No tienes permiso para editar productos." };
+    }
+
     const parsed = zodValidate(productoSchema.partial(), body);
 
     if (!parsed.success) {
@@ -158,21 +180,33 @@ export class ProductosController extends Controller {
     }
   }
 
-  // ✅ Eliminar producto
-  @Delete("/{id}")
-  public async deleteProducto(@Path() id: number): Promise<ResponseMessage> {
-    try {
-      await deleteProducto(id);
-      return { message: "Producto eliminado correctamente" };
-    } catch (error) {
-      console.error("🚨 Error al eliminar:", error);
-      if (error instanceof Error && error.message.includes("no encontrado")) {
-        this.setStatus(404);
-        return { message: "Producto no encontrado" };
-      }
 
-      this.setStatus(500);
-      return { message: "Error al eliminar producto" };
-    }
+  // ✅ Eliminar producto
+@Delete("/{id}")
+public async deleteProducto(
+  @Request() req: AuthenticatedRequest,
+  @Path() id: number
+): Promise<ResponseMessage> {
+  const rol = req.user?.rol;
+
+  if (!rol || !puede("eliminar", rol)) {
+    this.setStatus(403);
+    return { message: "No tienes permiso para eliminar productos." };
   }
+
+  try {
+    await deleteProducto(id);
+    return { message: "Producto eliminado correctamente" };
+  } catch (error) {
+    console.error("🚨 Error al eliminar:", error);
+    if (error instanceof Error && error.message.includes("no encontrado")) {
+      this.setStatus(404);
+      return { message: "Producto no encontrado" };
+    }
+
+    this.setStatus(500);
+    return { message: "Error al eliminar producto" };
+  }
+}
+
 }
