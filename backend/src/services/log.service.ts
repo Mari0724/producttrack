@@ -1,7 +1,7 @@
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../utils/prismaClient";
-import { JWT_SECRET } from "../config/token"; // ✅ Importaste desde tu config central
+import { JWT_SECRET, TOKEN_EXPIRES_IN } from "../config/token"; // ✅ Importaste desde tu config central
 
 export class LogService {
   async login(correo: string, password: string) {
@@ -15,10 +15,11 @@ export class LogService {
     if (!passwordValido) throw new Error("Contraseña incorrecta");
 
     // Generar token
-    const token = jwt.sign({ id: user.idUsuario, rol: user.rol }, JWT_SECRET, {
-      expiresIn: "1d",
-    });
-
+    const token = jwt.sign(
+      { id: user.idUsuario, rol: user.rol },
+      JWT_SECRET,
+      { expiresIn: TOKEN_EXPIRES_IN } // 💡 Usando la config centralizada
+    );
     // Verificar si necesita completar perfil
     let requiereCompletarPerfil = false;
 
