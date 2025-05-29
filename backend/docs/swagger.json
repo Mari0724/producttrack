@@ -349,6 +349,46 @@
 				]
 			}
 		},
+		"/Productos/cantidad-por-categoria": {
+			"get": {
+				"operationId": "GetCantidadPorCategoria",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/Productos/cantidad-por-rango-precio": {
+			"get": {
+				"operationId": "GetCantidadPorRangoPrecio",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
 		"/Productos/{id}": {
 			"get": {
 				"operationId": "GetById",

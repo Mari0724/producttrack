@@ -178,6 +178,64 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsProductosController_getCantidadPorCategoria: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/Productos/cantidad-por-categoria',
+            ...(fetchMiddlewares<RequestHandler>(ProductosController)),
+            ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getCantidadPorCategoria)),
+
+            async function ProductosController_getCantidadPorCategoria(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsProductosController_getCantidadPorCategoria, request, response });
+
+                const controller = new ProductosController();
+
+              await templateService.apiHandler({
+                methodName: 'getCantidadPorCategoria',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsProductosController_getCantidadPorRangoPrecio: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.get('/Productos/cantidad-por-rango-precio',
+            ...(fetchMiddlewares<RequestHandler>(ProductosController)),
+            ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getCantidadPorRangoPrecio)),
+
+            async function ProductosController_getCantidadPorRangoPrecio(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsProductosController_getCantidadPorRangoPrecio, request, response });
+
+                const controller = new ProductosController();
+
+              await templateService.apiHandler({
+                methodName: 'getCantidadPorRangoPrecio',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsProductosController_getById: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };

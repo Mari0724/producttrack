@@ -22,7 +22,10 @@ export const getAllProductos = async (filters: any) => {
 
   // Filtrar por categoría exacta
   if (filters.categoria) {
-    where.categoria = filters.categoria;
+    where.categoria = {
+      contains: filters.categoria,
+      mode: "insensitive",
+    };
   }
 
   // Filtrar por estado (enum)
@@ -98,6 +101,17 @@ export async function getCategoriasUnicas(): Promise<string[]> {
   }
 }
 
+// ✅ Aquí pones la nueva función 👇
+export async function getCantidadPorCategoria() {
+  return await prisma.productos.groupBy({
+    by: ['categoria'],
+    _count: { id: true },
+    where: {
+      eliminadoEn: null, // opcional: solo productos no eliminados
+    },
+  });
+}
+
 // 📂 Obtener productos por categoría
 export async function getProductosPorCategoria(categoria: string) {
   try {
@@ -113,6 +127,36 @@ export async function getProductosPorCategoria(categoria: string) {
     console.error("Error al obtener productos por categoría:", error);
     throw error;
   }
+}
+
+export async function getCantidadPorRangoPrecio() {
+  const resultados = await prisma.productos.findMany({
+    select: { precio: true },
+    where: { eliminadoEn: null }, // opcional
+  });
+
+  const rangos = {
+    "Menos de 50mil": 0,
+    "50mil - 100mil": 0,
+    "100mil - 200mil": 0,
+    "Más de 200mil": 0,
+  };
+
+  for (const producto of resultados) {
+    const precio = Number(producto.precio);
+
+    if (precio < 50000) {
+      rangos["Menos de 50mil"]++;
+    } else if (precio <= 100000) {
+      rangos["50mil - 100mil"]++;
+    } else if (precio <= 200000) {
+      rangos["100mil - 200mil"]++;
+    } else {
+      rangos["Más de 200mil"]++;
+    }
+  }
+
+  return rangos;
 }
 
 // Función para subir imagen a Cloudinary

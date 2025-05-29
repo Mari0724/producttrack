@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Path, Put, Query, TsoaResponse, Request,
 import { ProductosDTO } from "../models/ProductosDTO";
 import { zodValidate } from "../utils/zodValidate";
 import { productoSchema } from "../models/ProductosModel";
-import { getAllProductos, getProductoById, createProducto, updateProducto, deleteProducto, getCategoriasUnicas, getProductosPorCategoria } from "../services/Productos.service";
+import { getAllProductos, getProductoById, createProducto, updateProducto, deleteProducto, getCategoriasUnicas, getCantidadPorCategoria, getProductosPorCategoria, getCantidadPorRangoPrecio } from "../services/Productos.service";
 import { ResponseMessage, ResponseMessageWithData } from "../interfaces/ResponseMenssage";
 import { AuthenticatedRequest } from "../types/express"; // ajusta la ruta según tu estructura
 import { puede } from "../utils/checkPermissions";
@@ -78,6 +78,43 @@ export class ProductosController extends Controller {
       console.error(error);
       this.setStatus(500);
       return { message: "Error al obtener productos por categoría" };
+    }
+  }
+
+  // ✅ Cantidad de productos por categoría
+  @Get("/cantidad-por-categoria")
+  public async getCantidadPorCategoria(): Promise<any> {
+    try {
+      const resultados = await getCantidadPorCategoria();
+
+      // Organiza el resultado para que sea claro
+      const respuesta = resultados.map((item) => ({
+        categoria: item.categoria ?? "Sin categoría",
+        cantidad: item._count.id,
+      }));
+
+      return respuesta;
+    } catch (error) {
+      console.error("🚨 Error al obtener cantidades:", error);
+      this.setStatus(500);
+      return { message: "Error interno al obtener cantidades por categoría" };
+    }
+  }
+
+  // ✅ Cantidad de productos por rango de precio
+  @Get("/cantidad-por-rango-precio")
+  public async getCantidadPorRangoPrecio(): Promise<any> {
+    try {
+      const resultados = await getCantidadPorRangoPrecio();
+
+      return Object.entries(resultados).map(([rango, cantidad]) => ({
+        rango,
+        cantidad,
+      }));
+    } catch (error) {
+      console.error("🚨 Error al obtener cantidades por precio:", error);
+      this.setStatus(500);
+      return { message: "Error interno al obtener cantidades por rango de precio" };
     }
   }
 
