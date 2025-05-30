@@ -67,8 +67,8 @@ model notificaciones {
   tipo           TipoNotificacion
   titulo         String
   mensaje        String
-  fechaEnvio     DateTime
-  leida          Boolean
+  fechaEnvio     DateTime         @default(now())
+  leida          Boolean          @default(false)
   user           users            @relation(fields: [idUsuario], references: [idUsuario])
 }
 
