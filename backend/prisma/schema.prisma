@@ -260,9 +260,13 @@ enum EstadoProducto {
 }
 
 enum TipoNotificacion {
-  general
-  solicitud
-  recomendacion
+  STOCK_BAJO
+  PRODUCTO_VENCIDO
+  ACTUALIZACION_APP
+  COMENTARIO_PRODUCTO
+  REPOSICION_RECOMENDADA
+  PRODUCTO_POR_VENCER
+  RECOMENDACION
 }
 
 enum EstadoRecordatorio {
