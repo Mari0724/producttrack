@@ -193,7 +193,8 @@
 						"type": "string"
 					},
 					"tipoUsuario": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"rolEquipo": {
 						"type": "string"
@@ -213,7 +214,7 @@
 			},
 			"LoginRequest": {
 				"properties": {
-					"email": {
+					"correo": {
 						"type": "string"
 					},
 					"password": {
@@ -221,7 +222,7 @@
 					}
 				},
 				"required": [
-					"email",
+					"correo",
 					"password"
 				],
 				"type": "object",

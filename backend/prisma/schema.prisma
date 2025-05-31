@@ -28,7 +28,7 @@ model users {
   nit             String?   @unique
   estado         String
   rol            String
-  tipoUsuario    TipoUsuario
+  tipoUsuario TipoUsuario? @default(INDIVIDUAL)
   rolEquipo      rolEquipo?
   
   empresaId     Int?

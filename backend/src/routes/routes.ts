@@ -70,7 +70,7 @@ const models: TsoaRoute.Models = {
             "token": {"dataType":"string","required":true},
             "username": {"dataType":"string","required":true},
             "rol": {"dataType":"string","required":true},
-            "tipoUsuario": {"dataType":"string"},
+            "tipoUsuario": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "rolEquipo": {"dataType":"string"},
             "requiereCompletarPerfil": {"dataType":"boolean","required":true},
         },
@@ -80,7 +80,7 @@ const models: TsoaRoute.Models = {
     "LoginRequest": {
         "dataType": "refObject",
         "properties": {
-            "email": {"dataType":"string","required":true},
+            "correo": {"dataType":"string","required":true},
             "password": {"dataType":"string","required":true},
         },
         "additionalProperties": false,

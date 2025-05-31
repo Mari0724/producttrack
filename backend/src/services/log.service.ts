@@ -16,10 +16,15 @@ export class LogService {
 
     // Generar token
     const token = jwt.sign(
-      { id: user.idUsuario, rol: user.rol },
-      JWT_SECRET,
-      { expiresIn: TOKEN_EXPIRES_IN } // 💡 Usando la config centralizada
-    );
+      { 
+        id: user.idUsuario, 
+        rol: user.rol,
+        tipoUsuario: user.tipoUsuario,  // <-- aquí
+        rolEquipo: user.rolEquipo       // <-- opcional, si es relevante
+      },
+    JWT_SECRET,
+    { expiresIn: TOKEN_EXPIRES_IN }
+  );
     // Verificar si necesita completar perfil
     let requiereCompletarPerfil = false;
 

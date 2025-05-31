@@ -134,6 +134,8 @@ export class UserController extends Controller {
     @Path() id: number,
     @Body() body: Partial<UserDTO>
   ): Promise<ResponseMessage> {
+    
+    // 🚫 Validación especial para evitar mal uso del campo empresaId
     try {
       if (body.rol && body.rol !== "EQUIPO" && body.empresaId) {
         this.setStatus(400);
@@ -141,7 +143,10 @@ export class UserController extends Controller {
           message: "No se puede asignar empresaId a usuarios que no son del rol EQUIPO",
         };
     }
+    
+      // ✅ Actualizar usuario (incluye hash de contraseña si se envía)
       await updateUser(id, body);
+      
       return { message: "Usuario actualizado correctamente" };
     } catch (error) {
       console.error(error);

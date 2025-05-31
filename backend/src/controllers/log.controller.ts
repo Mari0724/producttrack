@@ -8,7 +8,7 @@ export class AuthController extends Controller {
   @Post("login")
   public async login(@Body() body: LoginRequest): Promise<LoginResponse> {
     const { user, token, requiereCompletarPerfil } = await validarCredenciales(
-      body.email,
+      body.correo,
       body.password
     );
 
