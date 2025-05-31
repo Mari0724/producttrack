@@ -85,7 +85,7 @@ export class UserController extends Controller {
   @Post("/")
   public async create(@Body() requestBody: UserDTO): Promise<ResponseMessageWithToken> {
     const parsed = zodValidate(userSchema, requestBody);
-
+    
     if (!parsed.success) {
       this.setStatus(400);
       return {
@@ -107,6 +107,7 @@ export class UserController extends Controller {
         message: "Solo se debe asignar empresaId a usuarios con rol EQUIPO",
       };
     }
+    
 
     try {
       const { user, token } = await createUser(parsed.data);

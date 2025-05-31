@@ -9,8 +9,11 @@ import { UserController } from './../controllers/user.controller';
 import { AuthController } from './../controllers/log.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { EquipoController } from './../controllers/equipo.controller';
+import { expressAuthentication } from './../utils/jwt';
+// @ts-ignore - no great way to install types from subpackage
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
 
+const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, securityName: string, scopes?: string[], res?: ExResponse) => Promise<any>;
 
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -36,7 +39,7 @@ const models: TsoaRoute.Models = {
             "telefono": {"dataType":"string","required":true},
             "direccion": {"dataType":"string","required":true},
             "fotoPerfil": {"dataType":"string"},
-            "tipoUsuario": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["INDIVIDUAL"]},{"dataType":"enum","enums":["EMPRESARIAL"]}],"required":true},
+            "tipoUsuario": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["INDIVIDUAL"]},{"dataType":"enum","enums":["EMPRESARIAL"]}]},
             "nombreEmpresa": {"dataType":"string"},
             "nit": {"dataType":"string"},
             "rol": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["USUARIO"]},{"dataType":"enum","enums":["EQUIPO"]},{"dataType":"enum","enums":["ADMIN"]},{"dataType":"enum","enums":["DESARROLLADOR"]}],"required":true},

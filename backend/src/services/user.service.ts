@@ -32,10 +32,17 @@ export async function getUserById(id: number) {
 }
 
 
+
 // 🆕 Crear usuario
 export async function createUser(data: UserDTO) {
+  if (data.rol === "USUARIO" && !data.tipoUsuario) {
+    throw new Error("El tipoUsuario es obligatorio para rol USUARIO");
+  }
+
   if (data.rol === "EQUIPO") {
-    if (!data.empresaId) throw new Error("empresaId es obligatorio para rol EQUIPO");
+    if (!data.empresaId) {
+      throw new Error("empresaId es obligatorio para rol EQUIPO");
+    }
 
     const empresa = await prisma.users.findUnique({
       where: { idUsuario: data.empresaId },
@@ -48,13 +55,24 @@ export async function createUser(data: UserDTO) {
 
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
-  const newUser = await prisma.users.create({
-    data: {
-      ...data,
-      password: hashedPassword,
-      estado: "activo",
-    },
-  });
+  // Construir los datos del nuevo usuario manualmente
+  const userData: any = {
+    username: data.username,
+    password: hashedPassword,
+    correo: data.correo,
+    nombreCompleto: data.nombreCompleto,
+    estado: "activo",
+    rol: data.rol,
+  };
+
+  if (data.telefono) userData.telefono = data.telefono;
+  if (data.nit) userData.nit = data.nit;
+  if (data.tipoUsuario) userData.tipoUsuario = data.tipoUsuario;
+  if (data.rolEquipo) userData.rolEquipo = data.rolEquipo;
+  if (data.empresaId) userData.empresaId = data.empresaId;
+  if (data.fotoPerfil) userData.fotoPerfil = data.fotoPerfil;
+
+  const newUser = await prisma.users.create({ data: userData });
 
   const token = jwt.sign(
     { idUsuario: newUser.idUsuario, username: newUser.username, rol: newUser.rol },
@@ -64,8 +82,6 @@ export async function createUser(data: UserDTO) {
 
   return { user: newUser, token };
 }
-
-
 
 
 

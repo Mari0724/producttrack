@@ -95,7 +95,6 @@
 					"nombreCompleto",
 					"telefono",
 					"direccion",
-					"tipoUsuario",
 					"rol"
 				],
 				"type": "object",
@@ -337,7 +336,13 @@
 				"description": "Make all properties in T optional"
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"jwt": {
+				"type": "apiKey",
+				"in": "header",
+				"name": "Authorization"
+			}
+		}
 	},
 	"info": {
 		"title": "producttrack",

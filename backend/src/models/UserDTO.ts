@@ -6,7 +6,7 @@ export interface UserDTO {
     telefono: string;
     direccion: string;
     fotoPerfil?: string;
-    tipoUsuario: "INDIVIDUAL" | "EMPRESARIAL";
+    tipoUsuario?: "INDIVIDUAL" | "EMPRESARIAL";
     nombreEmpresa?: string; // opcional según tipoUsuario
     nit?: string;           // opcional según tipoUsuario
     rol: "USUARIO" | "EQUIPO" | "ADMIN" | "DESARROLLADOR";

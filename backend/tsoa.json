@@ -1,15 +1,21 @@
 {
-    "entryFile": "src/index.ts",
-    "noImplicitAdditionalProperties": "throw-on-extras",
-    "controllerPathGlobs": ["src/controllers/*.ts"],
-    "spec": {
-      "outputDirectory": "docs",
-      "specVersion": 3,
-      "basePath": "/",
-      "securityDefinitions": {}
-    },
-    "routes": {
-      "routesDir": "./src/routes"
+  "entryFile": "src/index.ts",
+  "noImplicitAdditionalProperties": "throw-on-extras",
+  "controllerPathGlobs": ["src/controllers/*.ts"],
+  "spec": {
+    "outputDirectory": "docs",
+    "specVersion": 3,
+    "basePath": "/",
+    "securityDefinitions": {
+      "jwt": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization"
+      }
     }
+  },
+  "routes": {
+    "routesDir": "./src/routes",
+    "authenticationModule": "./src/utils/jwt"
   }
-  
+}

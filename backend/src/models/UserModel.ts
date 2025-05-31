@@ -64,7 +64,8 @@ export const userSchema = z.object({
 
     // Campo para indicar si es un usuario individual o empresarial
     tipoUsuario: z
-        .enum(["INDIVIDUAL", "EMPRESARIAL"]),
+        .enum(["INDIVIDUAL", "EMPRESARIAL"])
+        .optional(),
 
     empresaId: z
     .number()
@@ -73,6 +74,20 @@ export const userSchema = z.object({
         .optional(),
 
 })
+
+// 1️⃣ Validación: tipoUsuario es obligatorio si rol es USUARIO
+.refine(
+    (data) => {
+        if (data.rol === "USUARIO") {
+            return !!data.tipoUsuario;
+        }
+        return true;
+    },
+    {
+    message: "El tipo de usuario es obligatorio si el rol es USUARIO.",
+    path: ["tipoUsuario"],
+    }
+)
 
 // 1️⃣ Validación: Si es EMPRESARIAL, debe tener nombreEmpresa y nit
 .refine(
