@@ -1,0 +1,113 @@
+---
+id: index
+title: 📦 Backend
+sidebar_label: 📦 Backend
+---
+
+# 📦 Backend - ProductTrack
+
+Bienvenido a la documentación oficial del Backend de **ProductTrack**.  
+Aquí encontrarás la arquitectura, tecnologías utilizadas, estructura de carpetas y guías para instalar, ejecutar y mantener este servicio.
+
+
+---
+
+## 🧱 Arquitectura
+
+La arquitectura se conoce comúnmente como "Arquitectura en capas" (o Layered Architecture), y también se puede describir como una arquitectura modular basada en responsabilidad separada. 
+
+---
+
+## 🚀 Tecnologías utilizadas
+
+- **Node.js** – Motor de ejecución JavaScript
+- **Express** – Framework para manejar rutas y middlewares
+- **TypeScript** – Tipado estático para mayor mantenibilidad
+- **TSOA** – Decoradores para generar rutas y documentación Swagger
+- **Zod** – Validación de datos segura
+- **Prisma** – ORM para PostgreSQL
+- **Swagger UI** – Documentación automática de la API
+- **Multer y Cloudinary** – Para gestión de imágenes 
+
+---
+
+## 🧱 Estructura del proyecto
+
+```
+📦 raíz/
+├── 📁 docs/                 # Documentación Swagger generada por TSOA
+│   └── 📄 swagger.json      # Especificación OpenAPI generada
+├── 📁 prisma/               # Esquema de base de datos Prisma y migraciones
+│   ├── 📁 migrations/       # Historial de migraciones Prisma
+│   └── 📄 schema.prisma     # Modelo de datos de Prisma
+├── 📁 src/                  # Código fuente principal
+│   ├── 📄 app.ts            # Configuración de Express y middlewares
+│   ├── 📄 index.ts          # Punto de entrada del servidor (listener)
+│   ├── 📁 controllers/      # Controladores de TSOA (lógica de endpoints)
+│   ├── 📁 models/           # Validaciones y tipos (Zod, DTOs)
+│   ├── 📁 middleware/       # Middlewares personalizados
+│   ├── 📁 services/         # Lógica de negocio compleja separada de controllers
+│   └── 📁 routes/           # Rutas de la API
+├── 📄 .env                  # Variables de entorno (ocultas al subir)
+├── 📄 .gitignore            # Ignora carpetas y archivos innecesarios (como node_modules)
+├── 📄 package.json          # Scripts y dependencias del proyecto
+├── 📄 package-lock.json     # Versión exacta de dependencias
+├── 📄 tsconfig.json         # Configuración de TypeScript
+├── 📄 tsoa.json             # Configuración del generador de TSOA
+└── 📄 README.md             # Documentación principal del proyecto
+```
+
+---
+
+## 📁 ¿Qué va en cada carpeta?
+
+| Carpeta        | ¿Qué contiene? |
+|----------------|----------------|
+| `controllers/` | Clases decoradas con `@Route`, `@Get`, `@Post`, etc. usando TSOA |
+| `models/`      | `dto/` para estructuras de datos (entrada/salida) y `schemas/` para validaciones con Zod |
+| `middleware/`  | Middlewares para validaciones, autenticación y control de acceso |
+| `services/`    | Lógica de negocio reutilizable, separada del controlador |
+| `utils/`       | Funciones auxiliares como `zodValidate`, `prismaClient`, etc. |
+| `prisma/`      | Archivo `schema.prisma` y migraciones generadas por Prisma |
+| `docs/`        | Archivo Swagger JSON generado por TSOA |
+
+---
+
+## ⚙️ Instalación y ejecución
+
+```bash
+# Clona el repositorio
+git clone https://github.com/tuusuario/tu-repo.git
+cd tu-repo
+
+# Instala dependencias
+npm install
+
+# Genera las rutas y Swagger con TSOA
+npx tsoa routes && npx tsoa spec
+
+# Ejecuta en modo desarrollo
+npm run dev
+```
+
+---
+
+## 🛠️ Comandos útiles
+
+```bash
+npm run dev                 # Ejecuta el servidor en modo desarrollo
+npm run build               # Compila el código TypeScript a JavaScript
+npx prisma migrate dev      # Aplica migraciones de base de datos
+npx prisma studio           # Interfaz web para gestionar tu base de datos
+npx tsoa routes && spec     # Genera rutas y Swagger a partir de decoradores
+```
+
+---
+
+## 📘 Documentación
+
+Una vez que el servidor esté corriendo, accede a la documentación en:
+
+```
+http://localhost:3000/docs
+```
