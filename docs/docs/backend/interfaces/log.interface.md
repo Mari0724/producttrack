@@ -1,7 +1,7 @@
 ---
 id: log.interface
 title: Interface del log
-sidebar_label: LogInterface
+sidebar_label: Log Interface
 ---
 
 # log.interface.ts
