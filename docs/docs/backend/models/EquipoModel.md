@@ -10,6 +10,12 @@ Define el **esquema de validación** `equipoSchema` para los miembros del equipo
 
 ---
 
+## 🔍 Ubicación
+
+`src/models/EquipoModel.ts`
+
+---
+
 ## 🧩 Esquema base (`equipoSchema`)
 
 | Campo            | Tipo/Zod                                     | Obligatorio | Validaciones y Reglas                           |
