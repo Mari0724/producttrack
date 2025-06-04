@@ -46,7 +46,7 @@ model users {
   comentarios      comentarios[]
   soporte          soporte[]
   ajustInven       ajustInven[]
-  analisisImagenes analisisImagenes[]
+  nutriScans NutriScan[]
   histInv          histInv[]
   api_logs         api_logs[]
   MonAudRend       MonAudRend[]
@@ -86,7 +86,6 @@ model auteRest {
 
   user users @relation(fields: [idUsuario], references: [idUsuario])
 }
-
 
 model notificaciones {
   idNotificacion Int              @id @default(autoincrement())
@@ -222,13 +221,15 @@ model alertVen {
   producto productos @relation(fields: [idProducto], references: [id])
 }
 
-model analisisImagenes {
+model NutriScan {
   id            Int      @id @default(autoincrement())
   usuarioId     Int
-  esAlimento    Boolean
-  consulta      String
-  respuesta     Json
-  fechaAnalisis DateTime
+  esAlimento    Boolean              // Se identificó como alimento o no
+  consulta      String               // Texto extraído por OCR
+  respuesta     Json                 // Resumen generado por GPT
+  tipoAnalisis  String               // "ocr-openfoodfacts-gpt" o "ocr-gpt-only"
+  fechaAnalisis DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
 
   usuario users @relation(fields: [usuarioId], references: [idUsuario])
 }
