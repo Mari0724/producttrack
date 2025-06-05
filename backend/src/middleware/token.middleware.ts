@@ -6,6 +6,7 @@ export interface AuthenticatedRequest extends Request {
 }
 
 export function autenticarToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+  console.log("👉 Headers recibidos:", req.headers); // ← agrega esto
   const authHeader = req.headers["authorization"];
   const token = authHeader?.split(" ")[1]; // Formato: Bearer <token>
 
@@ -15,6 +16,8 @@ export function autenticarToken(req: AuthenticatedRequest, res: Response, next: 
 
   try {
     const usuario = verificarToken(token);
+    // 👉 Aquí pones el log
+    console.log("✅ Usuario autenticado:", usuario);
     req.user = usuario;
     next();
   } catch (error) {

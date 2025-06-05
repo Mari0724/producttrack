@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Path, Put, Query, TsoaResponse, Request, Res, Route, Post, SuccessResponse, Response, Tags } from "tsoa";
+import { Body, Controller, Delete, Get, Path, Put, Query, Security, Request, Res, Route, Post, SuccessResponse, Response, Tags } from "tsoa";
 import { ProductosDTO } from "../models/ProductosDTO";
 import { zodValidate } from "../utils/zodValidate";
 import { productoSchema } from "../models/ProductosModel";
@@ -6,7 +6,8 @@ import { getAllProductos, getProductoById, createProducto, updateProducto, delet
 import { ResponseMessage, ResponseMessageWithData } from "../interfaces/ResponseMenssage";
 import { AuthenticatedRequest } from "../types/express"; // ajusta la ruta según tu estructura
 import { puede } from "../utils/checkPermissions";
-
+import { Middlewares } from "tsoa";
+import { autenticarToken } from "../middleware/token.middleware"; 
 @Route("/Productos")
 @Tags("Productos")
 export class ProductosController extends Controller {
@@ -140,6 +141,8 @@ export class ProductosController extends Controller {
   // ✅ Crear producto
   @SuccessResponse("201", "Producto creado correctamente")
   @Response("400", "Datos inválidos")
+  @Security("jwt")
+  @Middlewares([autenticarToken])
   @Post("/")
   public async create(
     @Request() req: AuthenticatedRequest,
@@ -148,6 +151,7 @@ export class ProductosController extends Controller {
     console.log("➡️ Request body recibido:", requestBody);
 
     const rol = req.user?.rol;
+    console.log("👤 Rol recibido:", rol); // 👉 Agrega esto
 
     if (!rol || !puede("crear", rol)) {
       this.setStatus(403);
@@ -180,6 +184,8 @@ export class ProductosController extends Controller {
 
   // ✅ Actualizar producto
   @Put("/{id}")
+  @Security("jwt")
+  @Middlewares([autenticarToken])
   public async updateProducto(
     @Request() req: AuthenticatedRequest,
     @Path() id: number,
@@ -220,6 +226,8 @@ export class ProductosController extends Controller {
 
   // ✅ Eliminar producto
 @Delete("/{id}")
+@Security("jwt")
+@Middlewares([autenticarToken])
 public async deleteProducto(
   @Request() req: AuthenticatedRequest,
   @Path() id: number

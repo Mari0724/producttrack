@@ -7,17 +7,95 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"ResponseMessageWithData_any_": {
+			"ResponseMessageWithToken": {
 				"properties": {
 					"message": {
 						"type": "string"
 					},
 					"detalles": {},
-					"data": {}
+					"token": {
+						"type": "string"
+					}
 				},
 				"required": [
-					"message",
-					"data"
+					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"UserDTO": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"correo": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"nombreCompleto": {
+						"type": "string"
+					},
+					"telefono": {
+						"type": "string"
+					},
+					"direccion": {
+						"type": "string"
+					},
+					"fotoPerfil": {
+						"type": "string"
+					},
+					"tipoUsuario": {
+						"type": "string",
+						"enum": [
+							"INDIVIDUAL",
+							"EMPRESARIAL"
+						]
+					},
+					"nombreEmpresa": {
+						"type": "string"
+					},
+					"nit": {
+						"type": "string"
+					},
+					"rol": {
+						"type": "string",
+						"enum": [
+							"USUARIO",
+							"EQUIPO",
+							"ADMIN",
+							"DESARROLLADOR"
+						]
+					},
+					"rolEquipo": {
+						"type": "string",
+						"enum": [
+							"LECTOR",
+							"COMENTARISTA",
+							"EDITOR"
+						]
+					},
+					"estado": {
+						"type": "string",
+						"enum": [
+							"activo",
+							"inactivo"
+						]
+					},
+					"empresaId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"username",
+					"correo",
+					"password",
+					"nombreCompleto",
+					"telefono",
+					"direccion",
+					"rol"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -31,6 +109,89 @@
 				},
 				"required": [
 					"message"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Partial_UserDTO_": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"correo": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"nombreCompleto": {
+						"type": "string"
+					},
+					"telefono": {
+						"type": "string"
+					},
+					"direccion": {
+						"type": "string"
+					},
+					"fotoPerfil": {
+						"type": "string"
+					},
+					"tipoUsuario": {
+						"type": "string",
+						"enum": [
+							"INDIVIDUAL",
+							"EMPRESARIAL"
+						]
+					},
+					"nombreEmpresa": {
+						"type": "string"
+					},
+					"nit": {
+						"type": "string"
+					},
+					"rol": {
+						"type": "string",
+						"enum": [
+							"USUARIO",
+							"EQUIPO",
+							"ADMIN",
+							"DESARROLLADOR"
+						]
+					},
+					"rolEquipo": {
+						"type": "string",
+						"enum": [
+							"LECTOR",
+							"COMENTARISTA",
+							"EDITOR"
+						]
+					},
+					"estado": {
+						"type": "string",
+						"enum": [
+							"activo",
+							"inactivo"
+						]
+					},
+					"empresaId": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
+			},
+			"ResponseMessageWithData_any_": {
+				"properties": {
+					"message": {
+						"type": "string"
+					},
+					"detalles": {},
+					"data": {}
+				},
+				"required": [
+					"message",
+					"data"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -147,10 +308,165 @@
 				},
 				"type": "object",
 				"description": "Make all properties in T optional"
+			},
+			"LoginResponse": {
+				"properties": {
+					"token": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"rol": {
+						"type": "string"
+					},
+					"tipoUsuario": {
+						"type": "string",
+						"nullable": true
+					},
+					"rolEquipo": {
+						"type": "string"
+					},
+					"requiereCompletarPerfil": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"token",
+					"username",
+					"rol",
+					"requiereCompletarPerfil"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LoginRequest": {
+				"properties": {
+					"correo": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"correo",
+					"password"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"_36_Enums.TipoUsuario": {
+				"type": "string",
+				"enum": [
+					"INDIVIDUAL",
+					"EMPRESARIAL"
+				]
+			},
+			"_36_Enums.rolEquipo": {
+				"type": "string",
+				"enum": [
+					"LECTOR",
+					"COMENTARISTA",
+					"EDITOR"
+				]
+			},
+			"EquipoDTO": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"correo": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"nombreCompleto": {
+						"type": "string"
+					},
+					"telefono": {
+						"type": "string"
+					},
+					"direccion": {
+						"type": "string"
+					},
+					"fotoPerfil": {
+						"type": "string"
+					},
+					"rolEquipo": {
+						"type": "string",
+						"enum": [
+							"LECTOR",
+							"COMENTARISTA",
+							"EDITOR"
+						]
+					},
+					"estado": {
+						"type": "string",
+						"enum": [
+							"activo",
+							"inactivo"
+						]
+					}
+				},
+				"required": [
+					"username",
+					"correo",
+					"password",
+					"nombreCompleto",
+					"telefono",
+					"direccion",
+					"rolEquipo"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Partial_EquipoDTO_": {
+				"properties": {
+					"username": {
+						"type": "string"
+					},
+					"correo": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"nombreCompleto": {
+						"type": "string"
+					},
+					"telefono": {
+						"type": "string"
+					},
+					"direccion": {
+						"type": "string"
+					},
+					"fotoPerfil": {
+						"type": "string"
+					},
+					"rolEquipo": {
+						"type": "string",
+						"enum": [
+							"LECTOR",
+							"COMENTARISTA",
+							"EDITOR"
+						]
+					},
+					"estado": {
+						"type": "string",
+						"enum": [
+							"activo",
+							"inactivo"
+						]
+					}
+				},
+				"type": "object",
+				"description": "Make all properties in T optional"
 			}
 		},
 		"securitySchemes": {
-			"bearerAuth": {
+			"jwt": {
 				"type": "http",
 				"scheme": "bearer",
 				"bearerFormat": "JWT"
@@ -166,6 +482,252 @@
 		"contact": {}
 	},
 	"paths": {
+		"/usuarios": {
+			"get": {
+				"operationId": "GetAll",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "username",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "correo",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "nombreCompleto",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "telefono",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "nit",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "estado",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "rol",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "tipoUsuario",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"INDIVIDUAL",
+								"EMPRESARIAL"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "rolEquipo",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"LECTOR",
+								"COMENTARISTA",
+								"EDITOR"
+							]
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "Create",
+				"responses": {
+					"201": {
+						"description": "Usuario creado correctamente",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResponseMessageWithToken"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "Datos inválidos"
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/usuarios/{id}": {
+			"get": {
+				"operationId": "GetById",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateUsuario",
+				"responses": {
+					"200": {
+						"description": "Usuario actualizado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResponseMessage"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuario no encontrado"
+					},
+					"500": {
+						"description": "Error del servidor"
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_UserDTO_"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteUsuario",
+				"responses": {
+					"200": {
+						"description": "Usuario eliminado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResponseMessage"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "Usuario no encontrado"
+					},
+					"500": {
+						"description": "Error del servidor"
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/Productos": {
 			"get": {
 				"operationId": "GetAll",
@@ -281,7 +843,11 @@
 				"tags": [
 					"Productos"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -434,7 +1000,11 @@
 				"tags": [
 					"Productos"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -474,7 +1044,885 @@
 				"tags": [
 					"Productos"
 				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/notificaciones/stock-bajo": {
+			"post": {
+				"operationId": "EnviarNotificacionStockBajo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notificaciones"
+				],
 				"security": [],
+				"parameters": []
+			}
+		},
+		"/auth/login": {
+			"post": {
+				"operationId": "Login",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/LoginResponse"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Autenticación"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/equipo": {
+			"post": {
+				"operationId": "CrearEquipo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"deletedAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"updatedAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"createdAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"idUsuario": {
+													"type": "number",
+													"format": "double"
+												},
+												"empresaId": {
+													"type": "number",
+													"format": "double"
+												},
+												"estado": {
+													"type": "string"
+												},
+												"rolEquipo": {
+													"$ref": "#/components/schemas/_36_Enums.rolEquipo"
+												},
+												"rol": {
+													"type": "string"
+												},
+												"nit": {
+													"type": "string"
+												},
+												"nombreEmpresa": {
+													"type": "string"
+												},
+												"tipoUsuario": {
+													"$ref": "#/components/schemas/_36_Enums.TipoUsuario"
+												},
+												"fotoPerfil": {
+													"type": "string"
+												},
+												"direccion": {
+													"type": "string"
+												},
+												"telefono": {
+													"type": "string"
+												},
+												"nombreCompleto": {
+													"type": "string"
+												},
+												"password": {
+													"type": "string"
+												},
+												"correo": {
+													"type": "string"
+												},
+												"username": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"deletedAt",
+												"updatedAt",
+												"createdAt",
+												"idUsuario",
+												"empresaId",
+												"estado",
+												"rolEquipo",
+												"rol",
+												"nit",
+												"nombreEmpresa",
+												"tipoUsuario",
+												"fotoPerfil",
+												"direccion",
+												"telefono",
+												"nombreCompleto",
+												"password",
+												"correo",
+												"username"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"mensaje": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"mensaje"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Equipo"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/EquipoDTO"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "ObtenerTodosLosEquipos",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"items": {
+												"properties": {
+													"deletedAt": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"updatedAt": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"createdAt": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"idUsuario": {
+														"type": "number",
+														"format": "double"
+													},
+													"empresaId": {
+														"type": "number",
+														"format": "double"
+													},
+													"estado": {
+														"type": "string"
+													},
+													"rolEquipo": {
+														"$ref": "#/components/schemas/_36_Enums.rolEquipo"
+													},
+													"rol": {
+														"type": "string"
+													},
+													"nit": {
+														"type": "string"
+													},
+													"nombreEmpresa": {
+														"type": "string"
+													},
+													"tipoUsuario": {
+														"$ref": "#/components/schemas/_36_Enums.TipoUsuario"
+													},
+													"fotoPerfil": {
+														"type": "string"
+													},
+													"direccion": {
+														"type": "string"
+													},
+													"telefono": {
+														"type": "string"
+													},
+													"nombreCompleto": {
+														"type": "string"
+													},
+													"password": {
+														"type": "string"
+													},
+													"correo": {
+														"type": "string"
+													},
+													"username": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"deletedAt",
+													"updatedAt",
+													"createdAt",
+													"idUsuario",
+													"empresaId",
+													"estado",
+													"rolEquipo",
+													"rol",
+													"nit",
+													"nombreEmpresa",
+													"tipoUsuario",
+													"fotoPerfil",
+													"direccion",
+													"telefono",
+													"nombreCompleto",
+													"password",
+													"correo",
+													"username"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										{
+											"properties": {
+												"mensaje": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"mensaje"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Equipo"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": []
+			}
+		},
+		"/equipo/filtrar": {
+			"get": {
+				"operationId": "FiltrarEquipos",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"items": {
+												"properties": {
+													"deletedAt": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"updatedAt": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"createdAt": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"idUsuario": {
+														"type": "number",
+														"format": "double"
+													},
+													"empresaId": {
+														"type": "number",
+														"format": "double"
+													},
+													"estado": {
+														"type": "string"
+													},
+													"rolEquipo": {
+														"$ref": "#/components/schemas/_36_Enums.rolEquipo"
+													},
+													"rol": {
+														"type": "string"
+													},
+													"nit": {
+														"type": "string"
+													},
+													"nombreEmpresa": {
+														"type": "string"
+													},
+													"tipoUsuario": {
+														"$ref": "#/components/schemas/_36_Enums.TipoUsuario"
+													},
+													"fotoPerfil": {
+														"type": "string"
+													},
+													"direccion": {
+														"type": "string"
+													},
+													"telefono": {
+														"type": "string"
+													},
+													"nombreCompleto": {
+														"type": "string"
+													},
+													"password": {
+														"type": "string"
+													},
+													"correo": {
+														"type": "string"
+													},
+													"username": {
+														"type": "string"
+													}
+												},
+												"required": [
+													"deletedAt",
+													"updatedAt",
+													"createdAt",
+													"idUsuario",
+													"empresaId",
+													"estado",
+													"rolEquipo",
+													"rol",
+													"nit",
+													"nombreEmpresa",
+													"tipoUsuario",
+													"fotoPerfil",
+													"direccion",
+													"telefono",
+													"nombreCompleto",
+													"password",
+													"correo",
+													"username"
+												],
+												"type": "object"
+											},
+											"type": "array"
+										},
+										{
+											"properties": {
+												"mensaje": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"mensaje"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Equipo"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "nombreCompleto",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "correo",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "rolEquipo",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"LECTOR",
+								"COMENTARISTA",
+								"EDITOR"
+							]
+						}
+					}
+				]
+			}
+		},
+		"/equipo/{id}": {
+			"get": {
+				"operationId": "ObtenerEquipoPorId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"deletedAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"updatedAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"createdAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"idUsuario": {
+													"type": "number",
+													"format": "double"
+												},
+												"empresaId": {
+													"type": "number",
+													"format": "double"
+												},
+												"estado": {
+													"type": "string"
+												},
+												"rolEquipo": {
+													"$ref": "#/components/schemas/_36_Enums.rolEquipo"
+												},
+												"rol": {
+													"type": "string"
+												},
+												"nit": {
+													"type": "string"
+												},
+												"nombreEmpresa": {
+													"type": "string"
+												},
+												"tipoUsuario": {
+													"$ref": "#/components/schemas/_36_Enums.TipoUsuario"
+												},
+												"fotoPerfil": {
+													"type": "string"
+												},
+												"direccion": {
+													"type": "string"
+												},
+												"telefono": {
+													"type": "string"
+												},
+												"nombreCompleto": {
+													"type": "string"
+												},
+												"password": {
+													"type": "string"
+												},
+												"correo": {
+													"type": "string"
+												},
+												"username": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"deletedAt",
+												"updatedAt",
+												"createdAt",
+												"idUsuario",
+												"empresaId",
+												"estado",
+												"rolEquipo",
+												"rol",
+												"nit",
+												"nombreEmpresa",
+												"tipoUsuario",
+												"fotoPerfil",
+												"direccion",
+												"telefono",
+												"nombreCompleto",
+												"password",
+												"correo",
+												"username"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"mensaje": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"mensaje"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Equipo"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "ActualizarEquipo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"deletedAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"updatedAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"createdAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"idUsuario": {
+													"type": "number",
+													"format": "double"
+												},
+												"empresaId": {
+													"type": "number",
+													"format": "double"
+												},
+												"estado": {
+													"type": "string"
+												},
+												"rolEquipo": {
+													"$ref": "#/components/schemas/_36_Enums.rolEquipo"
+												},
+												"rol": {
+													"type": "string"
+												},
+												"nit": {
+													"type": "string"
+												},
+												"nombreEmpresa": {
+													"type": "string"
+												},
+												"tipoUsuario": {
+													"$ref": "#/components/schemas/_36_Enums.TipoUsuario"
+												},
+												"fotoPerfil": {
+													"type": "string"
+												},
+												"direccion": {
+													"type": "string"
+												},
+												"telefono": {
+													"type": "string"
+												},
+												"nombreCompleto": {
+													"type": "string"
+												},
+												"password": {
+													"type": "string"
+												},
+												"correo": {
+													"type": "string"
+												},
+												"username": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"deletedAt",
+												"updatedAt",
+												"createdAt",
+												"idUsuario",
+												"empresaId",
+												"estado",
+												"rolEquipo",
+												"rol",
+												"nit",
+												"nombreEmpresa",
+												"tipoUsuario",
+												"fotoPerfil",
+												"direccion",
+												"telefono",
+												"nombreCompleto",
+												"password",
+												"correo",
+												"username"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"mensaje": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"mensaje"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Equipo"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Partial_EquipoDTO_"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "EliminarEquipo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"deletedAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"updatedAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"createdAt": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"idUsuario": {
+													"type": "number",
+													"format": "double"
+												},
+												"empresaId": {
+													"type": "number",
+													"format": "double"
+												},
+												"estado": {
+													"type": "string"
+												},
+												"rolEquipo": {
+													"$ref": "#/components/schemas/_36_Enums.rolEquipo"
+												},
+												"rol": {
+													"type": "string"
+												},
+												"nit": {
+													"type": "string"
+												},
+												"nombreEmpresa": {
+													"type": "string"
+												},
+												"tipoUsuario": {
+													"$ref": "#/components/schemas/_36_Enums.TipoUsuario"
+												},
+												"fotoPerfil": {
+													"type": "string"
+												},
+												"direccion": {
+													"type": "string"
+												},
+												"telefono": {
+													"type": "string"
+												},
+												"nombreCompleto": {
+													"type": "string"
+												},
+												"password": {
+													"type": "string"
+												},
+												"correo": {
+													"type": "string"
+												},
+												"username": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"deletedAt",
+												"updatedAt",
+												"createdAt",
+												"idUsuario",
+												"empresaId",
+												"estado",
+												"rolEquipo",
+												"rol",
+												"nit",
+												"nombreEmpresa",
+												"tipoUsuario",
+												"fotoPerfil",
+												"direccion",
+												"telefono",
+												"nombreCompleto",
+												"password",
+												"correo",
+												"username"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"mensaje": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"mensaje"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Equipo"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",

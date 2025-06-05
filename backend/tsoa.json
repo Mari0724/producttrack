@@ -1,24 +1,26 @@
 {
   "entryFile": "src/index.ts",
-  "noImplicitAdditionalProperties": "silently-remove-extras",
+  "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/controllers/*.ts"],
   "spec": {
     "outputDirectory": "docs",
     "specVersion": 3,
+    "basePath": "/",
     "securityDefinitions": {
-      "bearerAuth": {
+      "jwt": {
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT"
       }
     },
     "security": [
-      {
-        "bearerAuth": []
-      }
+    {
+    "jwt": []
+    }
     ]
   },
   "routes": {
-    "routesDir": "src/routes"
+    "routesDir": "./src/routes",
+    "authenticationModule": "./src/utils/jwt"
   }
 }
