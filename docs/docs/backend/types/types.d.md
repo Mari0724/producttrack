@@ -28,7 +28,7 @@ Sin esta extensión, acceder a `req.user` generaría un error de tipo. Este arch
 
 ```ts
 import { Request } from "express";
-
+```
 
 
 * Se importa la interfaz Request base de Express.
@@ -37,7 +37,7 @@ import { Request } from "express";
 
 ## 🧱 Interfaz personalizada
 
-ts
+```ts
 export interface AuthenticatedRequest extends Request {
   user?: {
     id: number;
@@ -45,7 +45,7 @@ export interface AuthenticatedRequest extends Request {
     // puedes agregar más campos si los necesitas
   };
 }
-
+```
 
 ### 🔐 Campos incluidos
 
@@ -61,7 +61,7 @@ export interface AuthenticatedRequest extends Request {
 
 Esta interfaz se utiliza en middlewares o controladores así:
 
-ts
+```ts
 import { AuthenticatedRequest } from "../types/express";
 
 const rutaProtegida = (req: AuthenticatedRequest, res: Response) => {
@@ -70,7 +70,7 @@ const rutaProtegida = (req: AuthenticatedRequest, res: Response) => {
 
   res.send(`Hola usuario con ID ${usuario.id}`);
 };
-
+```
 
 ---
 

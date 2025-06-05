@@ -1,4 +1,3 @@
-ResponseMessage.md
 ---
 id: ResponseMessage
 title: Interface de respuestas
@@ -11,7 +10,7 @@ Este archivo contiene interfaces reutilizables que definen el formato estándar 
 
 ## 🔍 Ubicación
 
-src/interfaces/ResponseMessage.ts
+`src/interfaces/ResponseMessage.ts`
 
 ---
 

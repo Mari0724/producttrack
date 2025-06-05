@@ -1,5 +1,3 @@
-index.md
-
 ---
 id: index
 title: 📦 Backend
@@ -36,7 +34,7 @@ La arquitectura se conoce comúnmente como "Arquitectura en capas" (o Layered Ar
 
 ## 🧱 Estructura del proyecto
 
-
+```
 
 📦 backend/
 ├── 📁 docs/                 # Documentación Swagger generada por TSOA
@@ -63,7 +61,7 @@ La arquitectura se conoce comúnmente como "Arquitectura en capas" (o Layered Ar
 ├── 📄 tsoa.json             # Configuración del generador de TSOA
 └── 📄 README.md             # Documentación principal del proyecto
 
-`
+```
 
 ---
 

@@ -12,7 +12,7 @@ Este middleware configura *la subida de archivos (imágenes)* al servicio en la 
 
 ## 🔍 Ubicación
 
-src/middleware/upload.ts
+`src/middleware/upload.ts`
 
 ## 📌 Propósito
 

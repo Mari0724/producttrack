@@ -10,7 +10,7 @@ Este archivo define las interfaces utilizadas en el proceso de *autenticación y
 
 ## 🔍 Ubicación
 
-src/interfaces/log.interface.ts
+`src/interfaces/log.interface.ts`
 
 ---
 

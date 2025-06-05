@@ -12,7 +12,7 @@ Este archivo configura y exporta la instancia de Cloudinary para su uso en otros
 
 ## 🔍 Ubicación
 
-src/config/cloudinary.ts
+`src/config/cloudinary.ts`
 
 ---
 

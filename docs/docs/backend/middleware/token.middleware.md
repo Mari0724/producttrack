@@ -100,10 +100,3 @@ Este middleware depende de:
 
 * El campo req.user es utilizado por otros middlewares como roles.middleware.ts para controlar permisos.
 * Este middleware debe colocarse antes de cualquier middleware o controlador que requiera información del usuario autenticado.
-
----
-
-¿Deseas que documente también token.service.ts para completar esta sección?
-
-```
-```

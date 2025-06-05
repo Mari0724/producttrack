@@ -1,4 +1,3 @@
-roles.middleware.md
 ---
 id: roles.middleware
 title: Middleware de roles
@@ -14,7 +13,7 @@ Este middleware permite restringir el acceso a rutas basándose en el *rol princ
 
 ## 🔍 Ubicación
 
-src/middleware/roles.middleware.ts
+`src/middleware/roles.middleware.ts`
 
 
 
@@ -29,10 +28,10 @@ Limitar el acceso a ciertas rutas a:
 
 ## 📥 Importaciones
 
-ts
+```ts
 import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "./token.middleware";
-`
+```
 
 * AuthenticatedRequest es una extensión de Request que incluye la propiedad user, añadida previamente por el middleware de autenticación (token.middleware).
 
@@ -40,13 +39,13 @@ import { AuthenticatedRequest } from "./token.middleware";
 
 ## 🧠 Firma del middleware
 
-ts
+```ts
 permitirRolesYRolEquipo(
   rolesPermitidos: string[],
   rolesEquipoPermitidos?: string[],
   requiereTipoEmpresarial = false
 )
-
+```
 
 ### Parámetros
 
@@ -60,7 +59,7 @@ permitirRolesYRolEquipo(
 
 ## ✅ Ejemplo de uso
 
-ts
+```ts
 import { permitirRolesYRolEquipo } from "../middleware/roles.middleware";
 
 // Solo ADMIN y EMPRESARIAL pueden acceder
@@ -69,7 +68,7 @@ router.post(
   permitirRolesYRolEquipo(["ADMIN", "EMPRESARIAL"], ["editor", "admin"], true),
   controlador.crearUsuario
 );
-
+```
 
 ---
 
@@ -98,5 +97,6 @@ router.post(
 
 Este middleware depende del middleware de autenticación que añade req.user, generalmente implementado en:
 
-ts
+```ts
 token.middleware.ts
+```
