@@ -1,0 +1,130 @@
+/* Estilos base */
+.container-form {
+  display: flex;
+  width: 80%;
+  max-width: 900px;
+  background-color: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  margin: auto;
+  margin-top: 5vh;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Panel izquierdo */
+.information {
+  background-color: #58151d;
+  color: #fff;
+  width: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.info-childs h2 {
+  margin-bottom: 10px;
+}
+
+.info-childs p {
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.info-childs input[type='button'] {
+  background-color: #ffcc29;
+  color: #58151d;
+  border: none;
+  padding: 10px 25px;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.info-childs input[type='button']:hover {
+  background-color: #e6b821;
+}
+
+/* Panel derecho */
+.form-information {
+  width: 50%;
+  padding: 40px 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-information-childs h2 {
+  color: #58151d;
+  margin-bottom: 10px;
+}
+
+.form-information-childs .icons {
+  font-size: 30px;
+  margin: 10px 0;
+  color: #ffcc29;
+}
+
+.form-information-childs p {
+  font-size: 14px;
+  margin-bottom: 15px;
+}
+
+/* Formulario */
+form.form {
+  display: flex;
+  flex-direction: column;
+}
+
+form.form label {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+form.form input,
+form.form select {
+  width: 100%;
+  padding: 10px 10px 10px 35px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fef6df;
+}
+
+form.form i {
+  position: absolute;
+  top: 50%;
+  left: 10px;
+  transform: translateY(-50%);
+  color: #58151d;
+}
+
+form.form input[type='submit'] {
+  background-color: #58151d;
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+form.form input[type='submit']:hover {
+  background-color: #3d0e14;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .container-form {
+    flex-direction: column;
+    width: 95%;
+  }
+
+  .information,
+  .form-information {
+    width: 100%;
+  }
+}
