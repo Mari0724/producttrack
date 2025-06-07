@@ -14,7 +14,7 @@ CREATE TYPE "EstadoProducto" AS ENUM ('DISPONIBLE', 'AGOTADO', 'RESERVADO', 'VEN
 CREATE TYPE "TipoNotificacion" AS ENUM ('STOCK_BAJO', 'PRODUCTO_VENCIDO', 'ACTUALIZACION_APP', 'COMENTARIO_EQUIPO', 'REPOSICION_RECOMENDADA', 'PRODUCTO_POR_VENCER', 'RECOMENDACION');
 
 -- CreateEnum
-CREATE TYPE "EstadoRecordatorio" AS ENUM ('pendiente', 'atendido');
+CREATE TYPE "EstadoRecordatorio" AS ENUM ('PENDIENTE', 'ENVIADO', 'CANCELADO');
 
 -- CreateEnum
 CREATE TYPE "EstadoComentario" AS ENUM ('pendiente', 'revisado');
@@ -121,7 +121,7 @@ CREATE TABLE "histoVenta" (
 -- CreateTable
 CREATE TABLE "recorStock" (
     "idRecordatorio" SERIAL NOT NULL,
-    "idProducto" INTEGER NOT NULL,
+    "productoId" INTEGER NOT NULL,
     "cantidadMinima" INTEGER NOT NULL,
     "fechaRecordatorio" TIMESTAMP(3) NOT NULL,
     "estado" "EstadoRecordatorio" NOT NULL,
@@ -301,7 +301,7 @@ ALTER TABLE "productos" ADD CONSTRAINT "productos_usuarioId_fkey" FOREIGN KEY ("
 ALTER TABLE "histoVenta" ADD CONSTRAINT "histoVenta_idProducto_fkey" FOREIGN KEY ("idProducto") REFERENCES "productos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "recorStock" ADD CONSTRAINT "recorStock_idProducto_fkey" FOREIGN KEY ("idProducto") REFERENCES "productos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "recorStock" ADD CONSTRAINT "recorStock_productoId_fkey" FOREIGN KEY ("productoId") REFERENCES "productos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "comentarios" ADD CONSTRAINT "comentarios_idUsuario_fkey" FOREIGN KEY ("idUsuario") REFERENCES "users"("idUsuario") ON DELETE RESTRICT ON UPDATE CASCADE;

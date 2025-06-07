@@ -10,6 +10,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../docs/swagger.json";
 import { upload } from './middleware/upload';
 import { Request, Response } from 'express';
+import './utils/cronJobs';
 
 const app = express();
 

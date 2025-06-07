@@ -110,13 +110,13 @@ model histoVenta {
 
 model recorStock {
   idRecordatorio    Int                @id @default(autoincrement())
-  idProducto        Int
+  productoId        Int
   cantidadMinima    Int
   fechaRecordatorio DateTime
   estado            EstadoRecordatorio
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
-  producto          productos          @relation(fields: [idProducto], references: [id])
+  producto          productos          @relation(fields: [productoId], references: [id])
 }
 
 model comentarios {
@@ -270,8 +270,9 @@ enum TipoNotificacion {
 }
 
 enum EstadoRecordatorio {
-  pendiente
-  atendido
+  PENDIENTE
+  ENVIADO
+  CANCELADO
 }
 
 enum EstadoComentario {
