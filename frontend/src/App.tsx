@@ -1,8 +1,7 @@
+import AuthForms from './components/AuthForm'
+
 function App() {
-  return (
-    <div>
-      <h1>Bienvenida a ProductTrack</h1>
-    </div>
-  )
+  return <AuthForms />
 }
+
 export default App
