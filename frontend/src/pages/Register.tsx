@@ -11,7 +11,8 @@ import {
 } from "react-icons/fa";
 
 const Register: React.FC = () => {
-  const [userType, setUserType] = useState("");
+  const [userType, setUserType] = useState(""); // 'individual' o 'empresarial'
+  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullName, setFullName] = useState("");
@@ -23,19 +24,21 @@ const Register: React.FC = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      const payload = {
-        userType,
-        email,
-        password,
-        fullName,
-        phone,
-        address,
-        companyName: userType === "empresarial" ? companyName : null,
-        nit: userType === "empresarial" ? nit : null,
-      };
+    const datos = {
+      username,
+      correo: email,
+      password,
+      nombreCompleto: fullName,
+      telefono: phone,
+      direccion: address,
+      rol: "USUARIO",
+      tipoUsuario: userType.toUpperCase(), // INDIVIDUAL o EMPRESARIAL
+      nombreEmpresa: userType === "empresarial" ? companyName : undefined,
+      nit: userType === "empresarial" ? nit : undefined,
+    };
 
-      const response = await axios.post("http://localhost:3000/api/register", payload);
+    try {
+      const response = await axios.post("http://localhost:3000/usuarios", datos);
       console.log("Usuario registrado:", response.data);
       alert("Usuario registrado correctamente ✅");
     } catch (error) {
@@ -81,6 +84,19 @@ const Register: React.FC = () => {
               <FaUser className="absolute left-4 top-3 text-gray-500" />
             </div>
 
+            {/* Username */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Nombre de Usuario"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="w-full border border-gray-300 rounded-full px-12 py-2 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-700"
+              />
+              <FaUser className="absolute left-4 top-3 text-gray-500" />
+            </div>
+
+            {/* Correo */}
             <div className="relative">
               <input
                 type="email"
@@ -92,6 +108,7 @@ const Register: React.FC = () => {
               <FaEnvelope className="absolute left-4 top-3 text-gray-500" />
             </div>
 
+            {/* Contraseña */}
             <div className="relative">
               <input
                 type="password"
@@ -105,6 +122,7 @@ const Register: React.FC = () => {
 
             {(userType === "individual" || userType === "empresarial") && (
               <>
+                {/* Nombre completo */}
                 <div className="relative">
                   <input
                     type="text"
@@ -116,6 +134,7 @@ const Register: React.FC = () => {
                   <FaIdCard className="absolute left-4 top-3 text-gray-500" />
                 </div>
 
+                {/* Teléfono */}
                 <div className="relative">
                   <input
                     type="text"
@@ -127,6 +146,7 @@ const Register: React.FC = () => {
                   <FaPhone className="absolute left-4 top-3 text-gray-500" />
                 </div>
 
+                {/* Dirección */}
                 <div className="relative">
                   <input
                     type="text"
@@ -140,6 +160,7 @@ const Register: React.FC = () => {
               </>
             )}
 
+            {/* Empresa */}
             {userType === "empresarial" && (
               <>
                 <div className="relative">
