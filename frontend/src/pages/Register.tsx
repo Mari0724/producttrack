@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import axios from "axios";
-import {
-  FaUser,
-  FaEnvelope,
-  FaLock,
-  FaPhone,
-  FaHome,
-  FaBuilding,
-  FaIdCard,
-} from "react-icons/fa";
+import { FaUser, FaEnvelope, FaLock, FaPhone, FaHome, FaBuilding, FaIdCard, } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const Register: React.FC = () => {
-  const [userType, setUserType] = useState(""); // 'individual' o 'empresarial'
+  const [userType, setUserType] = useState(""); // ...
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,6 +13,8 @@ const Register: React.FC = () => {
   const [address, setAddress] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [nit, setNit] = useState("");
+
+  const navigate = useNavigate(); // 🟢 Agregado
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +27,7 @@ const Register: React.FC = () => {
       telefono: phone,
       direccion: address,
       rol: "USUARIO",
-      tipoUsuario: userType.toUpperCase(), // INDIVIDUAL o EMPRESARIAL
+      tipoUsuario: userType.toUpperCase(),
       nombreEmpresa: userType === "empresarial" ? companyName : undefined,
       nit: userType === "empresarial" ? nit : undefined,
     };
@@ -58,10 +53,18 @@ const Register: React.FC = () => {
           <p className="text-center text-base md:text-lg mb-6 leading-snug">
             Para unirte, por favor inicia sesión con tus datos.
           </p>
-          <button className="px-6 md:px-8 py-2 md:py-3 bg-[#7a1d27] text-white rounded-full hover:bg-[#6a1722] transition text-sm md:text-base">
+          {/* 🔵 Botón modificado */}
+          <button
+            onClick={() => navigate("/login")}
+            className="px-6 md:px-8 py-2 md:py-3 bg-[#7a1d27] text-white rounded-full hover:bg-[#6a1722] transition text-sm md:text-base"
+          >
             Iniciar Sesión
           </button>
         </div>
+
+        {/* Panel derecho */}
+        {/* (todo lo demás sin cambios) */}
+
 
         {/* Panel derecho */}
         <div className="md:w-3/5 p-6 md:p-10 flex flex-col justify-center">

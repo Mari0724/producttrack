@@ -1,0 +1,94 @@
+import React, { useState } from "react";
+import { FaEnvelope, FaLock, FaGoogle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
+const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    try {
+      // Aquí iría tu lógica de autenticación con el backend
+      console.log("Iniciar sesión con:", { email, password });
+      alert("Inicio de sesión exitoso ✅");
+    } catch (error) {
+      alert("Error al iniciar sesión ❌");
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    // Aquí se debería integrar Google Auth (OAuth2 o Firebase)
+    console.log("Iniciar sesión con Google");
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4 md:p-8 overflow-auto">
+      <div className="flex flex-col md:flex-row w-full max-w-[90%] md:max-w-4xl rounded-3xl overflow-hidden shadow-lg bg-white">
+        <div className="md:w-2/5 bg-[#35492c] text-white p-8 flex flex-col justify-center items-center rounded-t-3xl md:rounded-l-2xl md:rounded-tr-none">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold font-serif mb-4 text-center break-words">
+            ¡Bienvenido Nuevamente!
+          </h2>
+          <p className="text-center text-base md:text-lg mb-6 leading-snug">
+            Para unirte por favor Inicia Seción con tus datos
+          </p>
+          <button
+            onClick={() => navigate("/register")}
+            className="px-6 py-2 bg-[#7a1d27] text-white rounded-full hover:bg-[#6a1722] transition"
+          >
+            Registrarse
+          </button>
+        </div>
+
+        <div className="md:w-3/5 p-6 md:p-10 flex flex-col justify-center">
+          <h2 className="text-2xl md:text-3xl font-semibold text-black mb-6 text-center">
+            Iniciar sesión
+          </h2>
+
+          <form className="flex flex-col gap-5" onSubmit={handleLogin}>
+            <div className="relative">
+              <input
+                type="email"
+                placeholder="Correo Electrónico"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full border border-gray-300 rounded-full px-12 py-2 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-700"
+              />
+              <FaEnvelope className="absolute left-4 top-3 text-gray-500" />
+            </div>
+
+            <div className="relative">
+              <input
+                type="password"
+                placeholder="Contraseña"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full border border-gray-300 rounded-full px-12 py-2 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-700"
+              />
+              <FaLock className="absolute left-4 top-3 text-gray-500" />
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-yellow-600 text-white py-2 rounded-full hover:bg-yellow-700 transition"
+            >
+              Iniciar sesión
+            </button>
+
+            <button
+              type="button"
+              onClick={handleGoogleLogin}
+              className="w-full bg-red-500 text-white py-2 rounded-full hover:bg-red-600 transition flex items-center justify-center gap-2"
+            >
+              <FaGoogle />
+              Iniciar sesión con Google
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
