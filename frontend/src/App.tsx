@@ -1,7 +1,11 @@
-import AuthForms from './components/AuthForm'
+import Register from "./pages/Register";
 
 function App() {
-  return <AuthForms />
+  return (
+    <div className="w-screen min-h-screen">
+      <Register />
+    </div>
+  );
 }
 
-export default App
+export default App;
