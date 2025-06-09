@@ -710,6 +710,65 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificacionesController_enviarNotificacionReposicionRecomendada: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.post('/notificaciones/reposicion-recomendada',
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController.prototype.enviarNotificacionReposicionRecomendada)),
+
+            async function NotificacionesController_enviarNotificacionReposicionRecomendada(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificacionesController_enviarNotificacionReposicionRecomendada, request, response });
+
+                const controller = new NotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'enviarNotificacionReposicionRecomendada',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificacionesController_enviarNotificacionActualizacionApp: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"mensaje":{"dataType":"string","required":true},"titulo":{"dataType":"string","required":true}}},
+        };
+        app.post('/notificaciones/actualizacion-app',
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController.prototype.enviarNotificacionActualizacionApp)),
+
+            async function NotificacionesController_enviarNotificacionActualizacionApp(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificacionesController_enviarNotificacionActualizacionApp, request, response });
+
+                const controller = new NotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'enviarNotificacionActualizacionApp',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAuthController_login: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"LoginRequest"},
         };

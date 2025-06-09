@@ -1171,6 +1171,88 @@
 				}
 			}
 		},
+		"/notificaciones/reposicion-recomendada": {
+			"post": {
+				"operationId": "EnviarNotificacionReposicionRecomendada",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notificaciones"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/notificaciones/actualizacion-app": {
+			"post": {
+				"operationId": "EnviarNotificacionActualizacionApp",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notificaciones"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"mensaje": {
+										"type": "string"
+									},
+									"titulo": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"mensaje",
+									"titulo"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/auth/login": {
 			"post": {
 				"operationId": "Login",
