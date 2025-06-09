@@ -5,10 +5,10 @@ import cors from 'cors';
 import "reflect-metadata";
 import express from 'express';
 import bodyParser from 'body-parser';
-import { RegisterRoutes } from "../src/routes/routes"; // este se genera automáticamente
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../docs/swagger.json";
-
+import { RegisterRoutes } from "../src/routes/routes";
+import nutriscanOCRRoutes from './routes/ocr.routes';
 
 const app = express();
 
@@ -18,14 +18,16 @@ app.use(cors({
   credentials: true
 }));
 
-//Middlewares
+// ⛔ bodyParser no maneja multipart/form-data, pero no lo elimines
 app.use(bodyParser.json());
 
+// 👇 Coloca tus rutas manuales antes de RegisterRoutes
+app.use('/', nutriscanOCRRoutes);
+
+// 👇 Luego las rutas generadas por tsoa
 RegisterRoutes(app);
 
+// Swagger
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-
-
-// Aquí más adelante puedes agregar tus rutas
 
 export default app;
