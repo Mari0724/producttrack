@@ -8,31 +8,30 @@ datasource db {
 }
 
 model users {
-  idUsuario      Int       @id @default(autoincrement())
-  username       String    @unique
-  correo         String    @unique
+  idUsuario      Int     @id @default(autoincrement())
+  username       String  @unique
+  correo         String  @unique
   password       String
   nombreCompleto String
   telefono       String
   direccion      String
   fotoPerfil     String?
-  
-  // Campos opcionales porque solo aplican a EMPRESARIAL
-  nombreEmpresa   String?
-  nit             String?   @unique
-  estado         String
-  rol            String
-  tipoUsuario    TipoUsuario
-  rolEquipo      rolEquipo?
-  
-  empresaId     Int?
-  jefe       users?   @relation("EmpresaMiembros", fields: [empresaId], references: [idUsuario])
-  miembros users[]  @relation("EmpresaMiembros")
 
-  
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  deletedAt      DateTime?
+  // Campos opcionales porque solo aplican a EMPRESARIAL
+  nombreEmpresa String?
+  nit           String?     @unique
+  estado        String
+  rol           String
+  tipoUsuario   TipoUsuario
+  rolEquipo     rolEquipo?
+
+  empresaId Int?
+  jefe      users?  @relation("EmpresaMiembros", fields: [empresaId], references: [idUsuario])
+  miembros  users[] @relation("EmpresaMiembros")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
 
   auteRest         auteRest?
   notificaciones   notificaciones[]
@@ -96,6 +95,7 @@ model productos {
   histoVenta       histoVenta[]
   usuario          users            @relation(fields: [usuarioId], references: [idUsuario])
   recorStock       recorStock[]
+  comentarios      comentarios[]
 }
 
 model histoVenta {
@@ -122,12 +122,14 @@ model recorStock {
 model comentarios {
   idComentario    Int              @id @default(autoincrement())
   idUsuario       Int
+  idProducto      Int
   comentario      String
   fechaComentario DateTime
   estado          EstadoComentario
   createdAt       DateTime         @default(now())
   updatedAt       DateTime         @updatedAt
   user            users            @relation(fields: [idUsuario], references: [idUsuario])
+  producto        productos        @relation(fields: [idProducto], references: [id])
 }
 
 model soporte {
@@ -240,9 +242,9 @@ enum TipoUsuario {
 }
 
 enum rol {
-  USUARIO      // individual o empresa
-  EQUIPO       // miembro del equipo de una empresa
-  ADMIN        // administrador del sistema
+  USUARIO // individual o empresa
+  EQUIPO // miembro del equipo de una empresa
+  ADMIN // administrador del sistema
   DESARROLLADOR
 }
 

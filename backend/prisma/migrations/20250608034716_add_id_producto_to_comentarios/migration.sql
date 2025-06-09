@@ -135,6 +135,7 @@ CREATE TABLE "recorStock" (
 CREATE TABLE "comentarios" (
     "idComentario" SERIAL NOT NULL,
     "idUsuario" INTEGER NOT NULL,
+    "idProducto" INTEGER NOT NULL,
     "comentario" TEXT NOT NULL,
     "fechaComentario" TIMESTAMP(3) NOT NULL,
     "estado" "EstadoComentario" NOT NULL,
@@ -305,6 +306,9 @@ ALTER TABLE "recorStock" ADD CONSTRAINT "recorStock_productoId_fkey" FOREIGN KEY
 
 -- AddForeignKey
 ALTER TABLE "comentarios" ADD CONSTRAINT "comentarios_idUsuario_fkey" FOREIGN KEY ("idUsuario") REFERENCES "users"("idUsuario") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "comentarios" ADD CONSTRAINT "comentarios_idProducto_fkey" FOREIGN KEY ("idProducto") REFERENCES "productos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "soporte" ADD CONSTRAINT "soporte_idUsuario_fkey" FOREIGN KEY ("idUsuario") REFERENCES "users"("idUsuario") ON DELETE RESTRICT ON UPDATE CASCADE;

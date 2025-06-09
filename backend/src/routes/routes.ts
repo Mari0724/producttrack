@@ -651,6 +651,65 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificacionesController_enviarNotificacionProductoVencido: Record<string, TsoaRoute.ParameterSchema> = {
+        };
+        app.post('/notificaciones/producto-vencido',
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController.prototype.enviarNotificacionProductoVencido)),
+
+            async function NotificacionesController_enviarNotificacionProductoVencido(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificacionesController_enviarNotificacionProductoVencido, request, response });
+
+                const controller = new NotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'enviarNotificacionProductoVencido',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificacionesController_enviarNotificacionComentarioProducto: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"idComentario":{"dataType":"double","required":true}}},
+        };
+        app.post('/notificaciones/comentario-producto',
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController.prototype.enviarNotificacionComentarioProducto)),
+
+            async function NotificacionesController_enviarNotificacionComentarioProducto(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificacionesController_enviarNotificacionComentarioProducto, request, response });
+
+                const controller = new NotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'enviarNotificacionComentarioProducto',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAuthController_login: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"LoginRequest"},
         };
