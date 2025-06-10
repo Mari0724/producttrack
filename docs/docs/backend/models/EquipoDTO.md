@@ -4,7 +4,7 @@ title: DTO de Equipo
 sidebar_label: Equipo DTO
 ---
 
-#  EquipoDTO
+# EquipoDTO
 
 Interfaz utilizada para representar la estructura de los datos de un **miembro del equipo de trabajo** en el sistema ProductTrack.
 
@@ -29,6 +29,7 @@ Interfaz utilizada para representar la estructura de los datos de un **miembro d
 | `fotoPerfil`     | `string` *(opcional)*                    | ❌ No      | URL de la imagen de perfil (subida opcionalmente por la empresa).                                            |
 | `rolEquipo`      | `"LECTOR" \| "COMENTARISTA" \| "EDITOR"` | ✅ Sí      | Rol asignado al miembro del equipo, define permisos en el sistema.                                           |
 | `estado`         | `"activo" \| "inactivo"` *(opcional)*    | ❌ No      | Estado actual del miembro dentro del sistema. Si no se especifica, puede asumirse como "activo" por defecto. |
+| `empresaId`      | `number` *(opcional)*                    | ❌ No      | ID de la empresa a la que pertenece el equipo. Solo requerido si quien crea el equipo es un administrador.   |
 
 ---
 

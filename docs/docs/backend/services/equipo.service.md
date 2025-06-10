@@ -70,7 +70,7 @@ Permite aplicar múltiples filtros para buscar usuarios `EQUIPO`.
   rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR";
   empresaId?: number;
 }
-```
+````
 
 #### Retorna:
 
@@ -100,7 +100,7 @@ Busca un usuario `EQUIPO` por su `idUsuario`.
 
 ---
 
-### ✏️ `async actualizarEquipo(id: number, datosActualizados: Partial<EquipoDTO>, empresaId: number)`
+### ✏️ `async actualizarEquipo(id: number, datosActualizados: Partial<EquipoDTO>, empresaId?: number)`
 
 Actualiza los datos de un usuario `EQUIPO`.
 
@@ -108,7 +108,7 @@ Actualiza los datos de un usuario `EQUIPO`.
 
 * `id`: ID del equipo a actualizar.
 * `datosActualizados`: Objeto con los campos que se desean modificar.
-* `empresaId`: ID de la empresa que posee al equipo (validación de pertenencia).
+* `empresaId`: *(Opcional)* ID de la empresa que posee al equipo. Si se incluye, se valida la pertenencia.
 
 #### Retorna:
 
@@ -116,17 +116,18 @@ Actualiza los datos de un usuario `EQUIPO`.
 
 #### Lanza:
 
-* Error si el equipo no existe o no pertenece a la empresa especificada.
+* Error si el equipo no existe o no pertenece a la empresa especificada (si se proporciona).
 
 ---
 
-### 🗑️ `async eliminarEquipo(id: number)`
+### 🗑️ `async eliminarEquipo(id: number, empresaId?: number)`
 
 Elimina un usuario `EQUIPO` por ID.
 
 #### Parámetros:
 
 * `id`: Identificador del equipo a eliminar.
+* `empresaId`: *(Opcional)* ID de la empresa. Si se incluye, valida pertenencia.
 
 #### Retorna:
 
@@ -134,7 +135,21 @@ Elimina un usuario `EQUIPO` por ID.
 
 #### Lanza:
 
-* Error si el usuario no existe o no tiene el rol correcto (usa `obtenerEquipoPorId()` para verificación).
+* Error si el usuario no existe o no tiene el rol correcto o no pertenece a la empresa.
+
+---
+
+### 🧨 `async eliminarTodoElEquipo(empresaId: number)`
+
+Elimina a **todos los usuarios del equipo** asociados a una empresa específica.
+
+#### Parámetros:
+
+* `empresaId`: ID de la empresa cuyos equipos serán eliminados.
+
+#### Retorna:
+
+* Objeto con un mensaje que indica cuántos equipos fueron eliminados.
 
 ---
 
@@ -142,6 +157,7 @@ Elimina un usuario `EQUIPO` por ID.
 
 * Todos los datos se validan usando el esquema `equipoSchema`.
 * Se usa `.partial()` en `actualizarEquipo()` para permitir actualizaciones parciales.
+* Se verifica el rol `"EQUIPO"` y opcionalmente la pertenencia a una empresa (`empresaId`).
 
 ---
 
@@ -155,6 +171,9 @@ await servicio.crearEquipo({
   nombreCompleto: "Juan Pérez",
   correo: "juan@empresa.com",
   password: "segura123",
+  username: "jperez",
+  telefono: "3214567890",
+  direccion: "Calle 123",
   rolEquipo: "EDITOR"
 }, 1);
 
@@ -163,4 +182,10 @@ const resultado = await servicio.filtrarEquipos({
   empresaId: 1,
   rolEquipo: "LECTOR"
 });
+
+// Eliminar equipo individual
+await servicio.eliminarEquipo(10, 1);
+
+// Eliminar a todos los equipos de una empresa
+await servicio.eliminarTodoElEquipo(1);
 ```
