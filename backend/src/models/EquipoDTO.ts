@@ -7,5 +7,6 @@ export interface EquipoDTO {
     direccion: string;
     fotoPerfil?: string; // Opcional: la empresa puede no subirla de una vez
     rolEquipo: "LECTOR" | "COMENTARISTA" | "EDITOR";
-    estado?: "activo" | "inactivo"; 
+    estado?: "activo" | "inactivo";
+    empresaId?: number;  
 }
