@@ -1,9 +1,9 @@
 import { Controller, Post, Route, Tags, Body } from 'tsoa';
-import { notificarStockBajo } from '../services/notificaciones/notificar.StockBajo';
-import { notificarProductoVencido } from '../services/notificaciones/notificar.ProductoVencido';
-import { notificarComentarioProducto } from '../services/notificaciones/notificarComentarioProducto';
-import { notificarReposicionRecomendada } from '../services/notificaciones/notificarReposicion';
-import { notificarActualizacionApp } from '../services/notificaciones/notificarActualizacion';
+import { notificarStockBajo } from '../services/notificaciones/stockBajo.service';
+import { notificarProductoVencido } from '../services/notificaciones/productoVencido.service';
+import { notificarComentarioProducto } from '../services/notificaciones/comentarioProducto.service';
+import { notificarReposicionRecomendada } from '../services/notificaciones/reposicion.service';
+import { notificarActualizacionApp } from '../services/notificaciones/actualizacion.service';
 
 @Route('notificaciones')
 @Tags('Notificaciones')
