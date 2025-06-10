@@ -1,17 +1,30 @@
-import { Body, Controller, Delete, Get, Path, Put, Query, Security, Request, Res, Route, Post, SuccessResponse, Response, Tags } from "tsoa";
+import { Body,Controller,Delete,Get,Path,Put,Query,Security,Request,Res,Route,Post,SuccessResponse,Response,Tags } from "tsoa";
 import { ProductosDTO } from "../models/ProductosDTO";
 import { zodValidate } from "../utils/zodValidate";
 import { productoSchema } from "../models/ProductosModel";
-import { getAllProductos, getProductoById, createProducto, updateProducto, deleteProducto, getCategoriasUnicas, getCantidadPorCategoria, getProductosPorCategoria, getCantidadPorRangoPrecio } from "../services/Productos.service";
-import { ResponseMessage, ResponseMessageWithData } from "../interfaces/ResponseMenssage";
-import { AuthenticatedRequest } from "../types/express"; // ajusta la ruta según tu estructura
+import {
+  getAllProductos,
+  getProductoById,
+  createProducto,
+  updateProducto,
+  deleteProducto,
+  getCategoriasUnicas,
+  getCantidadPorCategoria,
+  getProductosPorCategoria,
+  getCantidadPorRangoPrecio
+} from "../services/Productos.service";
+import {
+  ResponseMessage,
+  ResponseMessageWithData
+} from "../interfaces/ResponseMenssage";
+import { AuthenticatedRequest } from "../types/express";
 import { puede } from "../utils/checkPermissions";
 import { Middlewares } from "tsoa";
-import { autenticarToken } from "../middleware/token.middleware"; 
+import { autenticarToken } from "../middleware/token.middleware";
+
 @Route("/Productos")
 @Tags("Productos")
 export class ProductosController extends Controller {
-
   // 🔍 Obtener productos con filtros
   @Get("/")
   public async getAll(
@@ -34,14 +47,14 @@ export class ProductosController extends Controller {
     if (fechaAdquisicionDesde || fechaAdquisicionHasta) {
       filters.fechaAdquisicion = {
         ...(fechaAdquisicionDesde && { gte: new Date(fechaAdquisicionDesde) }),
-        ...(fechaAdquisicionHasta && { lte: new Date(fechaAdquisicionHasta) }),
+        ...(fechaAdquisicionHasta && { lte: new Date(fechaAdquisicionHasta) })
       };
     }
 
     if (fechaVencimientoDesde || fechaVencimientoHasta) {
       filters.fechaVencimiento = {
         ...(fechaVencimientoDesde && { gte: new Date(fechaVencimientoDesde) }),
-        ...(fechaVencimientoHasta && { lte: new Date(fechaVencimientoHasta) }),
+        ...(fechaVencimientoHasta && { lte: new Date(fechaVencimientoHasta) })
       };
     }
 
@@ -59,7 +72,7 @@ export class ProductosController extends Controller {
     }
   }
 
-  // ✅ Obtener por categoría
+  // ✅ Obtener productos por categoría
   @Get("/por-categoria")
   public async getByCategoria(@Query() categoria: string): Promise<any> {
     if (!categoria?.trim()) {
@@ -87,14 +100,10 @@ export class ProductosController extends Controller {
   public async getCantidadPorCategoria(): Promise<any> {
     try {
       const resultados = await getCantidadPorCategoria();
-
-      // Organiza el resultado para que sea claro
-      const respuesta = resultados.map((item) => ({
+      return resultados.map((item) => ({
         categoria: item.categoria ?? "Sin categoría",
-        cantidad: item._count.id,
+        cantidad: item._count.id
       }));
-
-      return respuesta;
     } catch (error) {
       console.error("🚨 Error al obtener cantidades:", error);
       this.setStatus(500);
@@ -107,10 +116,9 @@ export class ProductosController extends Controller {
   public async getCantidadPorRangoPrecio(): Promise<any> {
     try {
       const resultados = await getCantidadPorRangoPrecio();
-
       return Object.entries(resultados).map(([rango, cantidad]) => ({
         rango,
-        cantidad,
+        cantidad
       }));
     } catch (error) {
       console.error("🚨 Error al obtener cantidades por precio:", error);
@@ -119,7 +127,7 @@ export class ProductosController extends Controller {
     }
   }
 
-  // ✅ Obtener por ID
+  // ✅ Obtener producto por ID
   @Get("/{id}")
   public async getById(@Path() id: string): Promise<any> {
     const numericId = Number(id);
@@ -148,10 +156,7 @@ export class ProductosController extends Controller {
     @Request() req: AuthenticatedRequest,
     @Body() requestBody: ProductosDTO
   ): Promise<ResponseMessageWithData<any> | ResponseMessage> {
-    console.log("➡️ Request body recibido:", requestBody);
-
     const rol = req.user?.rol;
-    console.log("👤 Rol recibido:", rol); // 👉 Agrega esto
 
     if (!rol || !puede("crear", rol)) {
       this.setStatus(403);
@@ -160,11 +165,10 @@ export class ProductosController extends Controller {
 
     const parsed = zodValidate(productoSchema, requestBody);
     if (!parsed.success) {
-      console.log("❌ Error de validación:", parsed.error);
       this.setStatus(400);
       return {
         message: "Datos inválidos",
-        detalles: parsed.error,
+        detalles: parsed.error
       };
     }
 
@@ -173,7 +177,7 @@ export class ProductosController extends Controller {
       this.setStatus(201);
       return {
         message: "Producto creado correctamente",
-        data: nuevoProducto,
+        data: nuevoProducto
       };
     } catch (error) {
       console.error("🚨 Error al crear producto:", error);
@@ -204,7 +208,7 @@ export class ProductosController extends Controller {
       this.setStatus(400);
       return {
         message: "Datos inválidos",
-        detalles: parsed.error,
+        detalles: parsed.error
       };
     }
 
@@ -223,35 +227,33 @@ export class ProductosController extends Controller {
     }
   }
 
-
   // ✅ Eliminar producto
-@Delete("/{id}")
-@Security("jwt")
-@Middlewares([autenticarToken])
-public async deleteProducto(
-  @Request() req: AuthenticatedRequest,
-  @Path() id: number
-): Promise<ResponseMessage> {
-  const rol = req.user?.rol;
+  @Delete("/{id}")
+  @Security("jwt")
+  @Middlewares([autenticarToken])
+  public async deleteProducto(
+    @Request() req: AuthenticatedRequest,
+    @Path() id: number
+  ): Promise<ResponseMessage> {
+    const rol = req.user?.rol;
 
-  if (!rol || !puede("eliminar", rol)) {
-    this.setStatus(403);
-    return { message: "No tienes permiso para eliminar productos." };
-  }
-
-  try {
-    await deleteProducto(id);
-    return { message: "Producto eliminado correctamente" };
-  } catch (error) {
-    console.error("🚨 Error al eliminar:", error);
-    if (error instanceof Error && error.message.includes("no encontrado")) {
-      this.setStatus(404);
-      return { message: "Producto no encontrado" };
+    if (!rol || !puede("eliminar", rol)) {
+      this.setStatus(403);
+      return { message: "No tienes permiso para eliminar productos." };
     }
 
-    this.setStatus(500);
-    return { message: "Error al eliminar producto" };
-  }
-}
+    try {
+      await deleteProducto(id);
+      return { message: "Producto eliminado correctamente" };
+    } catch (error) {
+      console.error("🚨 Error al eliminar:", error);
+      if (error instanceof Error && error.message.includes("no encontrado")) {
+        this.setStatus(404);
+        return { message: "Producto no encontrado" };
+      }
 
+      this.setStatus(500);
+      return { message: "Error al eliminar producto" };
+    }
+  }
 }
