@@ -4,9 +4,9 @@ title: Middleware upload
 sidebar_label: Upload
 ---
 
-#  Middleware: `upload.ts`
+# Middleware: `upload.ts`
 
-Este middleware configura **la subida de archivos (imágenes)** al servicio en la nube **Cloudinary**, utilizando `multer` como middleware para gestionar los archivos desde el cliente.
+Este middleware configura **la subida de archivos (imágenes)** al servicio en la nube **Cloudinary**, utilizando `multer` como gestor de archivos. Centraliza toda la lógica para almacenar imágenes en carpetas específicas de tu cuenta Cloudinary.
 
 ---
 
@@ -14,39 +14,55 @@ Este middleware configura **la subida de archivos (imágenes)** al servicio en l
 
 `src/middleware/upload.ts`
 
+---
+
 ## 📌 Propósito
 
-Permitir que los usuarios suban imágenes (por ejemplo, fotos de perfil) que se almacenarán en Cloudinary. Esto se integra fácilmente con rutas protegidas en el backend y garantiza un manejo eficiente de archivos.
+Permitir que los usuarios suban imágenes (por ejemplo, fotos de perfil) que se almacenarán directamente en Cloudinary. Este middleware puede integrarse fácilmente con rutas protegidas y garantiza un manejo seguro y organizado de archivos.
 
 ---
 
 ## 🛠️ Dependencias utilizadas
 
 ```ts
+import dotenv from 'dotenv';
+import path from 'path';
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import multer from 'multer';
-import dotenv from 'dotenv';
 ````
 
-* **cloudinary**: Cliente de la API de Cloudinary.
-* **CloudinaryStorage**: Adaptador de almacenamiento para `multer` que conecta con Cloudinary.
-* **multer**: Middleware para manejar `multipart/form-data`, utilizado para la subida de archivos.
-* **dotenv**: Para cargar variables de entorno desde `.env`.
+| Paquete                     | Propósito                                                    |
+| --------------------------- | ------------------------------------------------------------ |
+| `dotenv`                    | Carga las variables de entorno desde un archivo `.env`.      |
+| `path`                      | Facilita rutas absolutas para cargar archivos correctamente. |
+| `cloudinary`                | Cliente oficial de la API de Cloudinary.                     |
+| `multer-storage-cloudinary` | Adaptador de almacenamiento entre Multer y Cloudinary.       |
+| `multer`                    | Middleware para manejar archivos tipo `multipart/form-data`. |
 
 ---
 
-## 🔐 Variables de entorno requeridas
+## 🔐 Carga de variables de entorno
 
-Este middleware requiere que existan las siguientes variables definidas en el archivo `.env`:
-
-```env
-CLOUDINARY_NAME=<tu_nombre_en_cloudinary>
-CLOUDINARY_API_KEY=<tu_api_key>
-CLOUDINARY_API_SECRET=<tu_api_secret>
+```ts
+dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 ```
 
-Estas credenciales son necesarias para autenticar el uso de Cloudinary.
+Esto asegura que las variables del archivo `.env` sean cargadas correctamente incluso si se ejecuta desde otro directorio.
+
+> ✅ Útil en producción o ambientes donde el punto de entrada puede variar.
+
+---
+
+## ✅ Validación de variables de entorno
+
+```ts
+if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+  throw new Error("❌ Faltan variables de entorno de Cloudinary. Verifica tu archivo .env");
+}
+```
+
+Antes de configurar Cloudinary, se valida que las variables necesarias estén definidas. Esto evita errores silenciosos en producción.
 
 ---
 
@@ -54,40 +70,53 @@ Estas credenciales son necesarias para autenticar el uso de Cloudinary.
 
 ```ts
 cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 ```
 
+| Variable del entorno    | Descripción                       |
+| ----------------------- | --------------------------------- |
+| `CLOUDINARY_CLOUD_NAME` | Nombre del espacio en Cloudinary. |
+| `CLOUDINARY_API_KEY`    | Clave pública de la API.          |
+| `CLOUDINARY_API_SECRET` | Clave secreta para autenticación. |
+
 ---
 
-## 📦 Configuración de almacenamiento
+## 📦 Configuración del almacenamiento en Cloudinary
 
 ```ts
 const storage = new CloudinaryStorage({
-    cloudinary: cloudinary,
-    params: {
-        folder: 'producttrack/perfiles',
-        allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-        transformation: [{ width: 500, height: 500, crop: 'limit' }],
-    } as any,
+  cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: 'producttrack/perfiles',
+      allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+      transformation: [{ width: 500, height: 500, crop: 'limit' }],
+    };
+  },
 });
 ```
 
-* **folder**: Las imágenes se guardan en la carpeta `producttrack/perfiles` en Cloudinary.
-* **allowed\_formats**: Solo se permiten imágenes en formatos `jpg`, `png`, `jpeg` y `webp`.
-* **transformation**: Las imágenes se ajustan a un máximo de 500x500 píxeles, manteniendo su proporción (`crop: 'limit'`).
+| Propiedad         | Descripción                                                             |
+| ----------------- | ----------------------------------------------------------------------- |
+| `folder`          | Carpeta destino en Cloudinary: `producttrack/perfiles`.                 |
+| `allowed_formats` | Solo se permiten imágenes en `jpg`, `png`, `jpeg` y `webp`.             |
+| `transformation`  | Redimensiona la imagen a un máximo de 500x500px sin recorte forzado.    |
+| `params`          | Función asíncrona que retorna los parámetros dinámicamente por archivo. |
+
+> 🎯 Usar `params` como función permite lógica condicional futura según el archivo o usuario.
 
 ---
 
-## 🧩 Exportación del middleware
+## 🚀 Exportación del middleware
 
 ```ts
 export const upload = multer({ storage });
 ```
 
-Esto permite utilizar `upload` como middleware en rutas para manejar archivos subidos.
+Puedes usarlo directamente en rutas del backend como middleware para manejar la subida de archivos.
 
 ---
 
@@ -99,26 +128,30 @@ import { upload } from "../middleware/upload";
 router.post("/perfil/foto", upload.single("imagen"), controlador.subirFoto);
 ```
 
-* El campo `"imagen"` debe coincidir con el nombre del campo en el formulario HTML o frontend.
-* Se puede utilizar `.single()`, `.array()`, o `.fields()` según el tipo de carga.
+| Método                    | Explicación                                                      |
+| ------------------------- | ---------------------------------------------------------------- |
+| `upload.single("imagen")` | Procesa un solo archivo bajo el campo `"imagen"` del formulario. |
+| `upload.array("fotos")`   | Para subir múltiples imágenes.                                   |
+| `upload.fields([...])`    | Para manejar múltiples campos con archivos diferentes.           |
 
 ---
 
-## 📤 Resumen
+## 📝 Resumen
 
-| Elemento             | Valor                                  |
-| -------------------- | -------------------------------------- |
-| Almacenamiento       | Cloudinary (`producttrack/perfiles`)   |
-| Middleware de subida | `multer`                               |
-| Archivos permitidos  | `.jpg`, `.png`, `.jpeg`, `.webp`       |
-| Transformación       | Máximo 500x500 px, sin recorte forzado |
+| Elemento             | Valor                                |
+| -------------------- | ------------------------------------ |
+| Almacenamiento       | Cloudinary (`producttrack/perfiles`) |
+| Middleware de subida | `multer`                             |
+| Archivos permitidos  | `.jpg`, `.png`, `.jpeg`, `.webp`     |
+| Transformación       | Máximo 500x500 px (`crop: limit`)    |
+| Validación `.env`    | Sí, con `throw` si faltan variables  |
+| Flexibilidad         | Alta (con `params` asíncrono)        |
 
 ---
 
-## 🔍 Notas adicionales
+## 🧠 Notas adicionales
 
 * No es necesario crear manualmente la carpeta en Cloudinary.
-* Las imágenes pueden ser accedidas luego con las URLs públicas generadas por Cloudinary.
-* Este middleware es ideal para manejar fotos de perfil, logos de empresa u otros recursos visuales.
+* Las imágenes subidas devuelven una URL pública para ser usadas directamente en frontend.
+* Puedes modificar el nombre de la carpeta o agregar marcas de agua desde `params`.
 
----
