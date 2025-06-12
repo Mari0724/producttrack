@@ -46,9 +46,9 @@ export class NutriScanController extends Controller {
       this.setStatus(201);
       return created;
     } catch (error: any) {
-      this.setStatus(400);
-      return { message: error.message };
-    }
+        this.setStatus(400);
+        return { message: error.message || 'Ocurrió un error al procesar la solicitud.' };
+      }
   }
 
   // 🔍 Retorna todos los análisis registrados
@@ -70,9 +70,9 @@ export class NutriScanController extends Controller {
     try {
       return await this.service.update(id, body);
     } catch (error: any) {
-      this.setStatus(400);
-      return { message: error.message };
-    }
+        this.setStatus(400);
+        return { message: error.message || 'Ocurrió un error al actualizar el análisis.' };
+      }
   }
 
   // 🗑️ Elimina un análisis por ID

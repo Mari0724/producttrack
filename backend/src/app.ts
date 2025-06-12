@@ -1,5 +1,5 @@
-import dotenv from "dotenv";
-dotenv.config();
+import './config/env';
+
 
 import cors from 'cors';
 import "reflect-metadata";
@@ -13,7 +13,7 @@ import nutriscanOCRRoutes from './routes/ocr.routes';
 const app = express();
 
 app.use(cors({
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:5000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
@@ -21,10 +21,10 @@ app.use(cors({
 // ⛔ bodyParser no maneja multipart/form-data, pero no lo elimines
 app.use(bodyParser.json());
 
-// 👇 Coloca tus rutas manuales antes de RegisterRoutes
+// 👇 Coloca rutas manuales antes de RegisterRoutes
 app.use('/', nutriscanOCRRoutes);
 
-// 👇 Luego las rutas generadas por tsoa
+// 👇 Luego rutas generadas por tsoa
 RegisterRoutes(app);
 
 // Swagger
