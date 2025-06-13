@@ -230,6 +230,7 @@ model NutriScan {
   tipoAnalisis  String               // "ocr-openfoodfacts-gpt" o "ocr-gpt-only"
   fechaAnalisis DateTime @default(now())
   actualizadoEn DateTime @updatedAt
+  isTest         Boolean   @default(false)
 
   usuario users @relation(fields: [usuarioId], references: [idUsuario])
 }

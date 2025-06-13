@@ -658,6 +658,9 @@
 									"anyOf": [
 										{
 											"properties": {
+												"isTest": {
+													"type": "boolean"
+												},
 												"actualizadoEn": {
 													"type": "string",
 													"format": "date-time"
@@ -688,6 +691,7 @@
 												}
 											},
 											"required": [
+												"isTest",
 												"actualizadoEn",
 												"fechaAnalisis",
 												"tipoAnalisis",
@@ -715,12 +719,19 @@
 					},
 					"400": {
 						"description": "Datos inválidos"
+					},
+					"403": {
+						"description": "Acceso denegado"
 					}
 				},
 				"tags": [
 					"NutriScan"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -739,50 +750,69 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"properties": {
-											"actualizadoEn": {
-												"type": "string",
-												"format": "date-time"
+									"anyOf": [
+										{
+											"items": {
+												"properties": {
+													"isTest": {
+														"type": "boolean"
+													},
+													"actualizadoEn": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"fechaAnalisis": {
+														"type": "string",
+														"format": "date-time"
+													},
+													"tipoAnalisis": {
+														"type": "string"
+													},
+													"respuesta": {
+														"$ref": "#/components/schemas/JsonValue"
+													},
+													"consulta": {
+														"type": "string"
+													},
+													"esAlimento": {
+														"type": "boolean"
+													},
+													"usuarioId": {
+														"type": "number",
+														"format": "double"
+													},
+													"id": {
+														"type": "number",
+														"format": "double"
+													}
+												},
+												"required": [
+													"isTest",
+													"actualizadoEn",
+													"fechaAnalisis",
+													"tipoAnalisis",
+													"respuesta",
+													"consulta",
+													"esAlimento",
+													"usuarioId",
+													"id"
+												],
+												"type": "object"
 											},
-											"fechaAnalisis": {
-												"type": "string",
-												"format": "date-time"
-											},
-											"tipoAnalisis": {
-												"type": "string"
-											},
-											"respuesta": {
-												"$ref": "#/components/schemas/JsonValue"
-											},
-											"consulta": {
-												"type": "string"
-											},
-											"esAlimento": {
-												"type": "boolean"
-											},
-											"usuarioId": {
-												"type": "number",
-												"format": "double"
-											},
-											"id": {
-												"type": "number",
-												"format": "double"
-											}
+											"type": "array"
 										},
-										"required": [
-											"actualizadoEn",
-											"fechaAnalisis",
-											"tipoAnalisis",
-											"respuesta",
-											"consulta",
-											"esAlimento",
-											"usuarioId",
-											"id"
-										],
-										"type": "object"
-									},
-									"type": "array"
+										{
+											"properties": {
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message"
+											],
+											"type": "object"
+										}
+									]
 								}
 							}
 						}
@@ -791,7 +821,11 @@
 				"tags": [
 					"NutriScan"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": []
 			}
 		},
@@ -804,47 +838,66 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"properties": {
-										"actualizadoEn": {
-											"type": "string",
-											"format": "date-time"
+									"anyOf": [
+										{
+											"properties": {
+												"isTest": {
+													"type": "boolean"
+												},
+												"actualizadoEn": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"fechaAnalisis": {
+													"type": "string",
+													"format": "date-time"
+												},
+												"tipoAnalisis": {
+													"type": "string"
+												},
+												"respuesta": {
+													"$ref": "#/components/schemas/JsonValue"
+												},
+												"consulta": {
+													"type": "string"
+												},
+												"esAlimento": {
+													"type": "boolean"
+												},
+												"usuarioId": {
+													"type": "number",
+													"format": "double"
+												},
+												"id": {
+													"type": "number",
+													"format": "double"
+												}
+											},
+											"required": [
+												"isTest",
+												"actualizadoEn",
+												"fechaAnalisis",
+												"tipoAnalisis",
+												"respuesta",
+												"consulta",
+												"esAlimento",
+												"usuarioId",
+												"id"
+											],
+											"type": "object"
 										},
-										"fechaAnalisis": {
-											"type": "string",
-											"format": "date-time"
-										},
-										"tipoAnalisis": {
-											"type": "string"
-										},
-										"respuesta": {
-											"$ref": "#/components/schemas/JsonValue"
-										},
-										"consulta": {
-											"type": "string"
-										},
-										"esAlimento": {
-											"type": "boolean"
-										},
-										"usuarioId": {
-											"type": "number",
-											"format": "double"
-										},
-										"id": {
-											"type": "number",
-											"format": "double"
+										{
+											"properties": {
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message"
+											],
+											"type": "object"
 										}
-									},
-									"required": [
-										"actualizadoEn",
-										"fechaAnalisis",
-										"tipoAnalisis",
-										"respuesta",
-										"consulta",
-										"esAlimento",
-										"usuarioId",
-										"id"
-									],
-									"type": "object"
+									]
 								}
 							}
 						}
@@ -853,7 +906,11 @@
 				"tags": [
 					"NutriScan"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -877,6 +934,9 @@
 									"anyOf": [
 										{
 											"properties": {
+												"isTest": {
+													"type": "boolean"
+												},
 												"actualizadoEn": {
 													"type": "string",
 													"format": "date-time"
@@ -907,6 +967,7 @@
 												}
 											},
 											"required": [
+												"isTest",
 												"actualizadoEn",
 												"fechaAnalisis",
 												"tipoAnalisis",
@@ -939,7 +1000,11 @@
 				"tags": [
 					"NutriScan"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -985,7 +1050,11 @@
 				"tags": [
 					"NutriScan"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",

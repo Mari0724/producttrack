@@ -22,7 +22,7 @@ import { NutriScanSchema } from "../models/NutriScanModel";
 export class NutriScanController extends Controller {
   private service = new NutriScanService();
 
-  // ✅ Crea un nuevo análisis nutricional con validación de roles
+  // ✅ Crear análisis nutricional (solo INDIVIDUAL, ADMIN y DESARROLLADOR)
   @SuccessResponse("201", "Registro creado")
   @Response("400", "Datos inválidos")
   @Response("403", "Acceso denegado")
@@ -42,42 +42,79 @@ export class NutriScanController extends Controller {
     }
 
     try {
-      const created = await this.service.create(body);
+      const isTest = usuario.rol === "DESARROLLADOR"; // solo desarrollador guarda como prueba
+      const created = await this.service.create(body, usuario.id, isTest);
       this.setStatus(201);
       return created;
     } catch (error: any) {
-        this.setStatus(400);
-        return { message: error.message || 'Ocurrió un error al procesar la solicitud.' };
-      }
+      this.setStatus(400);
+      return { message: error.message || 'Ocurrió un error al procesar la solicitud.' };
+    }
   }
 
-  // 🔍 Retorna todos los análisis registrados
+  // ✅ Solo ADMIN y DESARROLLADOR pueden listar análisis de auditoría
+  @Security("jwt")
   @Get()
-  async findAll() {
-    return this.service.findAll();
+  async findAll(@Request() req: any) {
+    const usuario = req.user;
+
+    if (usuario.rol === "ADMIN") {
+      return this.service.findTestsOnly();
+    }
+
+    if (usuario.rol === "DESARROLLADOR") {
+      return this.service.findTestsByUser(usuario.id);
+    }
+
+    this.setStatus(403);
+    return { message: "Acceso denegado: solo disponible para auditoría o pruebas." };
   }
 
-  // 🔍 Retorna un análisis por su ID
+  // ✅ Buscar por ID — accesible solo a ADMIN
+  @Security("jwt")
   @Get("{id}")
-  async findById(@Path() id: number) {
+  async findById(@Path() id: number, @Request() req: any) {
+    const usuario = req.user;
+
+    if (usuario.rol !== "ADMIN") {
+      this.setStatus(403);
+      return { message: "Acceso denegado: solo disponible para auditoría." };
+    }
+
     return this.service.findById(id);
   }
 
-  // ✏️ Actualiza un análisis por ID
+  // ✅ Actualizar — solo ADMIN
+  @Security("jwt")
   @Put("{id}")
   @Response("400", "Datos inválidos")
-  async update(@Path() id: number, @Body() body: unknown) {
+  async update(@Path() id: number, @Body() body: unknown, @Request() req: any) {
+    const usuario = req.user;
+
+    if (usuario.rol !== "ADMIN") {
+      this.setStatus(403);
+      return { message: "Acceso denegado: solo disponible para auditoría." };
+    }
+
     try {
       return await this.service.update(id, body);
     } catch (error: any) {
-        this.setStatus(400);
-        return { message: error.message || 'Ocurrió un error al actualizar el análisis.' };
-      }
+      this.setStatus(400);
+      return { message: error.message || 'Ocurrió un error al actualizar el análisis.' };
+    }
   }
 
-  // 🗑️ Elimina un análisis por ID
+  // ✅ Eliminar — solo ADMIN
+  @Security("jwt")
   @Delete("{id}")
-  async delete(@Path() id: number) {
+  async delete(@Path() id: number, @Request() req: any) {
+    const usuario = req.user;
+
+    if (usuario.rol !== "ADMIN") {
+      this.setStatus(403);
+      return { message: "Acceso denegado: solo disponible para auditoría." };
+    }
+
     return this.service.delete(id);
   }
 }
