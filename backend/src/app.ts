@@ -1,6 +1,5 @@
 import './config/env';
 
-
 import cors from 'cors';
 import "reflect-metadata";
 import express from 'express';
@@ -12,22 +11,23 @@ import nutriscanOCRRoutes from './routes/ocr.routes';
 
 const app = express();
 
+// CORS config
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5000'],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 
-// ⛔ bodyParser no maneja multipart/form-data, pero no lo elimines
+// bodyParser para JSON
 app.use(bodyParser.json());
 
-// 👇 Coloca rutas manuales antes de RegisterRoutes
-app.use('/', nutriscanOCRRoutes);
+// 📌 Rutas OCR manuales primero, bajo /api/ocr
+app.use('/api/ocr', nutriscanOCRRoutes);
 
-// 👇 Luego rutas generadas por tsoa
+// 📌 Luego las rutas generadas por tsoa
 RegisterRoutes(app);
 
-// Swagger
+// Swagger docs
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 export default app;

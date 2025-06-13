@@ -11,6 +11,11 @@ if (apiKey) {
 }
 
 export class GPTService {
+  /**
+   * Genera un mensaje nutricional usando GPT, con los datos de OpenFoodFacts
+   * - nombreProducto se usa en caso de no haber resultados
+   * - resultados es un array con productos, se usa el primero
+   */
   static async generarMensajeNutricional(nombreProducto: string, resultados: any[]) {
     try {
       if (resultados.length === 0) {

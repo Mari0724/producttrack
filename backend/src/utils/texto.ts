@@ -1,110 +1,68 @@
-// Correcciones manuales que ya sé que pueden ocurrir por OCR defectuoso
-const correccionesOCR: Record<string, string> = {
-  'ntejas': 'lentejas',
-  'ocalola': 'coca-cola'
+// Limpia texto OCR de saltos de línea, caracteres basura, símbolos raros
+export const limpiarTextoOCR = (texto: string): string => {
+  return texto
+    .toLowerCase() // ✅ pasa todo a minúsculas para normalizar
+    .replace(/\n/g, ' ') // reemplaza saltos de línea por espacio
+    .replace(/[^a-z0-9áéíóúüñ\s\-]/g, '') // elimina todo excepto letras, números, espacios y guiones
+    .replace(/\s+/g, ' ') // colapsa múltiples espacios en uno solo
+    .trim();
 };
 
-/**
- * Limpia el texto extraído por OCR:
- * - Elimina saltos de línea
- * - Quita símbolos raros
- * - Solo deja letras, tildes y espacios
- * - Convierte a minúsculas y quita espacios extra
- */
-export function limpiarTextoOCR(texto: string): string {
+
+// Corrige errores comunes de OCR (ejemplo simple)
+export const corregirErroresOCR = (texto: string): string => {
   return texto
-    .replace(/\n/g, ' ')
-    .replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, '')
-    .replace(/\s+/g, ' ')
-    .toLowerCase()
-    .trim();
-}
+    .replace(/\b1entejas\b/gi, 'lentejas')
+    .replace(/\bgarbansos\b/gi, 'garbanzos')
+    .replace(/\baros\b/gi, 'arroz');
+    // Agrega más según tu caso
+};
 
-/**
- * Aplica correcciones manuales conocidas sobre el texto limpio.
- * Sustituye palabras reconocidas por su forma correcta.
- */
-export function corregirErroresOCR(texto: string): string {
-  const palabras = texto.split(' ');
-  const corregidas = palabras.map(palabra =>
-    correccionesOCR[palabra] ? correccionesOCR[palabra] : palabra
-  );
-  return corregidas.join(' ');
-}
-
-/**
- * Obtiene las palabras candidatas de un texto (solo palabras de al menos 4 letras)
- * para usarlas en búsquedas de coincidencias parciales.
- */
-export function obtenerCandidatosProductos(texto: string): string[] {
-  return texto
-    .split(' ')
-    .filter(p => p.length >= 4);
-}
-
-/**
- * Obtiene la palabra más larga del texto.
- * Útil como último recurso si ninguna coincidencia decente se encuentra.
- */
-export function palabraMasLarga(texto: string): string {
+// Detecta palabra más larga en un string (plan B si no hay candidatos)
+export const palabraMasLarga = (texto: string): string => {
   const palabras = texto.split(/\s+/);
-  let mayor = '';
-  for (const palabra of palabras) {
-    if (palabra.length > mayor.length) {
-      mayor = palabra;
-    }
-  }
-  return mayor;
-}
+  return palabras.reduce((a, b) => (b.length > a.length ? b : a), '');
+};
 
-/**
- * Selecciona el mejor producto de la lista según:
- * 1. Coincidencia exacta de palabra clave (ej. contiene 'lenteja' pero no 'pasta')
- * 2. Si no hay, calcula un score de coincidencias parciales y devuelve el de mayor score
- * 
- * productos Lista de productos candidatos desde OpenFoodFacts
- * Texto OCR ya limpio y corregido
- * El mejor producto encontrado o undefined
- */
-export function elegirMejorResultado(productos: any[], textoLimpio: string): any | undefined {
-  if (productos.length === 0) return undefined;
+// Busca coincidencias con alimentos comunes en español
+export const obtenerCandidatosProductos = (texto: string): string[] => {
+  const alimentosComunes = [
+    'lentejas', 'arroz', 'avena', 'garbanzos', 'frijoles',
+    'papa', 'fideos', 'espagueti', 'quinua', 'soya', 'trigo'
+  ];
+  const textoMinuscula = texto.toLowerCase();
 
-  const textoLower = textoLimpio.toLowerCase();
-
-  // 1️⃣ Buscar coincidencia exacta (contiene 'lenteja', no contiene 'pasta')
-  const matchExacto = productos.find(p => 
-    p.nombre.toLowerCase().includes('lenteja') &&
-    !p.nombre.toLowerCase().includes('pasta')
+  const coincidencias = alimentosComunes.filter(alimento =>
+    textoMinuscula.includes(alimento)
   );
-  if (matchExacto) return matchExacto;
 
-  // 2️⃣ Si no hay exacto, buscar coincidencias parciales palabra por palabra
-  const coincidencias = productos.map(p => {
-    const nombreLower = p.nombre.toLowerCase();
-    const palabras = textoLower.split(/\s+/);
-    const score = palabras.reduce((acc, palabra) => {
-      if (palabra.length >= 4 && nombreLower.includes(palabra)) {
-        acc += 1;
-      }
-      return acc;
-    }, 0);
-    return { producto: p, score };
+  return coincidencias;
+};
+
+// Elige mejor resultado de OpenFoodFacts en base a coincidencias con OCR limpio
+export const elegirMejorResultado = (resultados: any[], textoOCR: string): any | null => {
+  if (!resultados.length) return null;
+
+  const textoMinuscula = textoOCR.toLowerCase();
+
+  // Filtra productos no relevantes (ej: si OCR no menciona 'pasta', descarta productos con 'pasta')
+  const relevantes = resultados.filter((r: any) => {
+    const nombreProducto = r.nombre.toLowerCase();
+    if (!textoMinuscula.includes('pasta') && nombreProducto.includes('pasta')) {
+      return false;
+    }
+    if (!textoMinuscula.includes('lenteja') && nombreProducto.includes('lenteja')) {
+      return false;
+    }
+    return true;
   });
 
-  // 3️⃣ Ordenar por mayor score y devolver el primero
-  coincidencias.sort((a, b) => b.score - a.score);
+  // Coincidencias exactas
+  const coincidencias = relevantes.filter((r: any) =>
+    textoMinuscula.includes(r.nombre.toLowerCase())
+  );
 
-  return coincidencias[0].producto;
-}
-
-/**
- 🔄 Flujo completo para procesar texto OCR y elegir mejor producto
-  
-  textoOCR Texto crudo extraído desde OCR
-  productosOpenFoodFacts Resultados desde la API de OpenFoodFacts
- */
-export function procesarOCRySeleccionarProducto(textoOCR: string, productosOpenFoodFacts: any[]): any | undefined {
-  const textoLimpio = limpiarTextoOCR(textoOCR);
-  const textoCorregido = corregirErroresOCR(textoLimpio);
-  return elegirMejorResultado(productosOpenFoodFacts, textoCorregido);
-}
+  if (coincidencias.length > 0) return coincidencias[0];
+  if (relevantes.length > 0) return relevantes[0];
+  return resultados[0];
+};
