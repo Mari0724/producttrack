@@ -10,17 +10,17 @@ interface Product {
   image: string
 }
 
-interface ProductModal {
+interface ProductModalProps {
   isOpen: boolean
   onClose: () => void
   onSave: (product: Product) => void
-  product?: Product
+  initialData?: Product;
 }
 
 const CLOUD_NAME = 'delkfnnil'
 const UPLOAD_PRESET = 'productos_imagenes' // Crea uno en la consola
 
-const ProductModal: React.FC<ProductModal> = ({ isOpen, onClose, onSave, product }) => {
+const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onSave, initialData }) => {
   const [form, setForm] = useState<Product>({
     name: '',
     category: '',
@@ -33,7 +33,7 @@ const ProductModal: React.FC<ProductModal> = ({ isOpen, onClose, onSave, product
   const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
-    setForm(product || {
+    setForm(initialData || {
       name: '',
       category: '',
       stock: 0,
@@ -41,7 +41,7 @@ const ProductModal: React.FC<ProductModal> = ({ isOpen, onClose, onSave, product
       userType: 'INDIVIDUAL',
       image: '',
     })
-  }, [product])
+  }, [initialData])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -105,7 +105,7 @@ const ProductModal: React.FC<ProductModal> = ({ isOpen, onClose, onSave, product
         </button>
 
         <h2 className="text-2xl font-bold text-[#81203D] mb-4">
-          {product ? 'Detalles del producto' : 'Agregar nuevo producto'}
+          {initialData ? 'Detalles del producto' : 'Agregar nuevo producto'}
         </h2>
 
         {/* Inputs */}

@@ -49,6 +49,7 @@ const Inventario: React.FC = () => {
   ]);
 
   const [showProductModal, setShowProductModal] = useState(false);
+  const [productToEdit, setProductToEdit] = useState<Product | null>(null);
 
   const handleSaveProduct = (product: Product) => {
     // Imagen por defecto si no se proporciona
@@ -57,8 +58,32 @@ const Inventario: React.FC = () => {
       image: product.image?.trim() || 'https://via.placeholder.com/150'
     };
 
+    // Verifica si ya existe un producto con ese nombre
+    const exists = products.some(p => p.name === product.name);
+    if (exists) {
+      alert('Ya existe un producto con ese nombre.');
+      return;
+    }
+
     setProducts(prev => [...prev, productWithImage]);
     setShowProductModal(false);
+  };
+
+  const handleDeleteProduct = (name: string) => {
+    setProducts(prev => prev.filter(product => product.name !== name));
+  };
+
+  const handleEditProduct = (updatedProduct: Product) => {
+    setProducts(prev => prev.map(product => 
+      product.name === updatedProduct.name ? updatedProduct : product
+    ));
+    setProductToEdit(null);
+  };
+
+  // AQUÍ VA 👇
+  const openEditModal = (product: Product) => {
+    setProductToEdit(product);
+    setShowProductModal(true);
   };
 
   return (
@@ -67,7 +92,12 @@ const Inventario: React.FC = () => {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
         {products.map((product, idx) => (
-          <ProductCard key={idx} {...product} />
+          <ProductCard 
+            key={idx}
+            {...product}
+            onEdit={() => openEditModal(product)}
+            onDelete={() => handleDeleteProduct(product.name)}
+          />
         ))}
       </div>
 
@@ -77,8 +107,12 @@ const Inventario: React.FC = () => {
 
       <ProductModal 
         isOpen={showProductModal}
-        onClose={() => setShowProductModal(false)}
-        onSave={handleSaveProduct}
+        onClose={() => {
+          setShowProductModal(false);
+          setProductToEdit(null); // cerramos y limpiamos
+        }}
+        onSave={productToEdit ? handleEditProduct : handleSaveProduct}
+        initialData={productToEdit ?? undefined}
       />
     </div>
   );
