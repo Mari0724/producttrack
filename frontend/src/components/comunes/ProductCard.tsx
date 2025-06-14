@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import ProductActions from './ProductActions'
 import { BadgeCheck, CalendarDays } from 'lucide-react'
+import CommentsModal from './CommentsModal'
 
 interface ProductCardProps {
   name: string;
@@ -21,13 +22,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
   expirationDate,
   userType,
   image,
-  onView,
   onEdit,
   onDelete
 }) => {
   const [showDetails, setShowDetails] = useState(false)
 
   const isLowStock = userType === 'EMPRESARIAL' ? stock <= 30 : stock <= 1
+  const [showCommentsModal, setShowCommentsModal] = useState(false)
 
   const getStockStyle = () => {
     return isLowStock
@@ -36,10 +37,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
   }
 
   const handleView = () => {
-    if (onView) {
-      onView() // ✅ Esto lo define el padre (por ejemplo Inventario.tsx)
+    if (userType === 'INDIVIDUAL') {
+      setShowCommentsModal(true)
     } else {
-      console.log('Ver más no hace nada porque no hay acción definida')
+      console.log('Este usuario no puede ver los comentarios.')
     }
   }
 
@@ -83,8 +84,15 @@ const ProductCard: React.FC<ProductCardProps> = ({
               onEdit={onEdit}
               onDelete={onDelete}
               onView={handleView}
+              
             />
           </div>
+        )}
+        {userType === 'INDIVIDUAL' && showCommentsModal && (
+          <CommentsModal
+            productName={name}
+            onClose={() => setShowCommentsModal(false)}
+          />
         )}
       </div>
     </>

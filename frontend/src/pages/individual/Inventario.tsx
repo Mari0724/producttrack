@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import ProductCard from '../../components/comunes/ProductCard';
 import FloatingButton from '../../components/comunes/FloatingButton';
 import ProductModal from '../../components/comunes/ProductModal';
+import ConfirmDeleteModal from '../../components/comunes/ConfirmDeleteModal';
+
 
 interface Product {
   name: string;
@@ -50,6 +52,8 @@ const Inventario: React.FC = () => {
 
   const [showProductModal, setShowProductModal] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
+  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const handleSaveProduct = (product: Product) => {
     // Imagen por defecto si no se proporciona
@@ -69,10 +73,6 @@ const Inventario: React.FC = () => {
     setShowProductModal(false);
   };
 
-  const handleDeleteProduct = (name: string) => {
-    setProducts(prev => prev.filter(product => product.name !== name));
-  };
-
   const handleEditProduct = (updatedProduct: Product) => {
     setProducts(prev => prev.map(product => 
       product.name === updatedProduct.name ? updatedProduct : product
@@ -86,6 +86,22 @@ const Inventario: React.FC = () => {
     setShowProductModal(true);
   };
 
+  const handleAskDelete = (productName: string) => {
+    setProductToDelete(productName);
+    setShowConfirmModal(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (productToDelete) {
+      setProducts(prev =>
+        prev.filter(product => product.name !== productToDelete)
+      );
+      console.log(`Producto ${productToDelete} eliminado`);
+      setShowConfirmModal(false);
+      setProductToDelete(null);
+    }
+  };
+
   return (
     <div className="p-6 bg-[#F8F8F8] min-h-screen relative">
       <h2 className="text-2xl font-bold text-[#81203D] mb-6">Inventario de Productos</h2>
@@ -96,7 +112,7 @@ const Inventario: React.FC = () => {
             key={idx}
             {...product}
             onEdit={() => openEditModal(product)}
-            onDelete={() => handleDeleteProduct(product.name)}
+            onDelete={() => handleAskDelete(product.name)}
           />
         ))}
       </div>
@@ -105,11 +121,18 @@ const Inventario: React.FC = () => {
         onAddProduct={() => setShowProductModal(true)}
       />
 
-      <ProductModal 
+      <ConfirmDeleteModal
+        isOpen={showConfirmModal}
+        onClose={() => setShowConfirmModal(false)}
+        onConfirm={handleConfirmDelete}
+        productName={productToDelete || ''}
+      />
+
+      <ProductModal
         isOpen={showProductModal}
         onClose={() => {
           setShowProductModal(false);
-          setProductToEdit(null); // cerramos y limpiamos
+          setProductToEdit(null);
         }}
         onSave={productToEdit ? handleEditProduct : handleSaveProduct}
         initialData={productToEdit ?? undefined}
