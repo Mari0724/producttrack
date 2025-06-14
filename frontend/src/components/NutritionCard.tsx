@@ -42,7 +42,7 @@ const NutritionCard: React.FC<NutritionCardProps> = ({ data }) => {
       {/* Nutrition Grid */}
       <div className="p-6">
         <h4 className="text-lg font-semibold text-olive-green mb-4 font-poppins text-center">
-          Información Nutricional (por porción)
+          Información Nutricional
         </h4>
         
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
