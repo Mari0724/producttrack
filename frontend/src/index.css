@@ -2,74 +2,89 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body, #root {
+/* Aplicar estilos base al html, body y root */
+html,
+body,
+#root {
   height: 100%;
-}
-
-body {
-  @apply m-0 p-0 box-border bg-gray-100;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
 }
 
 
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+  --background: 48 100% 98%;
+  --foreground: 222.2 47.4% 11.2%;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  --primary: 54 89% 60%;
+  --primary-foreground: 0 0% 0%;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --secondary: 82 47% 33%;
+  --secondary-foreground: 0 0% 100%;
+
+  --accent: 82 47% 33%;
+  --accent-foreground: 0 0% 100%;
+
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 47.4% 11.2%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 47.4% 11.2%;
+
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 240 4.9% 83.9%;
+
+  /* Colores personalizados opcionales */
+  --sidebar-background: 0 0% 100%;
+  --sidebar-foreground: 222.2 47.4% 11.2%;
+  --sidebar-primary: 54 89% 60%;
+  --sidebar-primary-foreground: 0 0% 0%;
+  --sidebar-accent: 82 47% 33%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 240 5.9% 90%;
+  --sidebar-ring: 240 4.9% 83.9%;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
+.dark {
+  --background: 222.2 47.4% 11.2%;
+  --foreground: 210 40% 98%;
 
+  --primary: 54 89% 60%;
+  --primary-foreground: 0 0% 0%;
 
+  --secondary: 82 47% 33%;
+  --secondary-foreground: 0 0% 100%;
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
+  --accent: 82 47% 33%;
+  --accent-foreground: 0 0% 100%;
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 210 40% 98%;
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+  --popover: 222.2 47.4% 11.2%;
+  --popover-foreground: 210 40% 98%;
+
+  --card: 222.2 47.4% 11.2%;
+  --card-foreground: 210 40% 98%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 224.3 76.3% 48%;
+
+  --sidebar-background: 222.2 47.4% 11.2%;
+  --sidebar-foreground: 210 40% 98%;
+  --sidebar-primary: 54 89% 60%;
+  --sidebar-primary-foreground: 0 0% 0%;
+  --sidebar-accent: 82 47% 33%;
+  --sidebar-accent-foreground: 0 0% 100%;
+  --sidebar-border: 217.2 32.6% 17.5%;
+  --sidebar-ring: 224.3 76.3% 48%;
 }
