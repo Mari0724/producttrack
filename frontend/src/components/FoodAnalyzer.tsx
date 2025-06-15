@@ -1,19 +1,14 @@
 import { useState } from 'react';
-import ImageUpload from './ImageUpload.tsx';
-import ProcessingState from './ProcessingState.tsx';
-import NutritionCard from './NutritionCard.tsx';
+import ImageUpload from './ImageUpload';
+import ProcessingState from './ProcessingState';
+import NutritionCard from './NutritionCard';
 import ManualSearch from './ManualSearch';
-import { Search, RotateCcw, ImagePlus, ShoppingBasket  } from 'lucide-react'; // Íconos
+import { ShoppingBasket, Search, RotateCcw, ImagePlus } from 'lucide-react';
 
 interface NutritionData {
   food: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  fiber: number;
-  sugar: number;
-  sodium: number;
+  calories?: number;
+  nutritionInfo: string; // GPT-generated paragraph
 }
 
 const FoodAnalyzer = () => {
@@ -26,52 +21,52 @@ const FoodAnalyzer = () => {
     setSelectedImage(imageUrl);
     setNutritionData(null);
     setHasError(false);
+    console.log('Imagen seleccionada:', imageUrl);
   };
 
   const handleAnalyzeImage = async () => {
     if (!selectedImage) return;
+
     setIsProcessing(true);
     setHasError(false);
+    console.log('Iniciando análisis de imagen...');
 
     setTimeout(() => {
       const shouldError = Math.random() < 0.3;
+
       if (shouldError) {
         setHasError(true);
         setIsProcessing(false);
+        console.log('Error en el análisis de imagen');
       } else {
         const mockData: NutritionData = {
-          food: 'Frijoles enlatados',
+          food: "Ensalada mixta con pollo",
           calories: 245,
-          protein: 28,
-          carbs: 12,
-          fat: 8,
-          fiber: 4,
-          sugar: 6,
-          sodium: 320,
+          nutritionInfo: "Esta ensalada mixta con pollo es una excelente opción saludable que aporta 245 calorías por porción. Es rica en proteínas de alta calidad gracias al pollo, que ayuda en la construcción y reparación muscular. Las verduras frescas proporcionan vitaminas, minerales y fibra dietética esencial para una buena digestión. El contenido de grasas es moderado y proviene principalmente de fuentes saludables como el aceite de oliva usado en el aderezo. Esta comida es ideal para quienes buscan mantener un peso saludable mientras obtienen nutrientes esenciales."
         };
+
         setNutritionData(mockData);
         setIsProcessing(false);
+        console.log('Análisis completado:', mockData);
       }
     }, 3000);
   };
 
   const handleManualSearch = async (productName: string) => {
     setIsProcessing(true);
+    console.log('Buscando información para:', productName);
 
     setTimeout(() => {
       const mockData: NutritionData = {
         food: productName,
         calories: 180,
-        protein: 15,
-        carbs: 20,
-        fat: 5,
-        fiber: 3,
-        sugar: 8,
-        sodium: 250,
+        nutritionInfo: `${productName} es un alimento nutritivo que aporta aproximadamente 180 calorías por porción estándar. Contiene una buena combinación de macronutrientes que incluyen proteínas para el mantenimiento muscular, carbohidratos para energía y grasas esenciales. También proporciona vitaminas y minerales importantes para el funcionamiento óptimo del organismo. Es recomendable consumirlo como parte de una dieta balanceada y variada.`
       };
+
       setNutritionData(mockData);
       setIsProcessing(false);
       setHasError(false);
+      console.log('Búsqueda manual completada:', mockData);
     }, 2000);
   };
 
@@ -87,13 +82,15 @@ const FoodAnalyzer = () => {
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-            <ShoppingBasket className="mx-auto w-12 h-12 text-wine-red mb-2" />
-            <h1 className="text-4xl md:text-5xl font-bold text-wine-red mb-2 font-poppins">
-                NutriScan
-            </h1>
-            <p className="text-lg text-gray-600 font-poppins">
-                Analiza la información nutricional de tus alimentos con inteligencia artificial
-            </p>
+          <div className="flex justify-center mb-4">
+            <ShoppingBasket size={48} className="text-wine-red" />
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-wine-red mb-2 font-poppins">
+            NutriScan
+          </h1>
+          <p className="text-lg text-gray-600 font-poppins">
+            Analiza la información nutricional de tus alimentos con inteligencia artificial
+          </p>
         </div>
 
         {/* Main Content */}
@@ -105,7 +102,7 @@ const FoodAnalyzer = () => {
           {selectedImage && !isProcessing && !nutritionData && !hasError && (
             <div className="bg-white rounded-2xl shadow-lg p-6 border border-light-gray">
               <div className="text-center">
-                <h3 className="text-xl font-semibold text-black mb-4 font-poppins">
+                <h3 className="text-xl font-semibold text-wine-red mb-4 font-poppins">
                   Imagen seleccionada
                 </h3>
                 <div className="mb-6">
@@ -118,16 +115,16 @@ const FoodAnalyzer = () => {
                 <div className="flex gap-4 justify-center">
                   <button
                     onClick={handleAnalyzeImage}
-                    className="bg-olive-green hover:bg-olive-green/90 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins"
+                    className="bg-olive-green hover:bg-olive-green/90 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins flex items-center gap-2"
                   >
-                    <Search className="inline-block w-5 h-5 mr-2 -mt-1" />
+                    <Search className="w-5 h-5" />
                     Analizar Imagen
                   </button>
                   <button
                     onClick={handleReset}
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins"
+                    className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins flex items-center gap-2"
                   >
-                    <RotateCcw className="inline-block w-5 h-5 mr-2 -mt-1" />
+                    <RotateCcw className="w-5 h-5" />
                     Cambiar Imagen
                   </button>
                 </div>
@@ -147,9 +144,9 @@ const FoodAnalyzer = () => {
               <div className="text-center">
                 <button
                   onClick={handleReset}
-                  className="bg-wine-red hover:bg-wine-red/90 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins"
+                  className="bg-wine-red hover:bg-wine-red/90 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins flex items-center gap-2"
                 >
-                  <ImagePlus className="inline-block w-5 h-5 mr-2 -mt-1" />
+                  <ImagePlus className="w-5 h-5" />
                   Analizar Nueva Imagen
                 </button>
               </div>

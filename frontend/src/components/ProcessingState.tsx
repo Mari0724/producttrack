@@ -1,10 +1,12 @@
+import { ScanFace } from 'lucide-react';
+
 const ProcessingState = () => {
   return (
     <div className="bg-white rounded-2xl shadow-lg p-8 border border-light-gray">
       <div className="text-center">
         <div className="mb-6">
           <div className="inline-block animate-bounce-gentle text-6xl mb-4">
-            🤖
+            <ScanFace className="w-16 h-16 text-olive-green" />
           </div>
         </div>
         

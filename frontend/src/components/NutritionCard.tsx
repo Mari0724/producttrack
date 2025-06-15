@@ -1,14 +1,10 @@
 import React from 'react';
+import { UtensilsCrossed, Info, Lightbulb } from 'lucide-react';
 
 interface NutritionData {
   food: string;
-  calories: number;
-  protein: number;
-  carbs: number;
-  fat: number;
-  fiber: number;
-  sugar: number;
-  sodium: number;
+  calories?: number;
+  nutritionInfo: string; // This will be the GPT-generated paragraph
 }
 
 interface NutritionCardProps {
@@ -16,55 +12,49 @@ interface NutritionCardProps {
 }
 
 const NutritionCard: React.FC<NutritionCardProps> = ({ data }) => {
-  const nutritionItems = [
-    { label: 'Proteínas', value: data.protein, unit: 'g', color: 'bg-wine-red', emoji: '💪' },
-    { label: 'Carbohidratos', value: data.carbs, unit: 'g', color: 'bg-food-yellow', emoji: '🍞' },
-    { label: 'Grasas', value: data.fat, unit: 'g', color: 'bg-olive-green', emoji: '🥑' },
-    { label: 'Fibra', value: data.fiber, unit: 'g', color: 'bg-green-600', emoji: '🌾' },
-    { label: 'Azúcares', value: data.sugar, unit: 'g', color: 'bg-orange-500', emoji: '🍯' },
-    { label: 'Sodio', value: data.sodium, unit: 'mg', color: 'bg-gray-500', emoji: '🧂' },
-  ];
-
   return (
     <div className="bg-white rounded-2xl shadow-lg border border-light-gray overflow-hidden">
       {/* Header */}
       <div className="bg-gradient-to-r from-olive-green to-food-yellow p-6 text-white">
         <div className="text-center">
-          <div className="text-4xl mb-2">🍽️</div>
-          <h3 className="text-2xl font-bold font-poppins">{data.food}</h3>
-          <div className="mt-4 bg-white/20 rounded-lg p-3 inline-block">
-            <div className="text-3xl font-bold">{data.calories}</div>
-            <div className="text-sm">calorías</div>
+          <div className="text-4xl mb-2 flex justify-center">
+            <UtensilsCrossed className="w-10 h-10 text-white" />
           </div>
+          <h3 className="text-2xl font-bold font-poppins">{data.food}</h3>
         </div>
       </div>
 
-      {/* Nutrition Grid */}
-      <div className="p-6">
-        <h4 className="text-lg font-semibold text-olive-green mb-4 font-poppins text-center">
-          Información Nutricional
-        </h4>
-        
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {nutritionItems.map((item, index) => (
-            <div
-              key={index}
-              className="bg-gray-50 rounded-xl p-4 text-center border border-light-gray hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="text-2xl mb-2">{item.emoji}</div>
-              <div className="text-sm text-gray-600 font-poppins mb-1">{item.label}</div>
-              <div className="font-bold text-lg text-gray-800 font-poppins">
-                {item.value}{item.unit}
-              </div>
-              <div className={`h-2 ${item.color} rounded-full mt-2 mx-auto`} style={{ width: '60%' }}></div>
+      {/* Content */}
+      <div className="p-8 space-y-6">
+        {/* Calories Section - Only show if available */}
+        {data.calories && (
+          <div className="text-center bg-food-yellow/10 rounded-xl p-4 border border-food-yellow/20">
+            <div className="text-3xl font-bold text-olive-green font-poppins mb-1">
+              {data.calories} calorías
             </div>
-          ))}
+            <div className="text-sm text-gray-600 font-poppins">por porción</div>
+          </div>
+        )}
+
+        {/* Nutritional Information */}
+        <div className="space-y-4">
+          <h4 className="text-xl font-bold text-wine-red font-poppins flex items-center gap-2">
+            <Info className="w-5 h-5 text-wine-red" />
+            Información Nutricional
+          </h4>
+          
+          <div className="bg-gray-50 rounded-xl p-6">
+            <p className="text-gray-700 font-poppins leading-relaxed text-base">
+              {data.nutritionInfo}
+            </p>
+          </div>
         </div>
 
         {/* Footer Note */}
-        <div className="mt-6 p-4 bg-food-yellow/10 rounded-xl border border-food-yellow/20">
-          <p className="text-sm text-gray-600 text-center font-poppins">
-            ℹ️ Los valores nutricionales son aproximados y pueden variar según la preparación y los ingredientes específicos.
+        <div className="bg-olive-green/10 rounded-xl p-4 border border-olive-green/20">
+          <p className="text-sm text-gray-600 text-center font-poppins leading-relaxed flex items-center justify-center gap-2">
+            <Lightbulb className="w-4 h-4 text-olive-green" />
+            <strong>Nota:</strong> La información nutricional es generada por inteligencia artificial y puede variar según la preparación y los ingredientes específicos utilizados.
           </p>
         </div>
       </div>
