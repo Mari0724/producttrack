@@ -1,5 +1,7 @@
 import React, { useRef } from 'react';
 import { Camera, Upload, ImagePlus, Image, Ruler } from 'lucide-react';
+import { resizeImage } from '../utils/resizeImage';
+
 
 interface ImageUploadProps {
   onImageSelect: (imageUrl: string) => void;
@@ -9,17 +11,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const result = e.target?.result as string;
-        onImageSelect(result);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const resizedBase64 = await resizeImage(file, 800); // 800px de ancho máximo
+        onImageSelect(resizedBase64);
+      } catch (error) {
+        console.error("Error al redimensionar la imagen:", error);
+      }
     }
   };
+
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();

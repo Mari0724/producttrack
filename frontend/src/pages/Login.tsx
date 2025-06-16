@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaEnvelope, FaLock, FaGoogle } from "react-icons/fa";
+import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 const Login: React.FC = () => {
@@ -10,17 +10,31 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      // Aquí iría tu lógica de autenticación con el backend
-      console.log("Iniciar sesión con:", { email, password });
+      const response = await fetch("http://localhost:3000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ correo: email, password }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Credenciales incorrectas");
+      }
+
+      const data = await response.json();
+
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("tipoUsuario", data.tipoUsuario);
+      localStorage.setItem("rol", data.rol);
+      localStorage.setItem("username", data.username);
+
       alert("Inicio de sesión exitoso ✅");
+      navigate("/nutriscan");
     } catch (error) {
+      console.error("Error al iniciar sesión:", error);
       alert("Error al iniciar sesión ❌");
     }
-  };
-
-  const handleGoogleLogin = () => {
-    // Aquí se debería integrar Google Auth (OAuth2 o Firebase)
-    console.log("Iniciar sesión con Google");
   };
 
   return (
@@ -31,7 +45,7 @@ const Login: React.FC = () => {
             ¡Bienvenido Nuevamente!
           </h2>
           <p className="text-center text-base md:text-lg mb-6 leading-snug">
-            Para unirte por favor Inicia Seción con tus datos
+            Para unirte por favor Inicia Sesión con tus datos
           </p>
           <button
             onClick={() => navigate("/register")}
@@ -74,15 +88,6 @@ const Login: React.FC = () => {
               className="w-full bg-yellow-600 text-white py-2 rounded-full hover:bg-yellow-700 transition"
             >
               Iniciar sesión
-            </button>
-
-            <button
-              type="button"
-              onClick={handleGoogleLogin}
-              className="w-full bg-red-500 text-white py-2 rounded-full hover:bg-red-600 transition flex items-center justify-center gap-2"
-            >
-              <FaGoogle />
-              Iniciar sesión con Google
             </button>
           </form>
         </div>

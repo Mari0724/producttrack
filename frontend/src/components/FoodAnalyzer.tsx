@@ -8,10 +8,14 @@ import { ShoppingBasket, Search, RotateCcw, ImagePlus } from 'lucide-react';
 interface NutritionData {
   food: string;
   calories?: number;
-  nutritionInfo: string; // GPT-generated paragraph
+  nutritionInfo: string;
 }
 
-const FoodAnalyzer = () => {
+interface FoodAnalyzerProps {
+  analizarImagen: (base64: string, token: string) => Promise<unknown>;
+}
+
+const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [nutritionData, setNutritionData] = useState<NutritionData | null>(null);
@@ -21,7 +25,6 @@ const FoodAnalyzer = () => {
     setSelectedImage(imageUrl);
     setNutritionData(null);
     setHasError(false);
-    console.log('Imagen seleccionada:', imageUrl);
   };
 
   const handleAnalyzeImage = async () => {
@@ -29,45 +32,45 @@ const FoodAnalyzer = () => {
 
     setIsProcessing(true);
     setHasError(false);
-    console.log('Iniciando análisis de imagen...');
 
-    setTimeout(() => {
-      const shouldError = Math.random() < 0.3;
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token no encontrado");
 
-      if (shouldError) {
-        setHasError(true);
-        setIsProcessing(false);
-        console.log('Error en el análisis de imagen');
+      const result = await analizarImagen(selectedImage, token);
+
+      if (typeof result === "object" && result !== null && "food" in result && "nutritionInfo" in result) {
+        setNutritionData(result as NutritionData);
       } else {
-        const mockData: NutritionData = {
-          food: "Ensalada mixta con pollo",
-          calories: 245,
-          nutritionInfo: "Esta ensalada mixta con pollo es una excelente opción saludable que aporta 245 calorías por porción. Es rica en proteínas de alta calidad gracias al pollo, que ayuda en la construcción y reparación muscular. Las verduras frescas proporcionan vitaminas, minerales y fibra dietética esencial para una buena digestión. El contenido de grasas es moderado y proviene principalmente de fuentes saludables como el aceite de oliva usado en el aderezo. Esta comida es ideal para quienes buscan mantener un peso saludable mientras obtienen nutrientes esenciales."
-        };
-
-        setNutritionData(mockData);
-        setIsProcessing(false);
-        console.log('Análisis completado:', mockData);
+        throw new Error("Respuesta inválida del backend");
       }
-    }, 3000);
+    } catch (error) {
+      console.error("Error en análisis:", error);
+      setHasError(true);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   const handleManualSearch = async (productName: string) => {
     setIsProcessing(true);
-    console.log('Buscando información para:', productName);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token no encontrado");
 
-    setTimeout(() => {
-      const mockData: NutritionData = {
-        food: productName,
-        calories: 180,
-        nutritionInfo: `${productName} es un alimento nutritivo que aporta aproximadamente 180 calorías por porción estándar. Contiene una buena combinación de macronutrientes que incluyen proteínas para el mantenimiento muscular, carbohidratos para energía y grasas esenciales. También proporciona vitaminas y minerales importantes para el funcionamiento óptimo del organismo. Es recomendable consumirlo como parte de una dieta balanceada y variada.`
-      };
-
-      setNutritionData(mockData);
+      const result = await analizarImagen(productName, token); // usamos el mismo endpoint
+      if (typeof result === "object" && result !== null && "food" in result && "nutritionInfo" in result) {
+        setNutritionData(result as NutritionData);
+        setHasError(false);
+      } else {
+        throw new Error("Respuesta inválida del backend");
+      }
+    } catch (error) {
+      console.error("Error en búsqueda manual:", error);
+      setHasError(true);
+    } finally {
       setIsProcessing(false);
-      setHasError(false);
-      console.log('Búsqueda manual completada:', mockData);
-    }, 2000);
+    }
   };
 
   const handleReset = () => {
