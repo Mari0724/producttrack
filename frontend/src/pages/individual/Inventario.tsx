@@ -1,104 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ProductCard from '../../components/comunes/ProductCard';
 import FloatingButton from '../../components/comunes/FloatingButton';
 import ProductModal from '../../components/comunes/ProductModal';
 import ConfirmDeleteModal from '../../components/comunes/ConfirmDeleteModal';
+import type { Product } from '../../types/Product';
+import { getProductos, crearProducto, editarProducto, eliminarProducto } from '../../api/productos';
 
-
-interface Product {
-  name: string;
-  category: string;
-  stock: number;
-  expirationDate: string;
-  userType: 'INDIVIDUAL' | 'EMPRESARIAL';
-  image: string;
-}
 
 const Inventario: React.FC = () => {
-  const [products, setProducts] = useState<Product[]>([
-    {
-      name: 'Shampoo Natural',
-      category: 'Cuidado personal',
-      stock: 2,
-      expirationDate: '2025-10-01',
-      userType: 'INDIVIDUAL',
-      image: 'https://via.placeholder.com/150'
-    },
-    {
-      name: 'Arroz Premium 5kg',
-      category: 'Alimentos',
-      stock: 40,
-      expirationDate: '2026-01-15',
-      userType: 'EMPRESARIAL',
-      image: 'https://via.placeholder.com/150'
-    },
-    {
-      name: 'Crema dental',
-      category: 'Cuidado personal',
-      stock: 1,
-      expirationDate: '2024-12-01',
-      userType: 'INDIVIDUAL',
-      image: 'https://via.placeholder.com/150'
-    },
-    {
-      name: 'Aceite vegetal',
-      category: 'Alimentos',
-      stock: 28,
-      expirationDate: '2026-03-05',
-      userType: 'EMPRESARIAL',
-      image: 'https://via.placeholder.com/150'
-    }
-  ]);
-
+  const [products, setProducts] = useState<Product[]>([]);
   const [showProductModal, setShowProductModal] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
-  const [productToDelete, setProductToDelete] = useState<string | null>(null);
+  const [productToDelete, setProductToDelete] = useState<number | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  const handleSaveProduct = (product: Product) => {
-    // Imagen por defecto si no se proporciona
-    const productWithImage = {
-      ...product,
-      image: product.image?.trim() || 'https://via.placeholder.com/150'
-    };
-
-    // Verifica si ya existe un producto con ese nombre
-    const exists = products.some(p => p.name === product.name);
-    if (exists) {
-      alert('Ya existe un producto con ese nombre.');
-      return;
+  // 👉 Cargar productos al iniciar
+  useEffect(() => {
+    async function fetchProductos() {
+      try {
+        const res = await getProductos();
+        setProducts(res.data);
+      } catch (error) {
+        console.error("Error al cargar productos:", error);
+      }
     }
 
-    setProducts(prev => [...prev, productWithImage]);
-    setShowProductModal(false);
+    fetchProductos();
+  }, []);
+
+  const handleSaveProduct = async (product: Product) => {
+    try {
+      const res = await crearProducto(product);
+      setProducts(prev => [...prev, res.data]);
+      setShowProductModal(false);
+    } catch {
+      alert("Error al guardar producto");
+    }
   };
 
-  const handleEditProduct = (updatedProduct: Product) => {
-    setProducts(prev => prev.map(product => 
-      product.name === updatedProduct.name ? updatedProduct : product
-    ));
-    setProductToEdit(null);
+  const handleEditProduct = async (updatedProduct: Product) => {
+    try {
+      await editarProducto(updatedProduct.id, updatedProduct);
+      setProducts(prev =>
+        prev.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
+      );
+      setProductToEdit(null);
+    } catch {
+      alert("Error al editar producto");
+    }
   };
 
-  // AQUÍ VA 👇
   const openEditModal = (product: Product) => {
     setProductToEdit(product);
     setShowProductModal(true);
   };
 
-  const handleAskDelete = (productName: string) => {
-    setProductToDelete(productName);
+  const handleAskDelete = (productId: number) => {
+    setProductToDelete(productId);
     setShowConfirmModal(true);
   };
 
-  const handleConfirmDelete = () => {
-    if (productToDelete) {
-      setProducts(prev =>
-        prev.filter(product => product.name !== productToDelete)
-      );
-      console.log(`Producto ${productToDelete} eliminado`);
-      setShowConfirmModal(false);
-      setProductToDelete(null);
+  const handleConfirmDelete = async () => {
+    if (productToDelete !== null) {
+      try {
+        await eliminarProducto(productToDelete);
+        setProducts(prev =>
+          prev.filter(product => product.id !== productToDelete)
+        );
+        setShowConfirmModal(false);
+        setProductToDelete(null);
+      } catch {
+        alert("Error al eliminar producto");
+      }
     }
   };
 
@@ -107,12 +80,12 @@ const Inventario: React.FC = () => {
       <h2 className="text-2xl font-bold text-[#81203D] mb-6">Inventario de Productos</h2>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
-        {products.map((product, idx) => (
+        {products.map((product) => (
           <ProductCard 
-            key={idx}
+            key={product.id}
             {...product}
             onEdit={() => openEditModal(product)}
-            onDelete={() => handleAskDelete(product.name)}
+            onDelete={() => handleAskDelete(product.id)}
           />
         ))}
       </div>
@@ -125,7 +98,7 @@ const Inventario: React.FC = () => {
         isOpen={showConfirmModal}
         onClose={() => setShowConfirmModal(false)}
         onConfirm={handleConfirmDelete}
-        productName={productToDelete || ''}
+        productName={productToDelete?.toString() || ''}
       />
 
       <ProductModal

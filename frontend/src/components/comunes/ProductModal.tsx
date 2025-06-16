@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { AiOutlineClose } from 'react-icons/ai'
-
-interface Product {
-  name: string
-  category: string
-  stock: number
-  expirationDate: string
-  userType: 'INDIVIDUAL' | 'EMPRESARIAL'
-  image: string
-}
+import type { Product } from '../../types/Product';
 
 interface ProductModalProps {
   isOpen: boolean
@@ -22,26 +14,28 @@ const UPLOAD_PRESET = 'productos_imagenes' // Crea uno en la consola
 
 const ProductModal: React.FC<ProductModalProps> = ({ isOpen, onClose, onSave, initialData }) => {
   const [form, setForm] = useState<Product>({
+  id: 0,
+  name: '',
+  category: '',
+  stock: 0,
+  expirationDate: '',
+  userType: 'INDIVIDUAL',
+  image: '',
+});
+
+  const [uploading, setUploading] = useState(false)
+
+  useEffect(() => {
+  setForm(initialData || {
+    id: 0,
     name: '',
     category: '',
     stock: 0,
     expirationDate: '',
     userType: 'INDIVIDUAL',
     image: '',
-  })
-
-  const [uploading, setUploading] = useState(false)
-
-  useEffect(() => {
-    setForm(initialData || {
-      name: '',
-      category: '',
-      stock: 0,
-      expirationDate: '',
-      userType: 'INDIVIDUAL',
-      image: '',
-    })
-  }, [initialData])
+  });
+}, [initialData]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
