@@ -15,7 +15,7 @@ import {
 } from "tsoa";
 
 import { NutriScanService } from "../services/nutriscan.service";
-import { NutriScanSchema } from "../models/NutriScanModel";
+import { NutriScanSchemaWithoutUserId } from "../models/NutriScanModel";
 
 @Route("nutriscan")
 @Tags("NutriScan")
@@ -29,6 +29,7 @@ export class NutriScanController extends Controller {
   @Security("jwt")
   @Post()
   async create(@Body() body: unknown, @Request() req: any) {
+    console.log("✅ Se recibió solicitud en NutriScanController /nutriscan");
     const usuario = req.user;
 
     const puedeUsarNutriScan =
@@ -42,13 +43,17 @@ export class NutriScanController extends Controller {
     }
 
     try {
-      const isTest = usuario.rol === "DESARROLLADOR"; // solo desarrollador guarda como prueba
-      const created = await this.service.create(body, usuario.id, isTest);
+      const parsedBody = NutriScanSchemaWithoutUserId.parse(body);
+      const isTest = usuario.rol === "DESARROLLADOR";
+
+      const created = await this.service.create(parsedBody, usuario.id, isTest);
       this.setStatus(201);
       return created;
     } catch (error: any) {
       this.setStatus(400);
-      return { message: error.message || 'Ocurrió un error al procesar la solicitud.' };
+      return {
+        message: error.message || "Ocurrió un error al procesar la solicitud.",
+      };
     }
   }
 
@@ -67,7 +72,9 @@ export class NutriScanController extends Controller {
     }
 
     this.setStatus(403);
-    return { message: "Acceso denegado: solo disponible para auditoría o pruebas." };
+    return {
+      message: "Acceso denegado: solo disponible para auditoría o pruebas.",
+    };
   }
 
   // ✅ Buscar por ID — accesible solo a ADMIN
@@ -100,7 +107,9 @@ export class NutriScanController extends Controller {
       return await this.service.update(id, body);
     } catch (error: any) {
       this.setStatus(400);
-      return { message: error.message || 'Ocurrió un error al actualizar el análisis.' };
+      return {
+        message: error.message || "Ocurrió un error al actualizar el análisis.",
+      };
     }
   }
 

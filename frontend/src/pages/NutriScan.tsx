@@ -6,19 +6,24 @@ const NutriScan = () => {
   const analizarImagen = async (base64: string, token: string): Promise<unknown> => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/nutriscan/analizar",
-        { imagen: base64 },
+        "http://localhost:3000/nutriscan",
+        {
+          respuesta: {
+            base64: base64, // lo que espera el backend
+          },
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
         }
       );
-
+      console.log("🔎 Respuesta de NutriScan:", response.data);
       return response.data;
     } catch (error: unknown) {
-      if (error instanceof Error) {
-        console.error("Error al analizar imagen:", error.message);
+      if (axios.isAxiosError(error)) {
+        console.error("Error en respuesta del servidor:", error.response?.data || error.message);
       } else {
         console.error("Error desconocido:", error);
       }

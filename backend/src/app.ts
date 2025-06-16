@@ -19,7 +19,9 @@ app.use(cors({
 }));
 
 // bodyParser para JSON
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "3mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "3mb" }));
+
 
 // 📌 Rutas OCR manuales primero, bajo /api/ocr
 app.use('/api/ocr', nutriscanOCRRoutes);

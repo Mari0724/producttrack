@@ -1,11 +1,14 @@
 import prisma from "../utils/prismaClient";
-import { NutriScanSchema } from "../models/NutriScanModel";
+import {
+  NutriScanSchema,
+  NutriScanSchemaWithoutUserId,
+} from "../models/NutriScanModel";
 
 export class NutriScanService {
   // ✅ Crear registro con isTest y usuarioId
   async create(data: unknown, usuarioId: number, isTest: boolean) {
     try {
-      const parsedData = NutriScanSchema.parse(data);
+      const parsedData = NutriScanSchemaWithoutUserId.parse(data);
 
       if (parsedData.respuesta === undefined || parsedData.respuesta === null) {
         throw new Error("El campo 'respuesta' es obligatorio y no puede estar vacío.");
@@ -16,9 +19,10 @@ export class NutriScanService {
           ...parsedData,
           usuarioId,
           isTest,
-          respuesta: parsedData.respuesta ?? {}, // o un valor válido
+          respuesta: parsedData.respuesta ?? {}, // para evitar null
         },
       });
+
       return nuevoRegistro;
     } catch (error) {
       throw new Error(`Error al crear el registro: ${(error as Error).message}`);
@@ -52,11 +56,13 @@ export class NutriScanService {
   // ✅ Actualizar (solo ADMIN en controller)
   async update(id: number, data: unknown) {
     try {
-      const parsedData = NutriScanSchema.partial().parse(data);
+      const parsedData = NutriScanSchemaWithoutUserId.partial().parse(data);
+
       const actualizado = await prisma.nutriScan.update({
         where: { id },
         data: parsedData,
       });
+
       return actualizado;
     } catch (error) {
       throw new Error(`Error al actualizar el registro: ${(error as Error).message}`);
@@ -68,6 +74,7 @@ export class NutriScanService {
     await prisma.nutriScan.delete({
       where: { id },
     });
+
     return { message: `Registro con id ${id} eliminado.` };
   }
 }
