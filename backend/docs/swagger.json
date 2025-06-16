@@ -408,6 +408,10 @@
 							"activo",
 							"inactivo"
 						]
+					},
+					"empresaId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
@@ -459,6 +463,10 @@
 							"activo",
 							"inactivo"
 						]
+					},
+					"empresaId": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"type": "object",
@@ -2088,6 +2096,50 @@
 					{
 						"in": "path",
 						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/equipo/todos/{empresaId}": {
+			"delete": {
+				"operationId": "EliminarTodoElEquipo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Equipo"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "empresaId",
 						"required": true,
 						"schema": {
 							"format": "double",

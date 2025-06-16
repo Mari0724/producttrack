@@ -2,24 +2,22 @@ import prisma from '../utils/prismaClient'; // cliente separado
 import { EquipoDTO } from "../models/EquipoDTO";
 import { equipoSchema } from "../models/EquipoModel";
 
-
 export class EquipoService {
   // Crear usuario tipo equipo
   async crearEquipo(data: EquipoDTO, empresaId: number) {
-  const datosValidados = equipoSchema.parse(data);
+    const datosValidados = equipoSchema.parse(data);
 
-  const nuevoEquipo = await prisma.users.create({
-    data: {
-      ...datosValidados,
-      tipoUsuario: "EMPRESARIAL",
-      rol: "EQUIPO",
-      empresaId,
-    },
-  });
+    const nuevoEquipo = await prisma.users.create({
+      data: {
+        ...datosValidados,
+        tipoUsuario: "EMPRESARIAL",
+        rol: "EQUIPO",
+        empresaId,
+      },
+    });
 
-  return nuevoEquipo;
-}
-
+    return nuevoEquipo;
+  }
 
   // Obtener todos los usuarios equipo (sin filtros)
   async obtenerTodosLosEquipos() {
@@ -64,10 +62,17 @@ export class EquipoService {
   }
 
   // Actualizar usuario equipo
-  async actualizarEquipo(id: number, datosActualizados: Partial<EquipoDTO>, empresaId: number) {
-    const equipo = await prisma.users.findFirst({
-      where: { idUsuario: id, empresaId, rol: "EQUIPO" }
-    });
+  async actualizarEquipo(id: number, datosActualizados: Partial<EquipoDTO>, empresaId?: number) {
+    const condiciones: any = {
+      idUsuario: id,
+      rol: "EQUIPO",
+    };
+
+    if (empresaId !== undefined) {
+      condiciones.empresaId = empresaId;
+    }
+
+    const equipo = await prisma.users.findFirst({ where: condiciones });
 
     if (!equipo) throw new Error("Equipo no encontrado o no pertenece a esta empresa");
 
@@ -77,15 +82,41 @@ export class EquipoService {
       where: { idUsuario: id },
       data: datosActualizados,
     });
-}
+  }
 
+  // Eliminar usuario equipo individual
+  async eliminarEquipo(id: number, empresaId?: number) {
+    const condiciones: any = {
+      idUsuario: id,
+      rol: "EQUIPO",
+    };
 
-  // Eliminar usuario equipo
-  async eliminarEquipo(id: number) {
-    await this.obtenerEquipoPorId(id); // Verificación
+    if (empresaId !== undefined) {
+      condiciones.empresaId = empresaId;
+    }
+
+    const equipo = await prisma.users.findFirst({
+      where: condiciones,
+    });
+
+    if (!equipo) throw new Error("Equipo no encontrado o no pertenece a esta empresa");
 
     return await prisma.users.delete({
-      where: { idUsuario: id},
+      where: { idUsuario: id },
     });
+  }
+
+  // Eliminar a todo el equipo de una empresa
+  async eliminarTodoElEquipo(empresaId: number) {
+    const resultado = await prisma.users.deleteMany({
+      where: {
+        rol: "EQUIPO",
+        empresaId,
+      },
+    });
+
+    return {
+      mensaje: `Se eliminaron ${resultado.count} usuarios del equipo de la empresa.`,
+    };
   }
 }

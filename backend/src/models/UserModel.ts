@@ -120,5 +120,3 @@ export const userSchema = z.object({
 
 
 export type ValidatedUser = z.infer<typeof userSchema>;
-
-
