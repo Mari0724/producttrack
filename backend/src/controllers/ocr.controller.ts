@@ -9,7 +9,7 @@ import {
 } from '../utils/texto';
 import { Request, Response } from 'express';
 import { OpenFoodFactsService } from '../services/openfoodfacts.service';
-import { GPTService } from '../services/gpt.service';
+import { gptService } from '../services/gpt.service';
 import prisma from '../utils/prismaClient';
 import { preprocesarImagen } from '../utils/preprocesarImagen';
 
@@ -83,7 +83,8 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
 
 
     const mejorResultado = elegirMejorResultado(openFoodFactsResultados, textoCorregido);
-    const mensajeGPT = await GPTService.generarMensajeNutricional(
+    const mensajeGPT = await gptService.generarMensajeNutricional(
+
       nombreProducto || 'Producto desconocido',
       mejorResultado ? [mejorResultado] : []
     );
@@ -137,7 +138,8 @@ export const confirmarNombreManual = async (req: Request, res: Response): Promis
     const mejorResultado = elegirMejorResultado(openFoodFactsResultados, nombreProducto);
 
     // ⚙️ Generar mensaje GPT
-    const mensajeGPT = await GPTService.generarMensajeNutricional(
+    const mensajeGPT = await gptService.generarMensajeNutricional(
+
       nombreProducto,
       mejorResultado ? [mejorResultado] : []
     );

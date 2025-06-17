@@ -11,12 +11,7 @@ if (apiKey) {
 }
 
 export class GPTService {
-  /**
-   * Genera un mensaje nutricional usando GPT, con los datos de OpenFoodFacts
-   * - nombreProducto se usa en caso de no haber resultados
-   * - resultados es un array con productos, se usa el primero
-   */
-  static async generarMensajeNutricional(nombreProducto: string, resultados: any[]) {
+  public async generarMensajeNutricional(nombreProducto: string, resultados: any[]): Promise<string> {
     try {
       if (resultados.length === 0) {
         return `No se encontró información nutricional para un producto llamado "${nombreProducto}".`;
@@ -52,10 +47,12 @@ Redacta un mensaje para el usuario resumiendo esta información.
       });
 
       const mensajeGenerado = completion.choices[0].message?.content;
-      return mensajeGenerado;
+      return mensajeGenerado ?? "No se pudo generar el mensaje.";
     } catch (error: any) {
-      console.error('❌ Error generando mensaje nutricional:', error);
+      console.error("❌ Error generando mensaje nutricional:", error);
       throw new Error(`Error generando mensaje nutricional: ${error.message || error}`);
     }
   }
 }
+
+export const gptService = new GPTService();

@@ -5,14 +5,23 @@ import NutritionCard from './NutritionCard';
 import ManualSearch from './ManualSearch';
 import { ShoppingBasket, Search, RotateCcw, ImagePlus } from 'lucide-react';
 
-interface NutritionData {
+export interface NutritionData {
   food: string;
   calories?: number;
   nutritionInfo: string;
 }
 
+export interface RespuestaNutriScan {
+  mensajeGPT: string;
+  requiereConfirmacion: boolean;
+  registro: {
+    id: number;
+    consulta: string;
+  };
+}
+
 interface FoodAnalyzerProps {
-  analizarImagen: (base64: string, token: string) => Promise<unknown>;
+  analizarImagen: (base64: string, token: string) => Promise<RespuestaNutriScan>;
 }
 
 const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
@@ -39,8 +48,18 @@ const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
 
       const result = await analizarImagen(selectedImage, token);
 
-      if (typeof result === "object" && result !== null && "food" in result && "nutritionInfo" in result) {
-        setNutritionData(result as NutritionData);
+      if (
+        typeof result === "object" &&
+        result !== null &&
+        "mensajeGPT" in result &&
+        "registro" in result &&
+        typeof result.mensajeGPT === "string"
+      ) {
+        const data: NutritionData = {
+          food: result.registro.consulta,
+          nutritionInfo: result.mensajeGPT,
+        };
+        setNutritionData(data);
       } else {
         throw new Error("Respuesta inválida del backend");
       }
@@ -58,9 +77,19 @@ const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token no encontrado");
 
-      const result = await analizarImagen(productName, token); // usamos el mismo endpoint
-      if (typeof result === "object" && result !== null && "food" in result && "nutritionInfo" in result) {
-        setNutritionData(result as NutritionData);
+      const result = await analizarImagen(productName, token);
+      if (
+        typeof result === "object" &&
+        result !== null &&
+        "mensajeGPT" in result &&
+        "registro" in result &&
+        typeof result.mensajeGPT === "string"
+      ) {
+        const data: NutritionData = {
+          food: result.registro.consulta,
+          nutritionInfo: result.mensajeGPT,
+        };
+        setNutritionData(data);
         setHasError(false);
       } else {
         throw new Error("Respuesta inválida del backend");

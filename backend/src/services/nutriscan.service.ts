@@ -1,80 +1,61 @@
 import prisma from "../utils/prismaClient";
-import {
-  NutriScanSchema,
-  NutriScanSchemaWithoutUserId,
-} from "../models/NutriScanModel";
+import { NutriScanSchemaWithoutUserId } from "../models/NutriScanModel";
+import { OpenFoodFactsService } from "./openfoodfacts.service";
+import { gptService } from "./gpt.service";
 
 export class NutriScanService {
-  // ✅ Crear registro con isTest y usuarioId
   async create(data: unknown, usuarioId: number, isTest: boolean) {
     try {
-      const parsedData = NutriScanSchemaWithoutUserId.parse(data);
+      const parsed = NutriScanSchemaWithoutUserId.parse(data);
+      const nombreProducto = parsed.consulta.trim();
 
-      if (parsedData.respuesta === undefined || parsedData.respuesta === null) {
-        throw new Error("El campo 'respuesta' es obligatorio y no puede estar vacío.");
-      }
+      // Consultar OpenFoodFacts
+      const resultadosOpenFood = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
 
-      const nuevoRegistro = await prisma.nutriScan.create({
+      // Generar respuesta nutricional
+      const respuestaGenerada = {
+        mensaje: await gptService.generarMensajeNutricional(nombreProducto, resultadosOpenFood),
+        generadoPor: isTest ? "simulado" : "gpt",
+      };
+
+      // Guardar en la base de datos
+      const nuevo = await prisma.nutriScan.create({
         data: {
-          ...parsedData,
           usuarioId,
           isTest,
-          respuesta: parsedData.respuesta ?? {}, // para evitar null
+          esAlimento: parsed.esAlimento,
+          consulta: nombreProducto,
+          tipoAnalisis: "auto",
+          respuesta: respuestaGenerada,
         },
       });
 
-      return nuevoRegistro;
+      return nuevo;
     } catch (error) {
-      throw new Error(`Error al crear el registro: ${(error as Error).message}`);
+      console.error("❌ Error en NutriScanService:", error);
+      throw new Error(`Error al crear el análisis: ${(error as Error).message}`);
     }
   }
 
-  // ✅ ADMIN: ver todos los registros de prueba
   async findTestsOnly() {
-    return prisma.nutriScan.findMany({
-      where: { isTest: true },
-    });
+    return prisma.nutriScan.findMany({ where: { isTest: true } });
   }
 
-  // ✅ DESARROLLADOR: ver sus propios registros de prueba
   async findTestsByUser(usuarioId: number) {
-    return prisma.nutriScan.findMany({
-      where: {
-        isTest: true,
-        usuarioId,
-      },
-    });
+    return prisma.nutriScan.findMany({ where: { isTest: true, usuarioId } });
   }
 
-  // ✅ Buscar por ID (solo ADMIN en controller)
   async findById(id: number) {
-    return prisma.nutriScan.findUnique({
-      where: { id },
-    });
+    return prisma.nutriScan.findUnique({ where: { id } });
   }
 
-  // ✅ Actualizar (solo ADMIN en controller)
   async update(id: number, data: unknown) {
-    try {
-      const parsedData = NutriScanSchemaWithoutUserId.partial().parse(data);
-
-      const actualizado = await prisma.nutriScan.update({
-        where: { id },
-        data: parsedData,
-      });
-
-      return actualizado;
-    } catch (error) {
-      throw new Error(`Error al actualizar el registro: ${(error as Error).message}`);
-    }
+    const parsed = NutriScanSchemaWithoutUserId.partial().parse(data);
+    return prisma.nutriScan.update({ where: { id }, data: parsed });
   }
 
-  // ✅ Eliminar (solo ADMIN en controller)
   async delete(id: number) {
-    await prisma.nutriScan.delete({
-      where: { id },
-    });
-
+    await prisma.nutriScan.delete({ where: { id } });
     return { message: `Registro con id ${id} eliminado.` };
   }
 }
