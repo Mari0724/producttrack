@@ -6,7 +6,6 @@ import ConfirmDeleteModal from '../../components/comunes/ConfirmDeleteModal';
 import type { Product } from '../../types/Product';
 import { getProductos, crearProducto, editarProducto, eliminarProducto } from '../../api/productos';
 
-
 const Inventario: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [showProductModal, setShowProductModal] = useState(false);
@@ -14,7 +13,6 @@ const Inventario: React.FC = () => {
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
-  // 👉 Cargar productos al iniciar
   useEffect(() => {
     async function fetchProductos() {
       try {
@@ -76,40 +74,40 @@ const Inventario: React.FC = () => {
   };
 
   return (
-    <div className="p-6 bg-[#F8F8F8] min-h-screen relative">
-      <h2 className="text-2xl font-bold text-[#81203D] mb-6">Inventario de Productos</h2>
-      
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
-        {products.map((product) => (
-          <ProductCard 
-            key={product.id}
-            {...product}
-            onEdit={() => openEditModal(product)}
-            onDelete={() => handleAskDelete(product.id)}
-          />
-        ))}
+    <div className="main">
+      <div className="content">
+        <h2 className="text-2xl font-bold text-[#81203D] mb-6">Inventario de Productos</h2>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
+          {products.map((product) => (
+            <ProductCard 
+              key={product.id}
+              {...product}
+              onEdit={() => openEditModal(product)}
+              onDelete={() => handleAskDelete(product.id)}
+            />
+          ))}
+        </div>
+
+        <FloatingButton onAddProduct={() => setShowProductModal(true)} />
+
+        <ConfirmDeleteModal
+          isOpen={showConfirmModal}
+          onClose={() => setShowConfirmModal(false)}
+          onConfirm={handleConfirmDelete}
+          productName={productToDelete?.toString() || ''}
+        />
+
+        <ProductModal
+          isOpen={showProductModal}
+          onClose={() => {
+            setShowProductModal(false);
+            setProductToEdit(null);
+          }}
+          onSave={productToEdit ? handleEditProduct : handleSaveProduct}
+          initialData={productToEdit ?? undefined}
+        />
       </div>
-
-      <FloatingButton 
-        onAddProduct={() => setShowProductModal(true)}
-      />
-
-      <ConfirmDeleteModal
-        isOpen={showConfirmModal}
-        onClose={() => setShowConfirmModal(false)}
-        onConfirm={handleConfirmDelete}
-        productName={productToDelete?.toString() || ''}
-      />
-
-      <ProductModal
-        isOpen={showProductModal}
-        onClose={() => {
-          setShowProductModal(false);
-          setProductToEdit(null);
-        }}
-        onSave={productToEdit ? handleEditProduct : handleSaveProduct}
-        initialData={productToEdit ?? undefined}
-      />
     </div>
   );
 };

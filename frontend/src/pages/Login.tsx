@@ -10,7 +10,7 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/Login", {
+      const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -20,6 +20,7 @@ const Login: React.FC = () => {
       });
 
       const data = await response.json();
+      console.log("🧪 Datos recibidos:", data);
 
       if (response.ok) {
         // Guarda en localStorage
@@ -30,9 +31,9 @@ const Login: React.FC = () => {
         alert("Inicio de sesión exitoso ✅");
 
         // Redirige al home correcto
-        if (data.tipoUsuario === "individual") {
-          navigate("/individual/home");
-        } else if (data.tipoUsuario === "empresarial") {
+        if (data.tipoUsuario.toLowerCase() === "individual") {
+          navigate("/app/individual/home");
+        } else if (data.tipoUsuario.toLowerCase() === "empresarial") {
           navigate("/empresarial/home");
         } else {
           console.error("Tipo de usuario no reconocido.");

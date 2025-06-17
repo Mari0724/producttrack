@@ -76,7 +76,7 @@ const Sidebar = () => {
           </li>
           <li>
             <Link
-              to="/inventario"
+              to="/app/inventario"
               className={clsx(
                 "flex items-center gap-2 hover:text-[#FCDDEC] transition w-full",
                 "justify-center group-hover:justify-start pl-0 group-hover:pl-2",

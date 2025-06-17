@@ -19,6 +19,7 @@ function App() {
         {/* Rutas protegidas con layout */}
         <Route path="/app" element={<Layout />}>
           <Route index element={<Dashboard />} />
+          <Route path="individual/home" element={<Dashboard />} />
           <Route path="inventario" element={<ProductList />} />
           {/* Puedes agregar más rutas privadas aquí */}
         </Route>
