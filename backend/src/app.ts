@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import express from 'express';
+import cors from 'cors';
 import bodyParser from 'body-parser';
 import "reflect-metadata";
 import { RegisterRoutes } from "../src/routes/routes"; // este se genera automáticamente
@@ -22,9 +23,15 @@ interface MulterRequest extends Request {
 app.use(bodyParser.json());
 app.use(express.json({ limit: '10mb' }));
 
+app.use(cors({
+  origin: 'http://localhost:5173',
+  credentials: true, // si estás enviando cookies
+}))
+
 RegisterRoutes(app);
 
 app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
 
 // Aquí agregamos la nueva ruta para subir imágenes
 
