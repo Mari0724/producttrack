@@ -115,8 +115,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-[9999] bg-black bg-opacity-40 flex justify-center items-center px-4 py-10">
-      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md relative">
+    <div className="fixed inset-0 z-[9999] bg-black bg-opacity-40 flex items-start justify-center overflow-auto px-4 py-10">
+      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md relative max-h-[90vh] overflow-y-auto">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-[#81203D]"
