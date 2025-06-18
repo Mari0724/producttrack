@@ -1,18 +1,18 @@
 ---
-id: upload
-title: Middleware upload
-sidebar_label: Upload
+id: uploadCloudinary
+title: Middleware uploadCloudinary
+sidebar_label: UploadCloudinary
 ---
 
-# Middleware: `upload.ts`
+# Middleware: uploadCloudinary.ts
 
-Este middleware configura **la subida de archivos (imágenes)** al servicio en la nube **Cloudinary**, utilizando `multer` como gestor de archivos. Centraliza toda la lógica para almacenar imágenes en carpetas específicas de tu cuenta Cloudinary.
+Este middleware configura **la subida de archivos (imágenes)** al servicio en la nube **Cloudinary**, utilizando `multer` como gestor de archivos. Centraliza toda la lógica para almacenar imágenes de forma estructurada y optimizada en carpetas específicas de tu cuenta Cloudinary.
 
 ---
 
 ## 🔍 Ubicación
 
-`src/middleware/upload.ts`
+`src/middleware/uploadCloudinary.ts`
 
 ---
 
@@ -54,25 +54,13 @@ Esto asegura que las variables del archivo `.env` sean cargadas correctamente in
 
 ---
 
-## ✅ Validación de variables de entorno
-
-```ts
-if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
-  throw new Error("❌ Faltan variables de entorno de Cloudinary. Verifica tu archivo .env");
-}
-```
-
-Antes de configurar Cloudinary, se valida que las variables necesarias estén definidas. Esto evita errores silenciosos en producción.
-
----
-
 ## ☁️ Configuración de Cloudinary
 
 ```ts
 cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET,
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
+  api_key: process.env.CLOUDINARY_API_KEY!,
+  api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 ```
 
@@ -82,6 +70,8 @@ cloudinary.config({
 | `CLOUDINARY_API_KEY`    | Clave pública de la API.          |
 | `CLOUDINARY_API_SECRET` | Clave secreta para autenticación. |
 
+> ⚠️ *Asegúrate de que estas variables estén correctamente configuradas en tu archivo `.env`.*
+
 ---
 
 ## 📦 Configuración del almacenamiento en Cloudinary
@@ -89,13 +79,11 @@ cloudinary.config({
 ```ts
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: async (req, file) => {
-    return {
-      folder: 'producttrack/perfiles',
-      allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
-      transformation: [{ width: 500, height: 500, crop: 'limit' }],
-    };
-  },
+  params: async () => ({
+    folder: 'producttrack/perfiles',
+    allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
+    transformation: [{ width: 500, height: 500, crop: 'limit' }],
+  }),
 });
 ```
 
@@ -113,7 +101,7 @@ const storage = new CloudinaryStorage({
 ## 🚀 Exportación del middleware
 
 ```ts
-export const upload = multer({ storage });
+export const uploadCloudinary = multer({ storage });
 ```
 
 Puedes usarlo directamente en rutas del backend como middleware para manejar la subida de archivos.
@@ -123,35 +111,35 @@ Puedes usarlo directamente en rutas del backend como middleware para manejar la 
 ## ✅ Ejemplo de uso en rutas
 
 ```ts
-import { upload } from "../middleware/upload";
+import { uploadCloudinary } from "../middleware/uploadCloudinary";
 
-router.post("/perfil/foto", upload.single("imagen"), controlador.subirFoto);
+router.post("/perfil/foto", uploadCloudinary.single("imagen"), controlador.subirFoto);
 ```
 
-| Método                    | Explicación                                                      |
-| ------------------------- | ---------------------------------------------------------------- |
-| `upload.single("imagen")` | Procesa un solo archivo bajo el campo `"imagen"` del formulario. |
-| `upload.array("fotos")`   | Para subir múltiples imágenes.                                   |
-| `upload.fields([...])`    | Para manejar múltiples campos con archivos diferentes.           |
+| Método                              | Explicación                                                      |
+| ----------------------------------- | ---------------------------------------------------------------- |
+| `uploadCloudinary.single("imagen")` | Procesa un solo archivo bajo el campo `"imagen"` del formulario. |
+| `uploadCloudinary.array("fotos")`   | Para subir múltiples imágenes.                                   |
+| `uploadCloudinary.fields([...])`    | Para manejar múltiples campos con archivos diferentes.           |
 
 ---
 
 ## 📝 Resumen
 
-| Elemento             | Valor                                |
-| -------------------- | ------------------------------------ |
-| Almacenamiento       | Cloudinary (`producttrack/perfiles`) |
-| Middleware de subida | `multer`                             |
-| Archivos permitidos  | `.jpg`, `.png`, `.jpeg`, `.webp`     |
-| Transformación       | Máximo 500x500 px (`crop: limit`)    |
-| Validación `.env`    | Sí, con `throw` si faltan variables  |
-| Flexibilidad         | Alta (con `params` asíncrono)        |
+| Elemento               | Valor                                |
+| ---------------------- | ------------------------------------ |
+| Almacenamiento         | Cloudinary (`producttrack/perfiles`) |
+| Middleware de subida   | `multer`                             |
+| Archivos permitidos    | `.jpg`, `.png`, `.jpeg`, `.webp`     |
+| Transformación         | Máximo 500x500 px (`crop: limit`)    |
+| Nombre exportado       | `uploadCloudinary`                   |
+| Flexibilidad de lógica | Alta (con `params` asíncrono)        |
 
 ---
 
 ## 🧠 Notas adicionales
 
 * No es necesario crear manualmente la carpeta en Cloudinary.
-* Las imágenes subidas devuelven una URL pública para ser usadas directamente en frontend.
-* Puedes modificar el nombre de la carpeta o agregar marcas de agua desde `params`.
+* Las imágenes subidas devuelven una URL pública para ser usada directamente en el frontend.
+* Puedes modificar el nombre de la carpeta, formatos permitidos o agregar marcas de agua desde `params`.
 
