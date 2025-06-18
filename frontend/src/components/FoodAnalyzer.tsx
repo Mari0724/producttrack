@@ -14,6 +14,7 @@ export interface NutritionData {
 export interface RespuestaNutriScan {
   mensajeGPT: string;
   requiereConfirmacion: boolean;
+  sugerencia?: string;
   registro: {
     id: number;
     consulta: string;
@@ -21,14 +22,16 @@ export interface RespuestaNutriScan {
 }
 
 interface FoodAnalyzerProps {
-  analizarImagen: (base64: string, token: string) => Promise<RespuestaNutriScan>;
+  analizarImagen: (base64: string, token: string, nombreManual?: string) => Promise<RespuestaNutriScan>;
+  confirmarConsulta?: (id: number, nombreConfirmado: string, token: string) => Promise<RespuestaNutriScan>;
 }
 
-const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
+const FoodAnalyzer = ({ analizarImagen, confirmarConsulta }: FoodAnalyzerProps) => {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [nutritionData, setNutritionData] = useState<NutritionData | null>(null);
   const [hasError, setHasError] = useState(false);
+  const [lastRegistroId, setLastRegistroId] = useState<number | null>(null);
 
   const handleImageSelect = (imageUrl: string) => {
     setSelectedImage(imageUrl);
@@ -48,6 +51,12 @@ const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
 
       const result = await analizarImagen(selectedImage, token);
 
+      if (result?.requiereConfirmacion) {
+        setHasError(true);
+        setLastRegistroId(result.registro.id);
+        return;
+      }
+
       if (
         typeof result === "object" &&
         result !== null &&
@@ -56,7 +65,7 @@ const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
         typeof result.mensajeGPT === "string"
       ) {
         const data: NutritionData = {
-          food: result.registro.consulta,
+          food: result.sugerencia || result.registro.consulta,
           nutritionInfo: result.mensajeGPT,
         };
         setNutritionData(data);
@@ -73,24 +82,31 @@ const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
 
   const handleManualSearch = async (productName: string) => {
     setIsProcessing(true);
+    setHasError(false);
+
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token no encontrado");
 
-      const result = await analizarImagen(productName, token);
+      if (!confirmarConsulta || lastRegistroId === null) {
+        throw new Error("No se puede confirmar sin un ID de registro válido");
+      }
+
+      const result = await confirmarConsulta(lastRegistroId, productName, token);
+
       if (
         typeof result === "object" &&
         result !== null &&
         "mensajeGPT" in result &&
-        "registro" in result &&
         typeof result.mensajeGPT === "string"
       ) {
         const data: NutritionData = {
-          food: result.registro.consulta,
+          food: productName,
           nutritionInfo: result.mensajeGPT,
         };
         setNutritionData(data);
-        setHasError(false);
+        setSelectedImage(null);
+        setLastRegistroId(null);
       } else {
         throw new Error("Respuesta inválida del backend");
       }
@@ -107,6 +123,7 @@ const FoodAnalyzer = ({ analizarImagen }: FoodAnalyzerProps) => {
     setNutritionData(null);
     setIsProcessing(false);
     setHasError(false);
+    setLastRegistroId(null);
   };
 
   return (
