@@ -139,11 +139,11 @@ const Sidebar = () => {
           {(rol === "ADMIN" || rol === "DESARROLLADOR") && (
             <li>
               <Link
-                to="/nutriscan-auditoria"
+                to="/auditoria"
                 className={clsx(
                   "flex items-center gap-2 hover:text-[#FCDDEC] transition w-full",
                   "justify-center group-hover:justify-start pl-0 group-hover:pl-2",
-                  location.pathname === "/nutriscan-auditoria" && "font-semibold"
+                  location.pathname === "/auditoria" && "font-semibold"
                 )}
               >
                 <FaClipboardList className="text-2xl" />

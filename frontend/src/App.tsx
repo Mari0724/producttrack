@@ -3,7 +3,14 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import NutriScan from "./pages/NutriScan";
 import Layout from "./layout/Layout";
-import NutriScanAuditoria from "./pages/NutriScanAuditoria"; // ✅ versión correcta
+import AuditoriaIndex from "./pages/AuditoriaIndex";
+import NutriScanAuditoria from "./pages/NutriScanAuditoria";
+
+// (Opcional) futuras auditorías si ya las tienes:
+// import AuditoriaProductos from "./pages/AuditoriaProductos";
+// import AuditoriaInventario from "./pages/AuditoriaInventario";
+// import AuditoriaGraficas from "./pages/AuditoriaGraficas";
+// import AuditoriaEquipo from "./pages/AuditoriaEquipo";
 
 const Home = () => (
   <div className="flex">
@@ -21,11 +28,17 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Rutas privadas con Layout (Sidebar) */}
+        {/* Rutas privadas con Layout */}
         <Route path="/" element={<Layout />}>
-          {/* Aquí van las páginas que comparten el layout */}
           <Route path="nutriscan" element={<NutriScan />} />
-          <Route path="nutriscan-auditoria" element={<NutriScanAuditoria />} /> {/* 👈 agregas esta línea */}
+          <Route path="auditoria" element={<AuditoriaIndex />} />
+          <Route path="auditoria/nutriscan" element={<NutriScanAuditoria />} />
+          
+          {/* Puedes agregar estas después si quieres */}
+          {/* <Route path="auditoria/productos" element={<AuditoriaProductos />} /> */}
+          {/* <Route path="auditoria/inventario" element={<AuditoriaInventario />} /> */}
+          {/* <Route path="auditoria/graficas" element={<AuditoriaGraficas />} /> */}
+          {/* <Route path="auditoria/equipo" element={<AuditoriaEquipo />} /> */}
         </Route>
 
         {/* Ruta temporal de inicio después del login */}
