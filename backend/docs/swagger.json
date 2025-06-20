@@ -217,6 +217,13 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"_36_Enums.TipoUsuario": {
+				"type": "string",
+				"enum": [
+					"INDIVIDUAL",
+					"EMPRESARIAL"
+				]
+			},
 			"LoginResponse": {
 				"properties": {
 					"token": {
@@ -263,13 +270,6 @@
 				],
 				"type": "object",
 				"additionalProperties": false
-			},
-			"_36_Enums.TipoUsuario": {
-				"type": "string",
-				"enum": [
-					"INDIVIDUAL",
-					"EMPRESARIAL"
-				]
 			},
 			"_36_Enums.rolEquipo": {
 				"type": "string",
@@ -705,7 +705,9 @@
 										},
 										{
 											"properties": {
-												"message": {}
+												"message": {
+													"type": "string"
+												}
 											},
 											"required": [
 												"message"
@@ -829,9 +831,134 @@
 				"parameters": []
 			}
 		},
-		"/nutriscan/{id}": {
+		"/nutriscan/usuario/{usuarioId}": {
 			"get": {
-				"operationId": "FindById",
+				"operationId": "FindByUserId",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"items": {
+												"allOf": [
+													{
+														"properties": {
+															"usuario": {
+																"properties": {
+																	"tipoUsuario": {
+																		"$ref": "#/components/schemas/_36_Enums.TipoUsuario"
+																	},
+																	"nombreCompleto": {
+																		"type": "string"
+																	}
+																},
+																"required": [
+																	"tipoUsuario",
+																	"nombreCompleto"
+																],
+																"type": "object"
+															}
+														},
+														"required": [
+															"usuario"
+														],
+														"type": "object"
+													},
+													{
+														"properties": {
+															"isTest": {
+																"type": "boolean"
+															},
+															"actualizadoEn": {
+																"type": "string",
+																"format": "date-time"
+															},
+															"fechaAnalisis": {
+																"type": "string",
+																"format": "date-time"
+															},
+															"tipoAnalisis": {
+																"type": "string"
+															},
+															"respuesta": {
+																"$ref": "#/components/schemas/JsonValue"
+															},
+															"consulta": {
+																"type": "string"
+															},
+															"esAlimento": {
+																"type": "boolean"
+															},
+															"usuarioId": {
+																"type": "number",
+																"format": "double"
+															},
+															"id": {
+																"type": "number",
+																"format": "double"
+															}
+														},
+														"required": [
+															"isTest",
+															"actualizadoEn",
+															"fechaAnalisis",
+															"tipoAnalisis",
+															"respuesta",
+															"consulta",
+															"esAlimento",
+															"usuarioId",
+															"id"
+														],
+														"type": "object"
+													}
+												]
+											},
+											"type": "array"
+										},
+										{
+											"properties": {
+												"message": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"message"
+											],
+											"type": "object"
+										}
+									]
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"NutriScan"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "usuarioId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/nutriscan/{id}": {
+			"put": {
+				"operationId": "Update",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -891,97 +1018,6 @@
 												"message": {
 													"type": "string"
 												}
-											},
-											"required": [
-												"message"
-											],
-											"type": "object"
-										}
-									]
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"NutriScan"
-				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			},
-			"put": {
-				"operationId": "Update",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"anyOf": [
-										{
-											"properties": {
-												"isTest": {
-													"type": "boolean"
-												},
-												"actualizadoEn": {
-													"type": "string",
-													"format": "date-time"
-												},
-												"fechaAnalisis": {
-													"type": "string",
-													"format": "date-time"
-												},
-												"tipoAnalisis": {
-													"type": "string"
-												},
-												"respuesta": {
-													"$ref": "#/components/schemas/JsonValue"
-												},
-												"consulta": {
-													"type": "string"
-												},
-												"esAlimento": {
-													"type": "boolean"
-												},
-												"usuarioId": {
-													"type": "number",
-													"format": "double"
-												},
-												"id": {
-													"type": "number",
-													"format": "double"
-												}
-											},
-											"required": [
-												"isTest",
-												"actualizadoEn",
-												"fechaAnalisis",
-												"tipoAnalisis",
-												"respuesta",
-												"consulta",
-												"esAlimento",
-												"usuarioId",
-												"id"
-											],
-											"type": "object"
-										},
-										{
-											"properties": {
-												"message": {}
 											},
 											"required": [
 												"message"

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 import {
   FaHome,
   FaUser,
@@ -7,18 +7,22 @@ import {
   FaHistory,
   FaQrcode,
   FaCog,
-} from "react-icons/fa"
-import { Link, useLocation } from "react-router-dom"
-import clsx from "clsx"
+  FaClipboardList,
+} from "react-icons/fa";
+import { Link, useLocation } from "react-router-dom";
+import clsx from "clsx";
 
 const Sidebar = () => {
-  const location = useLocation()
-  const [tipoUsuario, setTipoUsuario] = useState<string | null>(null)
+  const location = useLocation();
+  const [tipoUsuario, setTipoUsuario] = useState<string | null>(null);
+  const [rol, setRol] = useState<string | null>(null);
 
   useEffect(() => {
-    const tipo = localStorage.getItem("tipoUsuario")
-    setTipoUsuario(tipo)
-  }, [])
+    const tipo = localStorage.getItem("tipoUsuario");
+    const storedRol = localStorage.getItem("rol");
+    setTipoUsuario(tipo);
+    setRol(storedRol);
+  }, []);
 
   return (
     <div
@@ -132,6 +136,23 @@ const Sidebar = () => {
             </li>
           )}
 
+          {(rol === "ADMIN" || rol === "DESARROLLADOR") && (
+            <li>
+              <Link
+                to="/nutriscan-auditoria"
+                className={clsx(
+                  "flex items-center gap-2 hover:text-[#FCDDEC] transition w-full",
+                  "justify-center group-hover:justify-start pl-0 group-hover:pl-2",
+                  location.pathname === "/nutriscan-auditoria" && "font-semibold"
+                )}
+              >
+                <FaClipboardList className="text-2xl" />
+                <span className="hidden group-hover:inline transition-all duration-300">
+                  Auditoría
+                </span>
+              </Link>
+            </li>
+          )}
 
           <li>
             <Link
@@ -151,7 +172,7 @@ const Sidebar = () => {
         </ul>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;

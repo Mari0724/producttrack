@@ -1,5 +1,5 @@
 import prisma from "../utils/prismaClient";
-import { NutriScanSchemaWithoutUserId } from "../models/NutriScanModel";
+import { NutriScanSchemaWithoutUserId, NutriScanUpdateSchema } from "../models/NutriScanModel";
 import { OpenFoodFactsService } from "./openfoodfacts.service";
 import { gptService } from "./gpt.service";
 
@@ -10,15 +10,19 @@ export class NutriScanService {
       const nombreProducto = parsed.consulta.trim();
 
       // Consultar OpenFoodFacts
-      const resultadosOpenFood = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
+      const resultadosOpenFood =
+        await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
 
       // Generar respuesta nutricional
       const respuestaGenerada = {
-        mensaje: await gptService.generarMensajeNutricional(nombreProducto, resultadosOpenFood),
+        mensaje: await gptService.generarMensajeNutricional(
+          nombreProducto,
+          resultadosOpenFood
+        ),
         generadoPor: isTest ? "simulado" : "gpt",
       };
 
-      // Guardar en la base de datos
+      // Guardar en base de datos
       const nuevo = await prisma.nutriScan.create({
         data: {
           usuarioId,
@@ -37,21 +41,48 @@ export class NutriScanService {
     }
   }
 
-  async findTestsOnly() {
-    return prisma.nutriScan.findMany({ where: { isTest: true } });
+  async findAll() {
+    return prisma.nutriScan.findMany({
+      orderBy: { fechaAnalisis: "desc" },
+      include: {
+        usuario: {
+          select: {
+            nombreCompleto: true,
+            tipoUsuario: true,
+          },
+        },
+      },
+    });
   }
 
   async findTestsByUser(usuarioId: number) {
-    return prisma.nutriScan.findMany({ where: { isTest: true, usuarioId } });
+    return prisma.nutriScan.findMany({
+      where: { isTest: true, usuarioId },
+    });
   }
 
-  async findById(id: number) {
-    return prisma.nutriScan.findUnique({ where: { id } });
+  async findByUserId(usuarioId: number) {
+    return prisma.nutriScan.findMany({
+      where: { usuarioId },
+      orderBy: { fechaAnalisis: "desc" },
+      include: {
+        usuario: {
+          select: {
+            nombreCompleto: true,
+            tipoUsuario: true,
+          },
+        },
+      },
+    });
   }
 
+  // ✅ Actualizado con NutriScanUpdateSchema
   async update(id: number, data: unknown) {
-    const parsed = NutriScanSchemaWithoutUserId.partial().parse(data);
-    return prisma.nutriScan.update({ where: { id }, data: parsed });
+    const parsed = NutriScanUpdateSchema.parse(data);
+    return prisma.nutriScan.update({
+      where: { id },
+      data: parsed,
+    });
   }
 
   async delete(id: number) {

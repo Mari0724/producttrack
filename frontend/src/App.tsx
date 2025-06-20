@@ -3,8 +3,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import NutriScan from "./pages/NutriScan";
 import Layout from "./layout/Layout";
+import NutriScanAuditoria from "./pages/NutriScanAuditoria"; // ✅ versión correcta
 
-// Página de inicio temporal (puedes reemplazarla luego)
 const Home = () => (
   <div className="flex">
     <Layout />
@@ -25,6 +25,7 @@ function App() {
         <Route path="/" element={<Layout />}>
           {/* Aquí van las páginas que comparten el layout */}
           <Route path="nutriscan" element={<NutriScan />} />
+          <Route path="nutriscan-auditoria" element={<NutriScanAuditoria />} /> {/* 👈 agregas esta línea */}
         </Route>
 
         {/* Ruta temporal de inicio después del login */}

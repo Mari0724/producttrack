@@ -15,22 +15,24 @@ import {
 } from "tsoa";
 
 import { NutriScanService } from "../services/nutriscan.service";
-import { NutriScanSchemaWithoutUserId } from "../models/NutriScanModel";
+import {
+  NutriScanSchemaWithoutUserId,
+  NutriScanUpdateSchema,
+} from "../models/NutriScanModel";
 
 @Route("nutriscan")
 @Tags("NutriScan")
 export class NutriScanController extends Controller {
   private service = new NutriScanService();
 
-  // ✅ Crear análisis nutricional (solo INDIVIDUAL, ADMIN y DESARROLLADOR)
+  // Crear análisis
   @SuccessResponse("201", "Registro creado")
   @Response("400", "Datos inválidos")
   @Response("403", "Acceso denegado")
   @Security("jwt")
   @Post()
-  async create(@Body() body: unknown, @Request() req: any) {
-    console.log("✅ Se recibió solicitud en NutriScanController /nutriscan");
-    const usuario = req.user;
+  async create(@Body() body: unknown, @Request() req: unknown) {
+    const usuario = (req as any).user;
 
     const puedeUsarNutriScan =
       usuario.tipoUsuario === "INDIVIDUAL" ||
@@ -49,22 +51,24 @@ export class NutriScanController extends Controller {
       const created = await this.service.create(parsedBody, usuario.id, isTest);
       this.setStatus(201);
       return created;
-    } catch (error: any) {
+    } catch (error: unknown) {
       this.setStatus(400);
       return {
-        message: error.message || "Ocurrió un error al procesar la solicitud.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Ocurrió un error al procesar la solicitud.",
       };
     }
   }
 
-  // ✅ Solo ADMIN y DESARROLLADOR pueden listar análisis de auditoría
   @Security("jwt")
   @Get()
-  async findAll(@Request() req: any) {
-    const usuario = req.user;
+  async findAll(@Request() req: unknown) {
+    const usuario = (req as any).user;
 
     if (usuario.rol === "ADMIN") {
-      return this.service.findTestsOnly();
+      return this.service.findAll();
     }
 
     if (usuario.rol === "DESARROLLADOR") {
@@ -77,26 +81,25 @@ export class NutriScanController extends Controller {
     };
   }
 
-  // ✅ Buscar por ID — accesible solo a ADMIN
   @Security("jwt")
-  @Get("{id}")
-  async findById(@Path() id: number, @Request() req: any) {
-    const usuario = req.user;
+  @Get("usuario/{usuarioId}")
+  async findByUserId(@Path() usuarioId: number, @Request() req: unknown) {
+    const usuario = (req as any).user;
 
     if (usuario.rol !== "ADMIN") {
       this.setStatus(403);
       return { message: "Acceso denegado: solo disponible para auditoría." };
     }
 
-    return this.service.findById(id);
+    return this.service.findByUserId(usuarioId);
   }
 
-  // ✅ Actualizar — solo ADMIN
+  // ✅ Actualizar un análisis
   @Security("jwt")
   @Put("{id}")
   @Response("400", "Datos inválidos")
-  async update(@Path() id: number, @Body() body: unknown, @Request() req: any) {
-    const usuario = req.user;
+  async update(@Path() id: number, @Body() body: unknown, @Request() req: unknown) {
+    const usuario = (req as any).user;
 
     if (usuario.rol !== "ADMIN") {
       this.setStatus(403);
@@ -104,20 +107,23 @@ export class NutriScanController extends Controller {
     }
 
     try {
-      return await this.service.update(id, body);
-    } catch (error: any) {
+      const parsedBody = NutriScanUpdateSchema.parse(body);
+      return await this.service.update(id, parsedBody);
+    } catch (error: unknown) {
       this.setStatus(400);
       return {
-        message: error.message || "Ocurrió un error al actualizar el análisis.",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Ocurrió un error al actualizar el análisis.",
       };
     }
   }
 
-  // ✅ Eliminar — solo ADMIN
   @Security("jwt")
   @Delete("{id}")
-  async delete(@Path() id: number, @Request() req: any) {
-    const usuario = req.user;
+  async delete(@Path() id: number, @Request() req: unknown) {
+    const usuario = (req as any).user;
 
     if (usuario.rol !== "ADMIN") {
       this.setStatus(403);

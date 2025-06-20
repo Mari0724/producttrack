@@ -83,6 +83,11 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "_36_Enums.TipoUsuario": {
+        "dataType": "refAlias",
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["INDIVIDUAL"]},{"dataType":"enum","enums":["EMPRESARIAL"]}],"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "LoginResponse": {
         "dataType": "refObject",
         "properties": {
@@ -103,11 +108,6 @@ const models: TsoaRoute.Models = {
             "password": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "_36_Enums.TipoUsuario": {
-        "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["INDIVIDUAL"]},{"dataType":"enum","enums":["EMPRESARIAL"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "_36_Enums.rolEquipo": {
@@ -376,27 +376,27 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsNutriScanController_findById: Record<string, TsoaRoute.ParameterSchema> = {
-                id: {"in":"path","name":"id","required":true,"dataType":"double"},
+        const argsNutriScanController_findByUserId: Record<string, TsoaRoute.ParameterSchema> = {
+                usuarioId: {"in":"path","name":"usuarioId","required":true,"dataType":"double"},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.get('/nutriscan/:id',
+        app.get('/nutriscan/usuario/:usuarioId',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(NutriScanController)),
-            ...(fetchMiddlewares<RequestHandler>(NutriScanController.prototype.findById)),
+            ...(fetchMiddlewares<RequestHandler>(NutriScanController.prototype.findByUserId)),
 
-            async function NutriScanController_findById(request: ExRequest, response: ExResponse, next: any) {
+            async function NutriScanController_findByUserId(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsNutriScanController_findById, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsNutriScanController_findByUserId, request, response });
 
                 const controller = new NutriScanController();
 
               await templateService.apiHandler({
-                methodName: 'findById',
+                methodName: 'findByUserId',
                 controller,
                 response,
                 next,

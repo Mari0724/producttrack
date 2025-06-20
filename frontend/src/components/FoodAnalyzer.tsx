@@ -1,210 +1,276 @@
-import { useState } from 'react';
-import ImageUpload from './ImageUpload';
-import ProcessingState from './ProcessingState';
-import NutritionCard from './NutritionCard';
-import ManualSearch from './ManualSearch';
-import { ShoppingBasket, Search, RotateCcw, ImagePlus } from 'lucide-react';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { useUser } from "../context/UserContext";
 
-export interface NutritionData {
-  food: string;
-  calories?: number;
-  nutritionInfo: string;
-}
-
-export interface RespuestaNutriScan {
-  mensajeGPT: string;
-  requiereConfirmacion: boolean;
-  sugerencia?: string;
-  registro: {
-    id: number;
-    consulta: string;
+interface Registro {
+  id: number;
+  consulta: string;
+  esAlimento?: boolean;
+  respuesta: {
+    mensaje: string;
+    generadoPor: string;
+  };
+  fechaAnalisis: string;
+  usuario: {
+    nombreCompleto: string;
+    tipoUsuario: "INDIVIDUAL";
   };
 }
 
-interface FoodAnalyzerProps {
-  analizarImagen: (base64: string, token: string, nombreManual?: string) => Promise<RespuestaNutriScan>;
-  confirmarConsulta?: (id: number, nombreConfirmado: string, token: string) => Promise<RespuestaNutriScan>;
-}
+const NutriScanAuditoria = () => {
+  const { usuario } = useUser();
+  const [registros, setRegistros] = useState<Registro[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [usuarioId, setUsuarioId] = useState<string>("");
 
-const FoodAnalyzer = ({ analizarImagen, confirmarConsulta }: FoodAnalyzerProps) => {
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [nutritionData, setNutritionData] = useState<NutritionData | null>(null);
-  const [hasError, setHasError] = useState(false);
-  const [lastRegistroId, setLastRegistroId] = useState<number | null>(null);
+  // Modal edición
+  const [editando, setEditando] = useState<Registro | null>(null);
+  const [nuevaConsulta, setNuevaConsulta] = useState("");
+  const [nuevoEsAlimento, setNuevoEsAlimento] = useState(true);
 
-  const handleImageSelect = (imageUrl: string) => {
-    setSelectedImage(imageUrl);
-    setNutritionData(null);
-    setHasError(false);
-  };
-
-  const handleAnalyzeImage = async () => {
-    if (!selectedImage) return;
-
-    setIsProcessing(true);
-    setHasError(false);
-
+  const cargarTodos = async () => {
     try {
+      setLoading(true);
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token no encontrado");
 
-      const result = await analizarImagen(selectedImage, token);
+      const res = await axios.get<Registro[]>("http://localhost:3000/nutriscan", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setRegistros(res.data);
+    } catch (e) {
+      const mensaje =
+        e instanceof Error ? e.message : "Error desconocido al cargar registros.";
+      setError(mensaje);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-      if (result?.requiereConfirmacion) {
-        setHasError(true);
-        setLastRegistroId(result.registro.id);
+  const buscarPorUsuarioId = async () => {
+    if (!usuarioId.trim()) return;
+    try {
+      setLoading(true);
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token no encontrado");
+
+      const res = await axios.get<Registro[]>(
+        `http://localhost:3000/nutriscan/usuario/${usuarioId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.data.length === 0 || res.data[0].usuario.tipoUsuario !== "INDIVIDUAL") {
+        setError("Ese usuario no tiene acceso a esta función.");
+        setRegistros([]);
         return;
       }
 
-      if (
-        typeof result === "object" &&
-        result !== null &&
-        "mensajeGPT" in result &&
-        "registro" in result &&
-        typeof result.mensajeGPT === "string"
-      ) {
-        const data: NutritionData = {
-          food: result.sugerencia || result.registro.consulta,
-          nutritionInfo: result.mensajeGPT,
-        };
-        setNutritionData(data);
-      } else {
-        throw new Error("Respuesta inválida del backend");
-      }
-    } catch (error) {
-      console.error("Error en análisis:", error);
-      setHasError(true);
+      setRegistros(res.data);
+    } catch (e) {
+      const mensaje =
+        e instanceof Error ? e.message : "Error al buscar por ID de usuario.";
+      setError(mensaje);
     } finally {
-      setIsProcessing(false);
+      setLoading(false);
     }
   };
 
-  const handleManualSearch = async (productName: string) => {
-    setIsProcessing(true);
-    setHasError(false);
+  useEffect(() => {
+    cargarTodos();
+  }, []);
+
+  const eliminarRegistro = async (id: number) => {
+    const confirmar = confirm("¿Estás seguro de eliminar este análisis?");
+    if (!confirmar) return;
 
     try {
       const token = localStorage.getItem("token");
       if (!token) throw new Error("Token no encontrado");
 
-      if (!confirmarConsulta || lastRegistroId === null) {
-        throw new Error("No se puede confirmar sin un ID de registro válido");
-      }
+      await axios.delete(`http://localhost:3000/nutriscan/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      const result = await confirmarConsulta(lastRegistroId, productName, token);
-
-      if (
-        typeof result === "object" &&
-        result !== null &&
-        "mensajeGPT" in result &&
-        typeof result.mensajeGPT === "string"
-      ) {
-        const data: NutritionData = {
-          food: productName,
-          nutritionInfo: result.mensajeGPT,
-        };
-        setNutritionData(data);
-        setSelectedImage(null);
-        setLastRegistroId(null);
-      } else {
-        throw new Error("Respuesta inválida del backend");
-      }
-    } catch (error) {
-      console.error("Error en búsqueda manual:", error);
-      setHasError(true);
-    } finally {
-      setIsProcessing(false);
+      setRegistros((prev) => prev.filter((r) => r.id !== id));
+    } catch {
+      alert("Error al eliminar.");
     }
   };
 
-  const handleReset = () => {
-    setSelectedImage(null);
-    setNutritionData(null);
-    setIsProcessing(false);
-    setHasError(false);
-    setLastRegistroId(null);
+  const abrirModalEdicion = (registro: Registro) => {
+    setEditando(registro);
+    setNuevaConsulta(registro.consulta);
+    setNuevoEsAlimento(registro.esAlimento ?? true);
   };
 
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-olive-green/10 to-food-yellow/10 py-8 px-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <div className="flex justify-center mb-4">
-            <ShoppingBasket size={48} className="text-wine-red" />
-          </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-wine-red mb-2 font-poppins">
-            NutriScan
-          </h1>
-          <p className="text-lg text-gray-600 font-poppins">
-            Analiza la información nutricional de tus alimentos con inteligencia artificial
-          </p>
-        </div>
+  const guardarCambios = async () => {
+    if (!editando) return;
 
-        {/* Main Content */}
-        <div className="space-y-8">
-          {!selectedImage && !isProcessing && !nutritionData && !hasError && (
-            <ImageUpload onImageSelect={handleImageSelect} />
-          )}
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) throw new Error("Token no encontrado");
 
-          {selectedImage && !isProcessing && !nutritionData && !hasError && (
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-light-gray">
-              <div className="text-center">
-                <h3 className="text-xl font-semibold text-wine-red mb-4 font-poppins">
-                  Imagen seleccionada
-                </h3>
-                <div className="mb-6">
-                  <img
-                    src={selectedImage}
-                    alt="Comida seleccionada"
-                    className="max-w-full h-64 object-cover rounded-lg mx-auto border-2 border-light-gray"
-                  />
-                </div>
-                <div className="flex gap-4 justify-center">
-                  <button
-                    onClick={handleAnalyzeImage}
-                    className="bg-olive-green hover:bg-olive-green/90 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins flex items-center gap-2"
-                  >
-                    <Search className="w-5 h-5" />
-                    Analizar Imagen
-                  </button>
-                  <button
-                    onClick={handleReset}
-                    className="bg-gray-500 hover:bg-gray-600 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins flex items-center gap-2"
-                  >
-                    <RotateCcw className="w-5 h-5" />
-                    Cambiar Imagen
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
+      await axios.put(
+        `http://localhost:3000/nutriscan/${editando.id}`,
+        { consulta: nuevaConsulta, esAlimento: nuevoEsAlimento },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
 
-          {isProcessing && <ProcessingState />}
+      setRegistros((prev) =>
+        prev.map((r) =>
+          r.id === editando.id
+            ? { ...r, consulta: nuevaConsulta, esAlimento: nuevoEsAlimento }
+            : r
+        )
+      );
+      setEditando(null);
+    } catch {
+      alert("Error al guardar cambios.");
+    }
+  };
 
-          {hasError && !isProcessing && (
-            <ManualSearch onSearch={handleManualSearch} onReset={handleReset} />
-          )}
-
-          {nutritionData && (
-            <div className="space-y-6">
-              <NutritionCard data={nutritionData} />
-              <div className="text-center">
-                <button
-                  onClick={handleReset}
-                  className="bg-wine-red hover:bg-wine-red/90 text-white px-8 py-3 rounded-xl font-semibold transition-colors duration-200 font-poppins flex items-center gap-2"
-                >
-                  <ImagePlus className="w-5 h-5" />
-                  Analizar Nueva Imagen
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+  if (usuario?.rol !== "ADMIN" && usuario?.rol !== "DESARROLLADOR") {
+    return (
+      <div className="text-center mt-20 text-red-600">
+        No tienes permiso para ver esta página 😢
       </div>
+    );
+  }
+
+  return (
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-6 text-wine-red">
+        🧾 Auditoría de Análisis Nutricionales
+      </h1>
+
+      {/* Buscar por ID usuario */}
+      <div className="flex gap-4 mb-4 items-center">
+        <input
+          type="number"
+          placeholder="Buscar por ID de usuario"
+          value={usuarioId}
+          onChange={(e) => setUsuarioId(e.target.value)}
+          className="border border-gray-300 rounded px-3 py-2"
+        />
+        <button
+          onClick={buscarPorUsuarioId}
+          className="bg-wine-red text-white px-4 py-2 rounded hover:bg-red-800"
+        >
+          Buscar
+        </button>
+        <button
+          onClick={() => {
+            setUsuarioId("");
+            cargarTodos();
+          }}
+          className="bg-gray-200 text-gray-800 px-4 py-2 rounded hover:bg-gray-300"
+        >
+          Limpiar
+        </button>
+      </div>
+
+      {loading ? (
+        <p>Cargando análisis...</p>
+      ) : error ? (
+        <p className="text-red-600">{error}</p>
+      ) : (
+        <div className="overflow-x-auto rounded-lg border border-gray-300">
+          <table className="min-w-full text-left text-sm bg-white rounded">
+            <thead className="bg-wine-red text-white font-semibold">
+              <tr>
+                <th className="px-4 py-2">ID</th>
+                <th className="px-4 py-2">Consulta</th>
+                <th className="px-4 py-2">Usuario</th>
+                <th className="px-4 py-2">Tipo Usuario</th>
+                <th className="px-4 py-2">Fecha</th>
+                <th className="px-4 py-2">Respuesta GPT</th>
+                <th className="px-4 py-2">Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {registros.map((reg) => (
+                <tr key={reg.id} className="border-t">
+                  <td className="px-4 py-2">{reg.id}</td>
+                  <td className="px-4 py-2">{reg.consulta}</td>
+                  <td className="px-4 py-2">{reg.usuario.nombreCompleto}</td>
+                  <td className="px-4 py-2">{reg.usuario.tipoUsuario}</td>
+                  <td className="px-4 py-2">
+                    {new Date(reg.fechaAnalisis).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-2">
+                    {reg.respuesta?.mensaje
+                      ? reg.respuesta.mensaje.slice(0, 60) + "..."
+                      : "Sin respuesta"}
+                  </td>
+                  <td className="px-4 py-2 flex gap-3">
+                    <button
+                      className="text-red-600 hover:underline"
+                      onClick={() => eliminarRegistro(reg.id)}
+                    >
+                      Eliminar
+                    </button>
+                    <button
+                      className="text-blue-600 hover:underline"
+                      onClick={() => abrirModalEdicion(reg)}
+                    >
+                      Editar
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modal Edición */}
+      {editando && (
+        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-96 shadow-lg">
+            <h2 className="text-xl font-semibold mb-4">Editar Análisis #{editando.id}</h2>
+            <label className="block mb-2">
+              Consulta:
+              <input
+                type="text"
+                value={nuevaConsulta}
+                onChange={(e) => setNuevaConsulta(e.target.value)}
+                className="border border-gray-300 rounded px-3 py-2 w-full"
+              />
+            </label>
+            <label className="block mb-4">
+              ¿Es alimento?
+              <select
+                value={nuevoEsAlimento ? "true" : "false"}
+                onChange={(e) => setNuevoEsAlimento(e.target.value === "true")}
+                className="border border-gray-300 rounded px-3 py-2 w-full"
+              >
+                <option value="true">Sí</option>
+                <option value="false">No</option>
+              </select>
+            </label>
+
+            <div className="flex justify-end gap-2">
+              <button
+                className="bg-gray-300 text-gray-800 px-4 py-2 rounded"
+                onClick={() => setEditando(null)}
+              >
+                Cancelar
+              </button>
+              <button
+                className="bg-wine-red text-white px-4 py-2 rounded hover:bg-red-800"
+                onClick={guardarCambios}
+              >
+                Guardar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
 
-export default FoodAnalyzer;
+export default NutriScanAuditoria;
