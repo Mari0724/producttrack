@@ -4,8 +4,9 @@ title: NutriScan Model
 sidebar_label: NutriScan Model
 ---
 
+# NutriScanModel
 
-Este archivo define el esquema de validación de datos para el módulo **NutriScan** utilizando la biblioteca [`zod`](https://zod.dev/). Sirve para validar y tipar la información tanto del **backend** como del **frontend** que se utiliza al realizar un análisis nutricional a partir de una imagen procesada por OCR.
+Este archivo define los **esquemas de validación** y **tipos TypeScript** para el módulo **NutriScan** usando [`zod`](https://zod.dev/). Estos esquemas se usan para validar entradas en endpoints del backend y formularios del frontend, y garantizan que los datos enviados para análisis nutricionales sean válidos, completos y seguros.
 
 ---
 
@@ -15,9 +16,11 @@ Este archivo define el esquema de validación de datos para el módulo **NutriSc
 
 ---
 
-## 📌 Propósito
+## 🎯 Propósito
 
-Establecer un esquema robusto para validar los datos que llegan al backend desde formularios o servicios. Esto evita errores comunes y garantiza la integridad del objeto `NutriScanDTO`.
+- Validar los datos enviados desde el frontend (evita errores y asegura integridad).
+- Facilitar el tipado automático en TypeScript con `z.infer`.
+- Estandarizar la estructura del objeto NutriScan para el backend.
 
 ---
 
@@ -28,54 +31,76 @@ export const NutriScanSchema = z.object({
   usuarioId: z.number().int().positive(),
   esAlimento: z.boolean(),
   consulta: z.string().min(1, "La consulta no puede estar vacía"),
-  respuesta: z.any(),
+  respuesta: z.object({
+    mensaje: z.string(),
+    generadoPor: z.string(),
+  }),
   tipoAnalisis: z.enum(["ocr-gpt-only", "ocr-openfoodfacts-gpt"]),
 });
 ````
 
-### ✏️ Descripción de campos
+### 🔍 Campos
 
-| Campo          | Tipo      | Validación / Reglas                                       |
-| -------------- | --------- | --------------------------------------------------------- |
-| `usuarioId`    | `number`  | Obligatorio, entero positivo. Usado internamente.         |
-| `esAlimento`   | `boolean` | Indica si el análisis corresponde a un alimento.          |
-| `consulta`     | `string`  | Texto extraído por OCR. No puede estar vacío.             |
-| `respuesta`    | `any`     | Resultado generado por GPT o por la API externa.          |
-| `tipoAnalisis` | Enum      | Solo acepta `"ocr-gpt-only"` o `"ocr-openfoodfacts-gpt"`. |
+| Campo          | Tipo      | Descripción                                                          |
+| -------------- | --------- | -------------------------------------------------------------------- |
+| `usuarioId`    | `number`  | ID positivo del usuario. Solo se usa internamente en el backend.     |
+| `esAlimento`   | `boolean` | Si el análisis se refiere a un alimento.                             |
+| `consulta`     | `string`  | Texto OCR o nombre proporcionado del producto. No puede estar vacío. |
+| `respuesta`    | `object`  | Objeto con el mensaje generado y quién lo generó (GPT o simulado).   |
+| `tipoAnalisis` | `enum`    | Tipo de flujo usado: `"ocr-gpt-only"` o `"ocr-openfoodfacts-gpt"`.   |
 
 ---
 
-## 🎯 Esquema parcial (`NutriScanSchemaWithoutUserId`)
+## 🧪 Esquema de entrada (`NutriScanSchemaWithoutUserId`)
 
 ```ts
 export const NutriScanSchemaWithoutUserId = NutriScanSchema.omit({ usuarioId: true });
 ```
 
-> Este esquema se usa para validar los datos que provienen **del frontend**, ya que el `usuarioId` generalmente se infiere desde el token JWT o sesión activa, y no es enviado directamente.
+> Este esquema se utiliza para validar entradas que vienen desde el frontend, ya que el `usuarioId` se infiere desde el token del usuario autenticado.
 
 ---
 
-## 🧬 Tipos derivados
+## ✏️ Esquema de actualización (`NutriScanUpdateSchema`)
 
 ```ts
-export type NutriScanDTO = z.infer<typeof NutriScanSchema>; // Backend (incluye usuarioId)
-export type NutriScanDTOInput = z.infer<typeof NutriScanSchemaWithoutUserId>; // Frontend
+export const NutriScanUpdateSchema = z.object({
+  consulta: z.string().min(1).optional(),
+  esAlimento: z.boolean().optional(),
+  tipoAnalisis: z.enum(["ocr-gpt-only", "ocr-openfoodfacts-gpt"]).optional(),
+  isTest: z.boolean().optional(),
+  respuesta: z.object({
+    mensaje: z.string(),
+    generadoPor: z.string(),
+  }).optional(),
+});
 ```
 
-### 📘 Uso típico
-
-| Tipo                | Uso esperado                                                |
-| ------------------- | ----------------------------------------------------------- |
-| `NutriScanDTO`      | Validación interna en servicios.                            |
-| `NutriScanDTOInput` | Validación de formularios o peticiones HTTP desde frontend. |
+> Permite realizar actualizaciones parciales en los análisis ya existentes. Todos los campos son opcionales.
 
 ---
 
-## ✅ Ventajas del uso de Zod
+## 🧬 Tipos generados
 
-* Permite validar entradas y generar tipos TypeScript automáticamente.
-* Proporciona mensajes de error claros.
-* Útil tanto en backend como frontend con librerías como React Hook Form o tRPC.
+```ts
+export type NutriScanDTO = z.infer<typeof NutriScanSchema>;
+export type NutriScanDTOInput = z.infer<typeof NutriScanSchemaWithoutUserId>;
+export type NutriScanDTOUpdate = z.infer<typeof NutriScanUpdateSchema>;
+```
+
+| Tipo                 | Uso previsto                              |
+| -------------------- | ----------------------------------------- |
+| `NutriScanDTO`       | Backend: objeto completo con `usuarioId`. |
+| `NutriScanDTOInput`  | Frontend: objeto enviado al crear.        |
+| `NutriScanDTOUpdate` | Backend: para actualizaciones parciales.  |
+
+---
+
+## ✅ Ventajas de usar Zod
+
+* Validación robusta y personalizada con mensajes claros.
+* Generación automática de tipos TypeScript.
+* Esquemas reutilizables en múltiples capas del sistema.
 
 ---
 
@@ -86,7 +111,7 @@ import { NutriScanSchema } from "../models/NutriScanModel";
 
 try {
   const datosValidados = NutriScanSchema.parse(req.body);
-  // datosValidados ahora es un objeto seguro
+  // datosValidados ahora es seguro para guardar en base de datos
 } catch (error) {
   res.status(400).json({ error: error.errors });
 }
@@ -94,13 +119,14 @@ try {
 
 ---
 
-## 📝 Resumen
+## 📌 Resumen
 
-| Elemento                       | Descripción                                        |
-| ------------------------------ | -------------------------------------------------- |
-| `NutriScanSchema`              | Validación completa (incluye `usuarioId`).         |
-| `NutriScanSchemaWithoutUserId` | Versión para formularios del frontend.             |
-| `NutriScanDTO`                 | Tipo TypeScript para uso interno.                  |
-| `NutriScanDTOInput`            | Tipo para validación en interfaces o endpoints.    |
-| Uso de `zod`                   | Validación sólida, tipado inferido y reutilizable. |
+| Elemento                       | Descripción                                         |
+| ------------------------------ | --------------------------------------------------- |
+| `NutriScanSchema`              | Esquema completo, incluye `usuarioId`.              |
+| `NutriScanSchemaWithoutUserId` | Entrada parcial sin `usuarioId`, desde el frontend. |
+| `NutriScanUpdateSchema`        | Esquema para actualizaciones parciales de análisis. |
+| `NutriScanDTO`                 | Tipo completo del backend.                          |
+| `NutriScanDTOInput`            | Tipo enviado desde el frontend.                     |
+| `NutriScanDTOUpdate`           | Tipo usado al actualizar registros existentes.      |
 

@@ -6,7 +6,7 @@ sidebar_label: NutriScan
 
 # NutriScanController
 
-Este controlador gestiona las rutas relacionadas con **NutriScan**, una funcionalidad que permite realizar análisis nutricionales a partir de imágenes o texto procesado. Controla el acceso según el rol del usuario (INDIVIDUAL, ADMIN o DESARROLLADOR) y delega la lógica de negocio al `NutriScanService`.
+Este controlador maneja las operaciones CRUD del módulo **NutriScan**, una herramienta para generar análisis nutricionales a partir de texto OCR o entradas manuales. La lógica de negocio es delegada al `NutriScanService` y se controla el acceso por tipo de usuario o rol (`INDIVIDUAL`, `ADMIN`, `DESARROLLADOR`).
 
 ---
 
@@ -16,100 +16,105 @@ Este controlador gestiona las rutas relacionadas con **NutriScan**, una funciona
 
 ---
 
-## 📦 Dependencias
+## 🔒 Seguridad
 
-- `tsoa`: Decoradores para documentación y generación de rutas.
-- `NutriScanService`: Lógica del negocio para crear, leer, actualizar y eliminar análisis.
-- `NutriScanSchemaWithoutUserId`: Validación con `Zod` del cuerpo sin ID de usuario.
+Todas las rutas están protegidas con `@Security("jwt")` y validan el `rol` o `tipoUsuario` del usuario autenticado.
 
----
-
-## 🔐 Seguridad
-
-- Todas las rutas usan `@Security("jwt")` para requerir autenticación con token JWT.
-- Se verifica el `rol` del usuario antes de permitir ejecutar acciones críticas.
+| Tipo de Usuario / Rol     | Acciones Permitidas                   |
+|---------------------------|----------------------------------------|
+| `INDIVIDUAL`              | Crear análisis                        |
+| `ADMIN`                   | Ver, crear, actualizar y eliminar     |
+| `DESARROLLADOR`           | Crear análisis de prueba y ver los suyos |
 
 ---
 
-## 🚀 Endpoints
+## 🧱 Dependencias clave
+
+- `NutriScanService`: Lógica principal de NutriScan.
+- `NutriScanSchemaWithoutUserId`: Validación de datos de entrada (`zod`).
+- `NutriScanUpdateSchema`: Validación para actualizaciones.
+
+---
+
+## 📘 Endpoints
 
 ### 📝 `POST /nutriscan`
 
 Crea un nuevo análisis nutricional.  
-Disponible solo para usuarios con tipo `INDIVIDUAL`, o roles `ADMIN` o `DESARROLLADOR`.
+**Disponible para:** `INDIVIDUAL`, `ADMIN`, `DESARROLLADOR`
 
-#### Parámetros:
+#### Validaciones:
 
-- `body`: Objeto con los datos del análisis nutricional (validado por `Zod`).
-- `req`: Objeto de solicitud para identificar al usuario autenticado.
+- Se usa `NutriScanSchemaWithoutUserId` para validar el cuerpo.
+- Si el usuario es desarrollador, el análisis se marca como prueba (`isTest = true`).
 
 #### Respuestas:
 
-- `201 Created`: Registro exitoso.
+- `201 Created`: Registro creado con éxito.
 - `400 Bad Request`: Datos inválidos.
-- `403 Forbidden`: El usuario no tiene permisos para usar NutriScan.
+- `403 Forbidden`: Acceso denegado.
 
 ---
 
 ### 📄 `GET /nutriscan`
 
-Lista los análisis almacenados para auditoría o pruebas.  
-Solo disponible para roles `ADMIN` y `DESARROLLADOR`.
+Devuelve los análisis disponibles según el rol del usuario.
 
-#### Lógica:
-
-- `ADMIN`: Obtiene todos los registros de prueba.
-- `DESARROLLADOR`: Solo los registros que él mismo creó.
+| Rol           | Acceso                                     |
+|---------------|---------------------------------------------|
+| `ADMIN`       | Todos los registros (auditoría)             |
+| `DESARROLLADOR` | Solo los registros de prueba que ha creado |
+| Otro          | ❌ Acceso denegado                          |
 
 #### Respuestas:
 
 - `200 OK`: Lista de análisis.
-- `403 Forbidden`: Acceso no permitido.
+- `403 Forbidden`: Acceso denegado.
 
 ---
 
-### 🔍 `GET /nutriscan/{id}`
+### 👤 `GET /nutriscan/usuario/{usuarioId}`
 
-Busca un análisis por su ID.  
-Solo accesible para usuarios con rol `ADMIN`.
+Devuelve los análisis de un usuario específico.  
+**Disponible para:** `ADMIN`
 
 #### Parámetros:
 
-- `id`: ID del análisis.
+- `usuarioId`: ID numérico del usuario.
 
 #### Respuestas:
 
-- `200 OK`: Registro encontrado.
+- `200 OK`: Registros encontrados.
 - `403 Forbidden`: Acceso denegado.
 
 ---
 
 ### ✏️ `PUT /nutriscan/{id}`
 
-Actualiza un análisis nutricional existente.  
-Solo accesible para `ADMIN`.
+Actualiza parcialmente un análisis.  
+**Disponible para:** `ADMIN`
 
 #### Parámetros:
 
 - `id`: ID del análisis.
-- `body`: Datos a actualizar (no validados con Zod directamente aquí).
+- `body`: Datos a modificar, validados con `NutriScanUpdateSchema`.
 
 #### Respuestas:
 
 - `200 OK`: Registro actualizado.
-- `400 Bad Request`: Error al actualizar.
+- `400 Bad Request`: Error de validación.
 - `403 Forbidden`: Acceso denegado.
 
 ---
 
 ### 🗑️ `DELETE /nutriscan/{id}`
 
-Elimina un análisis nutricional por ID.  
-Solo accesible para `ADMIN`.
+Elimina un análisis por su ID.  
+**Disponible para:** `ADMIN`
 
 #### Parámetros:
 
-- `id`: ID del análisis.
+- `id`: ID numérico del análisis.
 
 #### Respuestas:
 
@@ -118,19 +123,34 @@ Solo accesible para `ADMIN`.
 
 ---
 
-## 🧪 Ejemplo de uso
+## 🧪 Ejemplo de uso (POST)
 
 ```ts
-// Crear desde un usuario individual autenticado
-await fetch("/nutriscan", {
+// Crear análisis nutricional (tipo INDIVIDUAL)
+fetch("/nutriscan", {
   method: "POST",
   headers: {
     "Authorization": "Bearer <token>",
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    titulo: "Análisis de cereal",
-    textoExtraido: "...",
-    resultado: "...",
+    consulta: "Arroz integral",
+    esAlimento: true,
+    respuesta: {},
+    tipoAnalisis: "ocr-gpt-only"
   })
 });
+````
+
+---
+
+## 📦 Resumen de métodos
+
+| Método | Ruta                      | Descripción                           | Autorizado para        |
+| ------ | ------------------------- | ------------------------------------- | ---------------------- |
+| POST   | `/nutriscan`              | Crear un nuevo análisis               | INDIVIDUAL, ADMIN, DEV |
+| GET    | `/nutriscan`              | Obtener análisis según rol            | ADMIN, DESARROLLADOR   |
+| GET    | `/nutriscan/usuario/{id}` | Ver análisis de un usuario específico | ADMIN                  |
+| PUT    | `/nutriscan/{id}`         | Actualizar un análisis                | ADMIN                  |
+| DELETE | `/nutriscan/{id}`         | Eliminar un análisis                  | ADMIN                  |
+

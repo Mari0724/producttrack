@@ -4,7 +4,9 @@ title: Servicio NutriScan
 sidebar_label: NutriScanService
 ---
 
-Este servicio encapsula toda la lógica de negocio relacionada con el módulo **NutriScan**, incluyendo la creación, recuperación, actualización y eliminación de registros de análisis nutricional basados en texto OCR y consultas automáticas a OpenFoodFacts.
+# NutriScan
+
+Este servicio centraliza toda la **lógica de negocio** relacionada con el módulo **NutriScan**, incluyendo creación, consulta, actualización y eliminación de análisis nutricionales generados por usuarios mediante OCR y consultas automáticas a OpenFoodFacts, con generación de mensajes usando GPT.
 
 ---
 
@@ -16,7 +18,7 @@ Este servicio encapsula toda la lógica de negocio relacionada con el módulo **
 
 ## 📌 Propósito
 
-Gestionar los flujos de entrada, validación, procesamiento (mediante GPT y OpenFoodFacts) y persistencia en base de datos de los análisis nutricionales creados por los usuarios.
+Gestionar el flujo completo de análisis nutricional desde la recepción de datos hasta su persistencia en base de datos, incluyendo validación, enriquecimiento con fuentes externas y control de acceso.
 
 ---
 
@@ -24,133 +26,160 @@ Gestionar los flujos de entrada, validación, procesamiento (mediante GPT y Open
 
 ```ts
 import prisma from "../utils/prismaClient";
-import { NutriScanSchemaWithoutUserId } from "../models/NutriScanModel";
+import { NutriScanSchemaWithoutUserId, NutriScanUpdateSchema } from "../models/NutriScanModel";
 import { OpenFoodFactsService } from "./openfoodfacts.service";
 import { gptService } from "./gpt.service";
 ````
 
-| Módulo                 | Propósito                                           |
-| ---------------------- | --------------------------------------------------- |
-| `prismaClient`         | Interfaz con la base de datos.                      |
-| `NutriScanSchema...`   | Validación de datos entrantes con Zod.              |
-| `OpenFoodFactsService` | Servicio que consulta una base nutricional abierta. |
-| `gptService`           | Genera un resumen nutricional usando GPT.           |
+| Módulo                 | Propósito                                            |
+| ---------------------- | ---------------------------------------------------- |
+| `prismaClient`         | ORM para acceso a la base de datos.                  |
+| `NutriScanSchema...`   | Validaciones con Zod para entrada y actualización.   |
+| `OpenFoodFactsService` | Consulta información nutricional abierta por nombre. |
+| `gptService`           | Genera un resumen nutricional con OpenAI GPT.        |
 
 ---
 
 ## 🧠 Clase: `NutriScanService`
 
-### ✅ Método: `create(data, usuarioId, isTest)`
+---
 
-Crea un nuevo análisis nutricional automático. Este es el flujo principal que:
+### ✅ `create(data, usuarioId, isTest)`
 
-1. **Valida los datos recibidos.**
-2. **Consulta OpenFoodFacts.**
-3. **Genera un mensaje nutricional con GPT.**
-4. **Guarda el resultado en la base de datos.**
+Crea un nuevo análisis automático. El flujo:
+
+1. Valida los datos con `Zod`.
+2. Consulta OpenFoodFacts con el nombre del producto.
+3. Genera un mensaje nutricional con `GPT`.
+4. Guarda el resultado en la base de datos con marca de prueba (`isTest`) si aplica.
 
 ```ts
 const parsed = NutriScanSchemaWithoutUserId.parse(data);
-const resultadosOpenFood = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
+const resultados = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
 const mensaje = await gptService.generarMensajeNutricional(...);
 await prisma.nutriScan.create(...);
 ```
 
 | Parámetro   | Tipo      | Descripción                                      |
 | ----------- | --------- | ------------------------------------------------ |
-| `data`      | `unknown` | Datos desde frontend (texto OCR, booleano, etc). |
-| `usuarioId` | `number`  | ID del usuario que genera el análisis.           |
-| `isTest`    | `boolean` | Si el análisis es de prueba o no.                |
+| `data`      | `unknown` | Datos de entrada (consulta, esAlimento, etc.)    |
+| `usuarioId` | `number`  | ID del usuario que envía el análisis             |
+| `isTest`    | `boolean` | Si el análisis es de prueba (modo desarrollador) |
 
 ---
 
-### 📄 Otros métodos del servicio
+### 📄 `findAll()`
 
-#### `findTestsOnly()`
-
-Devuelve todos los análisis creados en modo de prueba (`isTest = true`).
-
----
-
-#### `findTestsByUser(usuarioId: number)`
-
-Retorna solo los análisis de prueba hechos por un usuario específico.
-
----
-
-#### `findById(id: number)`
-
-Obtiene un análisis por su ID único.
-
----
-
-#### `update(id: number, data: unknown)`
-
-Permite actualizar parcialmente un análisis (validado con Zod).
+Devuelve todos los análisis registrados en la base de datos.
+Incluye datos del usuario que los creó (nombre y tipo).
 
 ```ts
-NutriScanSchemaWithoutUserId.partial().parse(data);
+return prisma.nutriScan.findMany({
+  orderBy: { fechaAnalisis: "desc" },
+  include: {
+    usuario: {
+      select: {
+        nombreCompleto: true,
+        tipoUsuario: true,
+      },
+    },
+  },
+});
 ```
 
 ---
 
-#### `delete(id: number)`
+### 🧪 `findTestsByUser(usuarioId)`
 
-Elimina un análisis de la base de datos y retorna un mensaje de confirmación.
+Retorna únicamente los análisis de prueba hechos por un usuario específico.
 
 ---
 
-## 📝 Esquema de datos utilizados
+### 🔍 `findByUserId(usuarioId)`
 
-Este servicio usa el esquema:
+Obtiene todos los análisis (de prueba o reales) realizados por un usuario determinado.
+Incluye detalles del usuario y se ordena por fecha descendente.
+
+---
+
+### ✏️ `update(id, data)`
+
+Actualiza un análisis nutricional existente, validando solo los campos enviados con `NutriScanUpdateSchema`.
+
+```ts
+const parsed = NutriScanUpdateSchema.parse(data);
+await prisma.nutriScan.update({ where: { id }, data: parsed });
+```
+
+> Soporta actualizaciones parciales como `consulta`, `tipoAnalisis`, `esAlimento`, `respuesta`, etc.
+
+---
+
+### 🗑️ `delete(id)`
+
+Elimina un análisis de la base de datos permanentemente.
+Devuelve un mensaje de confirmación.
+
+---
+
+## 📝 Esquemas utilizados
+
+### Esquema de creación (`NutriScanSchemaWithoutUserId`)
 
 ```ts
 {
   esAlimento: boolean;
   consulta: string;
-  respuesta: any;
-  tipoAnalisis: "auto";
+  tipoAnalisis: "ocr-gpt-only" | "ocr-openfoodfacts-gpt";
 }
 ```
 
-Y guarda el `usuarioId` y el campo `isTest`.
+### Esquema de actualización (`NutriScanUpdateSchema`)
 
----
+Permite modificar selectivamente:
 
-## 🧪 Flujo completo (create)
-
-```txt
-Frontend → OCR → texto → NutriScanService.create()
-                ↳ OpenFoodFacts
-                ↳ GPT (opcional)
-                ↳ Guarda en BD
-                ↳ Retorna análisis
+```ts
+{
+  consulta?: string;
+  esAlimento?: boolean;
+  tipoAnalisis?: "ocr-gpt-only" | "ocr-openfoodfacts-gpt";
+  isTest?: boolean;
+  respuesta?: {
+    mensaje: string;
+    generadoPor: string;
+  };
+}
 ```
 
 ---
 
-## ✅ Validaciones incluidas
+## 🔄 Flujo típico de `create()`
 
-* Estructura de datos con `Zod`.
-* Mensajes claros en caso de error de validación o procesamiento.
-* Control de errores centralizado.
+```txt
+Frontend → texto OCR → NutriScanService.create()
+                 ↳ OpenFoodFacts (buscar alimento)
+                 ↳ GPT (crear resumen)
+                 ↳ Guardar en BD (Prisma)
+                 ↳ Retornar análisis generado
+```
 
 ---
 
-## 🧠 Notas adicionales
+## ✅ Validaciones y control de errores
 
-* El campo `respuesta` puede contener una estructura personalizada con metadatos.
-* Ideal para futuros análisis combinados (OCR + OpenFoodFacts + GPT).
-* Puede integrarse con sistemas de historial, dashboards o generación de reportes.
+* Validación estricta con `Zod`.
+* Captura de errores y trazabilidad en consola.
+* Soporte para ejecución en modo de prueba (`isTest`).
+* Inclusión de información del usuario (para auditoría o frontend).
 
 ---
 
 ## 🧾 Resumen
 
-| Función principal | Crear y gestionar análisis nutricionales automatizados |
-| ----------------- | ------------------------------------------------------ |
-| Base de datos     | Prisma ORM                                             |
-| Integraciones     | OpenFoodFacts, GPT                                     |
-| Validación        | Zod (`NutriScanSchemaWithoutUserId`)                   |
-| Modos soportados  | Normal y prueba (`isTest`)                             |
-| Exportación       | Clase `NutriScanService` (a instanciar manualmente)    |
+| Función principal | Crear y administrar análisis nutricionales                    |
+| ----------------- | ------------------------------------------------------------- |
+| Base de datos     | Prisma ORM                                                    |
+| Integraciones     | OpenFoodFacts, GPT                                            |
+| Validación        | Zod (`NutriScanSchemaWithoutUserId`, `NutriScanUpdateSchema`) |
+| Modos soportados  | Normal y prueba (`isTest`)                                    |
+| Métodos clave     | `create`, `findAll`, `findByUserId`, `update`, `delete`       |

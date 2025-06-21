@@ -68,6 +68,9 @@ const config = {
         'food-yellow': '#F2C94C',
         'light-gray': '#E0E0E0',
         'wine-red': '#800020',
+        'olive': '#808000',
+        'golden': '#F2C94C',
+        'burgundy': '#800020',
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -96,13 +99,18 @@ const config = {
             transform: 'translateY(-10px)',
             animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
           }
+        },
+        'fade-in': {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' }
         }
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'pulse-slow': 'pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'bounce-gentle': 'bounce-gentle 1s infinite'
+        'bounce-gentle': 'bounce-gentle 1s infinite',
+        'fade-in': 'fade-in 0.6s ease-out'
       }
     }
   },
