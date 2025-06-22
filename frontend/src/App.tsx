@@ -1,12 +1,14 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { Toaster } from "sonner";
+
 import Register from "./pages/Register";
 import Login from "./pages/Login";
 import NutriScan from "./pages/NutriScan";
-//import Equipo from "./pages/Equipo";
 import Layout from "./layout/Layout";
 import Index from "./pages/Index";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TeamManagement from "./pages/TeamManagement";
 
 function App() {
   return (
@@ -22,16 +24,18 @@ function App() {
 
         {/* Rutas privadas con Layout */}
         <Route path="/" element={<Layout />}>
-          {/* Esta es la nueva página de inicio luego del login */}
           <Route index element={<Index />} />
-          <Route path="home" element={<Navigate to="/" />} /> {/* redirección de /home a raíz */}
+          <Route path="home" element={<Navigate to="/" />} />
           <Route path="nutriscan" element={<NutriScan />} />
-          {/* <Route path="equipo" element={<Equipo />} />*/}
+          <Route path="equipo" element={<TeamManagement />} />
         </Route>
 
         {/* Cualquier otra ruta no encontrada */}
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
+
+      {/* Sonner toaster */}
+      <Toaster richColors position="top-right" />
     </Router>
   );
 }

@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+.producttrack-button-primary {
+  @apply bg-producttrack-olive text-white text-sm px-4 py-3 rounded-lg hover:bg-producttrack-olive/90 transition-colors;
+}
+
+.producttrack-button-danger {
+  @apply px-4 py-3 rounded-lg text-white bg-producttrack-wine hover:bg-producttrack-wine/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors;
+}
+
+
 /* Aplicar estilos base al html, body y root */
 html,
 body,
