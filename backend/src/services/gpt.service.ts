@@ -4,7 +4,7 @@ const apiKey = process.env.OPENAI_API_KEY;
 
 let openai: OpenAI | null = null;
 
-if (apiKey) {
+if (apiKey?.startsWith("sk-")) {
   openai = new OpenAI({ apiKey });
 } else {
   console.warn("⚠️ No se encontró la clave de OpenAI. Se usarán respuestas simuladas.");

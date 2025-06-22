@@ -7,6 +7,19 @@ import RegisterForm from "../components/RegisterForm";
 import LandingInfo from "../components/LandingInfo";
 import Footer from "../components/Footer";
 
+interface RegistroUsuario {
+  username: string;
+  correo: string;
+  password: string;
+  nombreCompleto: string;
+  telefono: string;
+  direccion: string;
+  rol: string;
+  tipoUsuario: "INDIVIDUAL" | "EMPRESARIAL";
+  nombreEmpresa?: string;
+  nit?: string;
+}
+
 const Register: React.FC = () => {
   const [userType, setUserType] = useState("");
   const [username, setUsername] = useState("");
@@ -47,7 +60,7 @@ const Register: React.FC = () => {
     e.preventDefault();
     if (!validate()) return;
 
-    const datos = {
+    const datos: RegistroUsuario = {
       username,
       correo: email,
       password,
@@ -55,19 +68,26 @@ const Register: React.FC = () => {
       telefono: phone,
       direccion: address,
       rol: "USUARIO",
-      tipoUsuario: userType.toUpperCase(),
-      nombreEmpresa: userType === "empresarial" ? companyName : undefined,
-      nit: userType === "empresarial" ? nit : undefined,
+      tipoUsuario: userType.toUpperCase() as "INDIVIDUAL" | "EMPRESARIAL",
+      ...(userType === "empresarial" && {
+        nombreEmpresa: companyName,
+        nit,
+      }),
     };
 
     try {
       setLoading(true);
+      console.log("📤 Enviando datos:", datos);
       await axios.post("http://localhost:3000/usuarios", datos);
       alert("Usuario registrado correctamente ✅");
       navigate("/login");
-    } catch (error) {
-      console.error("Error al registrar usuario:", error);
-      alert("Hubo un error al registrarse ❌");
+    } catch (error: unknown) {
+      const mensaje =
+        axios.isAxiosError(error) && error.response?.data?.message
+          ? error.response.data.message
+          : "No se pudo registrar el usuario.";
+      console.error("❌ Error al registrar usuario:", mensaje);
+      alert("Error: " + mensaje);
     } finally {
       setLoading(false);
     }
@@ -104,7 +124,6 @@ const Register: React.FC = () => {
         </div>
       </div>
 
-      {/* Contenido adicional del landing */}
       <LandingInfo />
       <Footer />
     </>
