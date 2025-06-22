@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import ProductCard from '../../components/comunes/ProductCard';
-import FloatingButton from '../../components/comunes/FloatingButton';
-import ProductModal from '../../components/comunes/ProductModal';
-import ConfirmDeleteModal from '../../components/comunes/ConfirmDeleteModal';
+import ProductCard from '../../components/ProductCard';
+import FloatingButton from '../../components/FloatingButton';
+import ProductModal from '../../components/ProductModal';
+import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 import type { Product } from '../../types/Product';
 import { getProductos, crearProducto, editarProducto, eliminarProducto } from '../../api/productos';
+import toast from 'react-hot-toast';
 
 const Inventario: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -28,7 +29,15 @@ const Inventario: React.FC = () => {
 
   const handleSaveProduct = async (product: Product) => {
     try {
-      const res = await crearProducto(product);
+      // Obtener el usuarioId del localStorage (o donde lo tengas)
+      const userId = Number(localStorage.getItem("userId")); // o el nombre real que usaste
+
+      const productoConUsuario = {
+        ...product,
+        usuarioId: userId, // sobreescribe con el ID correcto
+      };
+
+      const res = await crearProducto(productoConUsuario);
       setProducts(prev => [...prev, res.data]);
       setShowProductModal(false);
     } catch {
@@ -37,6 +46,11 @@ const Inventario: React.FC = () => {
   };
 
   const handleEditProduct = async (updatedProduct: Product) => {
+    if (updatedProduct.id === undefined) {
+      alert("Producto sin ID, no se puede editar");
+      return;
+    }
+
     try {
       await editarProducto(updatedProduct.id, updatedProduct);
       setProducts(prev =>
@@ -65,10 +79,11 @@ const Inventario: React.FC = () => {
         setProducts(prev =>
           prev.filter(product => product.id !== productToDelete)
         );
+        toast.success("Producto eliminado exitosamente");
         setShowConfirmModal(false);
         setProductToDelete(null);
       } catch {
-        alert("Error al eliminar producto");
+        toast.error("Error al eliminar producto");
       }
     }
   };
@@ -82,9 +97,9 @@ const Inventario: React.FC = () => {
           {products.map((product) => (
             <ProductCard 
               key={product.id}
-              {...product}
+              product={product}
               onEdit={() => openEditModal(product)}
-              onDelete={() => handleAskDelete(product.id)}
+              onDelete={() => handleAskDelete(product.id!)}
             />
           ))}
         </div>

@@ -28,6 +28,13 @@ const Login: React.FC = () => {
       localStorage.setItem("tipoUsuario", data.tipoUsuario);
       localStorage.setItem("rol", data.rol);
       localStorage.setItem("username", data.username);
+      
+      if (data.usuario && data.usuario.id) {
+        localStorage.setItem("userId", data.usuario.id.toString());
+      } else {
+        console.warn("El campo 'usuario.id' no vino en la respuesta:", data);
+        localStorage.setItem("userId", "0"); // O puedes no guardarlo en absoluto
+      }
 
       alert("Inicio de sesión exitoso ✅");
       navigate("/app/individual/home");
