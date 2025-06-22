@@ -3,6 +3,17 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { getComentariosPorProducto, crearComentario } from '../api/comentarios';
 import toast from 'react-hot-toast';
 
+// ✅ Tipo que viene del backend
+type ComentarioDesdeAPI = {
+  id: number;
+  comentario: string;
+  createdAt: string;
+  usuario?: {
+    nombre: string;
+  };
+};
+
+// ✅ Tipo que usamos en el componente
 interface Comment {
   id: number;
   text: string;
@@ -29,12 +40,18 @@ const ProductCommentsModal: React.FC<CommentsModalProps> = ({ productId, product
       try {
         const res = await getComentariosPorProducto(productId);
 
-        // 🛡️ Asegurarse que sea un arreglo
         if (Array.isArray(res.data)) {
-          setComments(res.data);
+          const comentariosFormateados: Comment[] = res.data.map((c: ComentarioDesdeAPI) => ({
+            id: c.id,
+            text: c.comentario,
+            user: c.usuario?.nombre || 'Usuario',
+            date: c.createdAt?.split('T')[0] || new Date().toISOString().split('T')[0],
+          }));
+
+          setComments(comentariosFormateados);
         } else {
           console.error("La respuesta no es un arreglo:", res.data);
-          setComments([]); // Evitar error si la API no devuelve un array
+          setComments([]);
         }
       } catch (error) {
         console.error(error);
@@ -52,12 +69,12 @@ const ProductCommentsModal: React.FC<CommentsModalProps> = ({ productId, product
 
     try {
       const res = await crearComentario({
-      idUsuario: userId,
-      idProducto: productId,
-      comentario: newComment,
-    });
+        idUsuario: userId,
+        idProducto: productId,
+        comentario: newComment,
+      });
 
-      const nuevo = {
+      const nuevo: Comment = {
         id: res.data.id,
         text: newComment,
         user: userName,
@@ -67,8 +84,6 @@ const ProductCommentsModal: React.FC<CommentsModalProps> = ({ productId, product
       setComments(prev => [...prev, nuevo]);
       setNewComment('');
       toast.success("Comentario enviado");
-
-      // ✅ El backend ya notifica al equipo, ¡así que no necesitas hacer más aquí!
     } catch (error) {
       console.error(error);
       toast.error("Error al enviar comentario");
@@ -82,7 +97,9 @@ const ProductCommentsModal: React.FC<CommentsModalProps> = ({ productId, product
           <AiOutlineClose size={22} />
         </button>
 
-        <h2 className="text-xl font-bold text-[#81203D]">Comentarios de: {productName}</h2>
+        <h2 className="text-xl font-bold text-[#81203D]">
+          Notas personales sobre: {productName}
+        </h2>
 
         {loading ? (
           <p className="text-sm text-gray-500">Cargando comentarios...</p>
@@ -109,7 +126,7 @@ const ProductCommentsModal: React.FC<CommentsModalProps> = ({ productId, product
             onClick={handleAddComment}
             className="mt-2 bg-[#81203D] hover:bg-[#60162F] text-white px-4 py-2 rounded-lg text-sm"
           >
-            Enviar comentario
+            Subir mis notas
           </button>
         </div>
       </div>

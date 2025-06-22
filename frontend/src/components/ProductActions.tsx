@@ -26,7 +26,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({ onEdit, onDelete, onVie
         onClick={onView}
         className="flex items-center gap-1 bg-[#405057] hover:bg-[#303D42] px-3 py-1.5 rounded-lg text-sm"
       >
-        <FaEye /> Ver más
+        <FaEye /> Notas personales
       </button>
     </div>
   )

@@ -1,14 +1,22 @@
 import type { Product } from '../types/Product';
 import axiosInstance from '../utils/axiosInstance';
 
+// ✅ Productos
 export const getProductos = () =>
-  axiosInstance.get<Product[]>('/Productos');
+  axiosInstance.get<Product[]>('/productos');
 
 export const crearProducto = (data: Product) =>
-  axiosInstance.post<Product>('/Productos', data);
+  axiosInstance.post<Product>('/productos', data);
 
 export const editarProducto = (id: number, data: Partial<Product>) =>
-  axiosInstance.put(`/Productos/${id}`, data);
+  axiosInstance.put(`/productos/${id}`, data);
 
 export const eliminarProducto = (id: number) =>
-  axiosInstance.delete(`/Productos/${id}`);
+  axiosInstance.delete(`/productos/${id}`);
+
+// ✅ Categorías
+export const getCategorias = () =>
+  axiosInstance.get<string[]>('/productos/categorias');
+
+export const getProductosPorCategoria = (categoria: string) =>
+  axiosInstance.get<Product[]>(`/productos/por-categoria?categoria=${encodeURIComponent(categoria)}`);
