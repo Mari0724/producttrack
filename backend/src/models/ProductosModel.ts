@@ -10,9 +10,9 @@ export const productoSchema = z.object({
   descripcion: z.string().min(1).trim(),
   categoria: z.string().optional(),
   cantidad: z.number().int().nonnegative(),
-  precio: z.string().refine((val) => /^\d+(\.\d{1,2})?$/.test(val), {
-    message: "El precio debe ser un número válido con hasta 2 decimales",
-  }),
+  precio: z.preprocess((val) => Number(val), z.number().nonnegative({
+    message: "El precio debe ser un número válido",
+  })),
   fechaAdquisicion: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: "fechaAdquisicion debe ser una fecha válida (ISO string)",
   }),

@@ -6,13 +6,15 @@ import {  fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { UserController } from './../controllers/user.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { ProductosController } from './../controllers/Productos.controller';
+import { ProductosController } from './../controllers/productos.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { NotificacionesController } from './../controllers/Notificaciones.controller';
+import { NotificacionesController } from './../controllers/notificaciones.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../controllers/log.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { EquipoController } from './../controllers/equipo.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { ComentariosController } from './../controllers/comentarios.controller';
 import { expressAuthentication } from './../utils/jwt';
 // @ts-ignore - no great way to install types from subpackage
 import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
@@ -91,12 +93,13 @@ const models: TsoaRoute.Models = {
     "ProductosDTO": {
         "dataType": "refObject",
         "properties": {
+            "id": {"dataType":"double"},
             "codigoBarras": {"dataType":"string","required":true},
             "codigoQR": {"dataType":"string","required":true},
             "nombre": {"dataType":"string","required":true},
             "descripcion": {"dataType":"string","required":true},
             "cantidad": {"dataType":"double","required":true},
-            "precio": {"dataType":"string","required":true},
+            "precio": {"dataType":"double","required":true},
             "fechaAdquisicion": {"dataType":"string","required":true},
             "fechaVencimiento": {"dataType":"string","required":true},
             "usuarioId": {"dataType":"double","required":true},
@@ -109,7 +112,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Partial_ProductosDTO_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"codigoBarras":{"dataType":"string"},"codigoQR":{"dataType":"string"},"nombre":{"dataType":"string"},"descripcion":{"dataType":"string"},"cantidad":{"dataType":"double"},"precio":{"dataType":"string"},"fechaAdquisicion":{"dataType":"string"},"fechaVencimiento":{"dataType":"string"},"usuarioId":{"dataType":"double"},"estado":{"ref":"_36_Enums.EstadoProducto"},"imagen":{"dataType":"string"},"categoria":{"dataType":"string"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double"},"codigoBarras":{"dataType":"string"},"codigoQR":{"dataType":"string"},"nombre":{"dataType":"string"},"descripcion":{"dataType":"string"},"cantidad":{"dataType":"double"},"precio":{"dataType":"double"},"fechaAdquisicion":{"dataType":"string"},"fechaVencimiento":{"dataType":"string"},"usuarioId":{"dataType":"double"},"estado":{"ref":"_36_Enums.EstadoProducto"},"imagen":{"dataType":"string"},"categoria":{"dataType":"string"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "LoginResponse": {
@@ -121,6 +124,7 @@ const models: TsoaRoute.Models = {
             "tipoUsuario": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "rolEquipo": {"dataType":"string"},
             "requiereCompletarPerfil": {"dataType":"boolean","required":true},
+            "usuario": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double","required":true}},"required":true},
         },
         "additionalProperties": false,
     },
@@ -164,6 +168,21 @@ const models: TsoaRoute.Models = {
     "Partial_EquipoDTO_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"username":{"dataType":"string"},"correo":{"dataType":"string"},"password":{"dataType":"string"},"nombreCompleto":{"dataType":"string"},"telefono":{"dataType":"string"},"direccion":{"dataType":"string"},"fotoPerfil":{"dataType":"string"},"rolEquipo":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["LECTOR"]},{"dataType":"enum","enums":["COMENTARISTA"]},{"dataType":"enum","enums":["EDITOR"]}]},"estado":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["activo"]},{"dataType":"enum","enums":["inactivo"]}]},"empresaId":{"dataType":"double"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ComentarioDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "idComentario": {"dataType":"double","required":true},
+            "idUsuario": {"dataType":"double","required":true},
+            "idProducto": {"dataType":"double","required":true},
+            "comentario": {"dataType":"string","required":true},
+            "fechaComentario": {"dataType":"datetime","required":true},
+            "estado": {"dataType":"string","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"datetime","required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
@@ -1015,6 +1034,127 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'eliminarTodoElEquipo',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsComentariosController_getComentariosPorProducto: Record<string, TsoaRoute.ParameterSchema> = {
+                productoId: {"in":"path","name":"productoId","required":true,"dataType":"double"},
+        };
+        app.get('/comentarios/:productoId',
+            ...(fetchMiddlewares<RequestHandler>(ComentariosController)),
+            ...(fetchMiddlewares<RequestHandler>(ComentariosController.prototype.getComentariosPorProducto)),
+
+            async function ComentariosController_getComentariosPorProducto(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsComentariosController_getComentariosPorProducto, request, response });
+
+                const controller = new ComentariosController();
+
+              await templateService.apiHandler({
+                methodName: 'getComentariosPorProducto',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsComentariosController_crearComentario: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"comentario":{"dataType":"string","required":true},"idProducto":{"dataType":"double","required":true},"idUsuario":{"dataType":"double","required":true}}},
+        };
+        app.post('/comentarios',
+            ...(fetchMiddlewares<RequestHandler>(ComentariosController)),
+            ...(fetchMiddlewares<RequestHandler>(ComentariosController.prototype.crearComentario)),
+
+            async function ComentariosController_crearComentario(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsComentariosController_crearComentario, request, response });
+
+                const controller = new ComentariosController();
+
+              await templateService.apiHandler({
+                methodName: 'crearComentario',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsComentariosController_actualizarComentario: Record<string, TsoaRoute.ParameterSchema> = {
+                idComentario: {"in":"path","name":"idComentario","required":true,"dataType":"double"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"comentario":{"dataType":"string","required":true}}},
+        };
+        app.put('/comentarios/:idComentario',
+            ...(fetchMiddlewares<RequestHandler>(ComentariosController)),
+            ...(fetchMiddlewares<RequestHandler>(ComentariosController.prototype.actualizarComentario)),
+
+            async function ComentariosController_actualizarComentario(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsComentariosController_actualizarComentario, request, response });
+
+                const controller = new ComentariosController();
+
+              await templateService.apiHandler({
+                methodName: 'actualizarComentario',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsComentariosController_eliminarComentario: Record<string, TsoaRoute.ParameterSchema> = {
+                idComentario: {"in":"path","name":"idComentario","required":true,"dataType":"double"},
+        };
+        app.delete('/comentarios/:idComentario',
+            ...(fetchMiddlewares<RequestHandler>(ComentariosController)),
+            ...(fetchMiddlewares<RequestHandler>(ComentariosController.prototype.eliminarComentario)),
+
+            async function ComentariosController_eliminarComentario(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsComentariosController_eliminarComentario, request, response });
+
+                const controller = new ComentariosController();
+
+              await templateService.apiHandler({
+                methodName: 'eliminarComentario',
                 controller,
                 response,
                 next,

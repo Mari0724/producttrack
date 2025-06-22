@@ -19,6 +19,9 @@ export class AuthController extends Controller {
       tipoUsuario: user.tipoUsuario,
       rolEquipo: user.rolEquipo || "",
       requiereCompletarPerfil, // ✅ Ya lo devuelve tu servicio
+      usuario: {
+        id: user.idUsuario, // ✅ ¡Aquí está la clave!
+      },
     };
   }
 }

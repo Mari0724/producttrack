@@ -161,12 +161,17 @@ export async function getCantidadPorRangoPrecio() {
 
 // Función para subir imagen a Cloudinary
 export const subirImagenCloudinary = async (imagenBase64: string): Promise<string> => {
-  const uploadResult = await cloudinary.uploader.upload(imagenBase64, {
-    folder: "productos",
-    public_id: `${Date.now()}`,
-    resource_type: "image",
-  });
-  return uploadResult.secure_url;
+  try {
+    const uploadResult = await cloudinary.uploader.upload(imagenBase64, {
+      folder: "productos",
+      public_id: `${Date.now()}`,
+      resource_type: "image",
+    });
+    return uploadResult.secure_url;
+  } catch (error) {
+    console.error("Error al subir imagen a Cloudinary:", error);
+    throw new Error("No se pudo subir la imagen.");
+  }
 };
 
 // 🆕 Crear producto con conversiones de tipo
@@ -179,7 +184,7 @@ export async function createProducto(data: ProductosDTO) {
         nombre: data.nombre,
         descripcion: data.descripcion,
         cantidad: data.cantidad,
-        precio: parseFloat(data.precio),
+        precio: data.precio,
         fechaAdquisicion: new Date(data.fechaAdquisicion),
         fechaVencimiento: new Date(data.fechaVencimiento),
         usuarioId: data.usuarioId,
@@ -196,6 +201,7 @@ export async function createProducto(data: ProductosDTO) {
 
 // ✏️ Actualizar producto
 export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
+  console.log("🔄 updateProducto service - id:", id, "data:", data); // 👈 Agrega esto
   const producto = await prisma.productos.findUnique({
     where: { id: id },
   });
@@ -204,19 +210,24 @@ export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
 
   let imagenUrl = producto.imagen;
   // Si hay una nueva imagen, subirla a Cloudinary
-  if (data.imagen) {
-    // Eliminar la imagen anterior de Cloudinary si existe
-    if (producto.imagen) {
-      const oldUrl = producto.imagen;
-      const parts = oldUrl.split('/upload/');
-      if (parts.length > 1) {
-        const pathWithExt = parts[1];
-        const publicId = pathWithExt.replace(/\.[^/.]+$/, "");
-        try {
-          await cloudinary.uploader.destroy(publicId);
-          console.log(`Imagen antigua eliminada: ${publicId}`);
-        } catch (error) {
-          console.error("Error eliminando imagen antigua:", error);
+  if (data.imagen && data.imagen !== producto.imagen) {
+    // Solo procesar si la imagen cambió
+    const yaEsUrlDeCloudinary = data.imagen.startsWith("http") && data.imagen.includes("res.cloudinary.com");
+
+    if (!yaEsUrlDeCloudinary) {
+      // Eliminar imagen anterior
+      if (producto.imagen) {
+        const oldUrl = producto.imagen;
+        const parts = oldUrl.split('/upload/');
+        if (parts.length > 1) {
+          const pathWithExt = parts[1];
+          const publicId = pathWithExt.replace(/\.[^/.]+$/, "");
+          try {
+            await cloudinary.uploader.destroy(publicId);
+            console.log(`Imagen antigua eliminada: ${publicId}`);
+          } catch (error) {
+            console.error("Error eliminando imagen antigua:", error);
+          }
         }
       }
     }
@@ -224,10 +235,12 @@ export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
     imagenUrl = await subirImagenCloudinary(data.imagen);
   }
 
+  console.log("📦 Data recibida en updateProducto:", data);
+
   return await prisma.productos.update({
     where: { id: id },
     data: {
-      ...(data.precio && { precio: parseFloat(data.precio) }),
+      ...(data.precio !== undefined && { precio: data.precio }),
       ...(data.fechaAdquisicion && { fechaAdquisicion: new Date(data.fechaAdquisicion) }),
       ...(data.fechaVencimiento && { fechaVencimiento: new Date(data.fechaVencimiento) }),
       ...(data.nombre && { nombre: data.nombre }),
@@ -237,7 +250,8 @@ export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
       ...(data.estado && { estado: data.estado }),
       ...(data.codigoBarras && { codigoBarras: data.codigoBarras }),
       ...(data.codigoQR && { codigoQR: data.codigoQR }),
-      ...(data.imagen && { imagen: data.imagen }),
+      ...(data.imagen && { imagen: imagenUrl }),
+      ...(data.categoria && { categoria: data.categoria }),
       updatedAt: new Date(),
     },
   });
@@ -245,17 +259,24 @@ export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
 
 // ❌ Eliminar (soft delete)
 export async function deleteProducto(id: number) {
-  const producto = await prisma.productos.findUnique({
-    where: { id: id },
-  });
+  const producto = await prisma.productos.findUnique({ where: { id } });
 
   if (!producto) throw new Error("Producto no encontrado");
 
-  return await prisma.productos.update({
-    where: { id: id },
-    data: {
-      eliminadoEn: new Date(),
-      updatedAt: new Date(),
-    },
-  });
+  // Eliminar imagen de Cloudinary si existe
+  if (producto.imagen) {
+    const parts = producto.imagen.split('/upload/');
+    if (parts.length > 1) {
+      const pathWithExt = parts[1];
+      const publicId = pathWithExt.replace(/\.[^/.]+$/, "");
+      try {
+        await cloudinary.uploader.destroy(publicId);
+        console.log(`🗑️ Imagen eliminada: ${publicId}`);
+      } catch (error) {
+        console.error("⚠️ Error eliminando imagen:", error);
+      }
+    }
+  }
+
+  await prisma.productos.delete({ where: { id } });
 }

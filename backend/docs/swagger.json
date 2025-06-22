@@ -210,6 +210,10 @@
 			},
 			"ProductosDTO": {
 				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
 					"codigoBarras": {
 						"type": "string"
 					},
@@ -227,7 +231,8 @@
 						"format": "double"
 					},
 					"precio": {
-						"type": "string"
+						"type": "number",
+						"format": "double"
 					},
 					"fechaAdquisicion": {
 						"type": "string"
@@ -267,6 +272,10 @@
 			},
 			"Partial_ProductosDTO_": {
 				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
 					"codigoBarras": {
 						"type": "string"
 					},
@@ -284,7 +293,8 @@
 						"format": "double"
 					},
 					"precio": {
-						"type": "string"
+						"type": "number",
+						"format": "double"
 					},
 					"fechaAdquisicion": {
 						"type": "string"
@@ -329,13 +339,26 @@
 					},
 					"requiereCompletarPerfil": {
 						"type": "boolean"
+					},
+					"usuario": {
+						"properties": {
+							"id": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"id"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
 					"token",
 					"username",
 					"rol",
-					"requiereCompletarPerfil"
+					"requiereCompletarPerfil",
+					"usuario"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -471,6 +494,52 @@
 				},
 				"type": "object",
 				"description": "Make all properties in T optional"
+			},
+			"ComentarioDTO": {
+				"properties": {
+					"idComentario": {
+						"type": "number",
+						"format": "double"
+					},
+					"idUsuario": {
+						"type": "number",
+						"format": "double"
+					},
+					"idProducto": {
+						"type": "number",
+						"format": "double"
+					},
+					"comentario": {
+						"type": "string"
+					},
+					"fechaComentario": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"estado": {
+						"type": "string"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					}
+				},
+				"required": [
+					"idComentario",
+					"idUsuario",
+					"idProducto",
+					"comentario",
+					"fechaComentario",
+					"estado",
+					"createdAt",
+					"updatedAt"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -2140,6 +2209,179 @@
 					{
 						"in": "path",
 						"name": "empresaId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/comentarios/{productoId}": {
+			"get": {
+				"operationId": "GetComentariosPorProducto",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ComentarioDTO"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Comentarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "productoId",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/comentarios": {
+			"post": {
+				"operationId": "CrearComentario",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ComentarioDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Comentarios"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"comentario": {
+										"type": "string"
+									},
+									"idProducto": {
+										"type": "number",
+										"format": "double"
+									},
+									"idUsuario": {
+										"type": "number",
+										"format": "double"
+									}
+								},
+								"required": [
+									"comentario",
+									"idProducto",
+									"idUsuario"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/comentarios/{idComentario}": {
+			"put": {
+				"operationId": "ActualizarComentario",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ComentarioDTO"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Comentarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idComentario",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"comentario": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"comentario"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "EliminarComentario",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Comentarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idComentario",
 						"required": true,
 						"schema": {
 							"format": "double",

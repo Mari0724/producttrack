@@ -10,4 +10,7 @@ export interface LoginResponse {
   tipoUsuario?: string | null;
   rolEquipo?: string;
   requiereCompletarPerfil: boolean;
+  usuario: {
+    id: number;
+  };
 }

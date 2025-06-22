@@ -12,7 +12,7 @@ import {
   getCantidadPorCategoria,
   getProductosPorCategoria,
   getCantidadPorRangoPrecio
-} from "../services/Productos.service";
+} from "../services/productos.service";
 import {
   ResponseMessage,
   ResponseMessageWithData
@@ -173,7 +173,10 @@ export class ProductosController extends Controller {
     }
 
     try {
-      const nuevoProducto = await createProducto(parsed.data);
+      const nuevoProducto = await createProducto({
+      ...parsed.data,
+      precio: Number(parsed.data.precio),
+    });
       this.setStatus(201);
       return {
         message: "Producto creado correctamente",
@@ -201,22 +204,34 @@ export class ProductosController extends Controller {
       this.setStatus(403);
       return { message: "No tienes permiso para editar productos." };
     }
-
+    const { id: _, ...bodySinId } = body; // quitar id antes de validar
+    
     const parsed = zodValidate(productoSchema.partial(), body);
 
     if (!parsed.success) {
+      console.error("❌ Errores de validación Zod:", parsed.error.flatten());
+
       this.setStatus(400);
       return {
         message: "Datos inválidos",
-        detalles: parsed.error
+        detalles: parsed.error.flatten(), // ✅ ahora esto funciona bien
       };
     }
 
     try {
-      await updateProducto(id, parsed.data);
+      console.log("🔧 Datos recibidos para actualización:", parsed.data);
+
+      const { precio, ...resto } = parsed.data;
+
+      await updateProducto(id, {
+        ...resto,
+        ...(precio !== undefined && { precio: Number(precio) }),
+      });
+
       return { message: "Producto actualizado correctamente" };
     } catch (error) {
-      console.error("🚨 Error al actualizar:", error);
+      console.error("🚨 Error al actualizar producto:", JSON.stringify(error, null, 2));
+      console.error("🔍 Detalle completo:", error);
       if (error instanceof Error && error.message.includes("no encontrado")) {
         this.setStatus(404);
         return { message: "Producto no encontrado" };
@@ -225,6 +240,7 @@ export class ProductosController extends Controller {
       this.setStatus(500);
       return { message: "Error al actualizar producto" };
     }
+
   }
 
   // ✅ Eliminar producto
