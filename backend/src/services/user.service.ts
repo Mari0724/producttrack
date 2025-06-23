@@ -72,6 +72,8 @@ if (data.tipoUsuario) userData.tipoUsuario = data.tipoUsuario;
 if (data.rolEquipo) userData.rolEquipo = data.rolEquipo;
 if (data.empresaId) userData.empresaId = data.empresaId;
 if (data.fotoPerfil) userData.fotoPerfil = data.fotoPerfil;
+if (data.nombreEmpresa) userData.nombreEmpresa = data.nombreEmpresa; // <-- AGREGA ESTA LÍNEA
+
 
   const newUser = await prisma.users.create({ data: userData });
 

@@ -1,15 +1,43 @@
+import { useEffect, useState } from 'react';
 import { ArrowRight, Users, User, Building2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
+import axiosInstance from '../utils/axiosInstance';
+
+interface EmpresaInfo {
+  nombreEmpresa: string;
+  nit: string;
+  telefono: string;
+}
 
 const Index = () => {
   const { usuario } = useUser();
-  console.log("usuario:", usuario);
+  const [empresaData, setEmpresaData] = useState<EmpresaInfo | null>(null);
+
+  useEffect(() => {
+    const fetchEmpresaInfo = async () => {
+      if (usuario?.id && usuario?.tipoUsuario === 'EMPRESARIAL') {
+        try {
+          const response = await axiosInstance.get(`/usuarios/${usuario.id}`);
+          const data = response.data;
+
+          setEmpresaData({
+            nombreEmpresa: data.nombreEmpresa || 'Sin nombre',
+            nit: data.nit || 'Sin NIT',
+            telefono: data.telefono || 'Sin teléfono',
+          });
+        } catch (error) {
+          console.error("❌ Error al obtener datos de empresa:", error);
+        }
+      }
+    };
+
+    fetchEmpresaInfo();
+  }, [usuario]);
 
   return (
     <div className="p-6 bg-[#fffaf0]">
-
-      {/* Hero Section */}
+      {/* Hero */}
       <div className="text-center mb-12 animate-fade-in">
         <h1 className="text-4xl md:text-5xl font-bold text-producttrack-olive mb-4 font-nunito">
           Bienvenido a ProductTrack
@@ -19,10 +47,8 @@ const Index = () => {
         </p>
       </div>
 
-      {/* Quick Actions */}
       <div className="grid md:grid-cols-3 gap-6 mb-12">
-
-        {/* Gestión de Equipo solo para EMPRESARIAL */}
+        {/* Gestión de Equipo */}
         {usuario?.tipoUsuario === 'EMPRESARIAL' && (
           <div className="border-l-4 border-l-producttrack-olive bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200">
             <div className="p-4">
@@ -68,7 +94,7 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Información de Empresa para EMPRESARIAL y EQUIPO */}
+        {/* Info Empresa */}
         {(usuario?.tipoUsuario === 'EMPRESARIAL' || usuario?.rol === 'EQUIPO') && (
           <div className="border-l-4 border-l-producttrack-wine bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200">
             <div className="p-4">
@@ -80,20 +106,18 @@ const Index = () => {
                 </div>
               </div>
               <div className="space-y-2 text-sm text-gray-600">
-                <p><strong>Empresa:</strong> {String(usuario?.nombreEmpresa || 'Tech Solutions S.A.S')}</p>
-                <p><strong>NIT:</strong> {String(usuario?.nit || '900.123.456-7')}</p>
-                {/* Solo para EMPRESARIAL mostrar conteo de usuarios */}
+                <p><strong>Empresa:</strong> {empresaData?.nombreEmpresa || 'Cargando...'}</p>
+                <p><strong>NIT:</strong> {empresaData?.nit || 'Cargando...'}</p>
                 {usuario?.tipoUsuario === 'EMPRESARIAL' && (
-                  <p><strong>Usuarios activos:</strong> 12</p>
+                  <p><strong>Teléfono:</strong> {empresaData?.telefono || 'Cargando...'}</p>
                 )}
               </div>
             </div>
           </div>
         )}
-
       </div>
 
-      {/* Resumen del Sistema solo para EMPRESARIAL */}
+      {/* Resumen del Sistema */}
       {usuario?.tipoUsuario === 'EMPRESARIAL' && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-semibold text-producttrack-olive mb-6 font-nunito">Resumen del Sistema</h2>
@@ -117,7 +141,6 @@ const Index = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

@@ -24,10 +24,13 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token) {
       try {
         const decoded = jwtDecode<Usuario>(token);
+        console.log("🔐 Usuario cargado desde token:", decoded); // ← agrega esto
         setUsuario(decoded);
       } catch (e) {
         console.error("❌ Error al decodificar token:", e);
       }
+    }else {
+    console.log("⚠️ No hay token en localStorage");
     }
   }, []);
 

@@ -115,6 +115,19 @@ export const userSchema = z.object({
         message: "El campo 'empresaId' es obligatorio para usuarios con rol EQUIPO.",
         path: ["empresaId"],
     }
+)
+
+.refine(
+  (data) => {
+    if (data.tipoUsuario === "INDIVIDUAL") {
+      return !data.nombreEmpresa && !data.nit;
+    }
+    return true;
+  },
+  {
+    message: "Los usuarios individuales no deben tener nombre de empresa ni NIT.",
+    path: ["nombreEmpresa", "nit"],
+  }
 );
 
 

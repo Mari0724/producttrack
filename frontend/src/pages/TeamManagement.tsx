@@ -13,6 +13,9 @@ import type { TeamMember } from "../types/team";
 import { AddMemberModal } from "../../src/components/team/AddMemberModal";
 import { EditMemberModal } from "../../src/components/team/EditMemberModal";
 import { DeleteConfirmModal } from "../../src/components/team/DeleteConfirmModal";
+import { useUser } from "../context/UserContext";
+import { createTeamMember } from "../services/teamService";
+import { useToast } from "../hooks/useToast";
 
 interface TeamMemberWithStatus extends TeamMember {
   status: "activo" | "pendiente";
@@ -20,37 +23,25 @@ interface TeamMemberWithStatus extends TeamMember {
 }
 
 const TeamManagement = () => {
+  const { usuario } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
-  const [teamMembers, setTeamMembers] = useState<TeamMemberWithStatus[]>([
-    {
-      id: "1",
-      name: "Ana García López",
-      email: "ana.garcia@techsolutions.com",
-      role: "EDITOR",
-      phone: "+57 300 123 4567",
-      status: "activo",
-    },
-    {
-      id: "2",
-      name: "Carlos Rodríguez",
-      email: "carlos.rodriguez@techsolutions.com",
-      role: "COMENTARISTA",
-      phone: "+57 301 234 5678",
-      status: "activo",
-    },
-    {
-      id: "3",
-      name: "María Fernández",
-      email: "maria.fernandez@techsolutions.com",
-      role: "LECTOR",
-      status: "pendiente",
-    },
-  ]);
-
+  const [teamMembers, setTeamMembers] = useState<TeamMemberWithStatus[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+  const { toast } = useToast();
+
+  if (!usuario || usuario.tipoUsuario !== "EMPRESARIAL" || usuario.rol !== "USUARIO") {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-2xl font-bold text-red-600">Acceso no autorizado</h2>
+        <p className="text-gray-700 mt-2">
+          Esta sección está disponible solo para empresas con rol de usuario.
+        </p>
+      </div>
+    );
+  }
 
   const filteredMembers = teamMembers.filter(
     (member) =>
@@ -58,14 +49,36 @@ const TeamManagement = () => {
       member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleAddMember = (data: Omit<TeamMember, "id">) => {
-    const newMember: TeamMemberWithStatus = {
-      ...data,
-      id: crypto.randomUUID(),
-      status: "activo",
-    };
-    setTeamMembers((prev) => [...prev, newMember]);
-    setIsAddModalOpen(false);
+  const handleAddMember = async (data: Omit<TeamMember, "id"> & { password: string }) => {
+    try {
+      const payload = {
+        username: data.email.split("@")[0],
+        correo: data.email,
+        password: data.password,
+        nombreCompleto: data.name,
+        rol: "EQUIPO" as const,
+        rolEquipo: data.role as "LECTOR" | "COMENTARISTA" | "EDITOR",
+        empresaId: usuario.id,
+        telefono: "0000000000", // temporal hasta que se añadan esos campos en UI
+        direccion: "pendiente", // temporal también
+      };
+      await createTeamMember(payload);
+
+      const newMember: TeamMemberWithStatus = {
+        id: crypto.randomUUID(),
+        name: data.name,
+        email: data.email,
+        role: data.role,
+        status: "activo",
+      };
+
+      setTeamMembers((prev) => [...prev, newMember]);
+      toast(`✅ ${data.name} agregado al equipo.`);
+      setIsAddModalOpen(false);
+    } catch (error) {
+      console.error(error);
+      toast("❌ Error al agregar el miembro. Intenta de nuevo.");
+    }
   };
 
   const handleEditMember = (updatedData: Omit<TeamMember, "id">) => {
@@ -134,76 +147,56 @@ const TeamManagement = () => {
       <div className="space-y-4">
         {filteredMembers.map((member) => (
           <div
-  key={member.id}
-  className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white border border-gray-200 rounded-xl p-4 gap-4"
->
-  <div className="flex items-center gap-4 flex-1 min-w-0">
-    <div className="w-12 h-12 bg-producttrack-olive/10 rounded-full flex items-center justify-center">
-      <User className="h-6 w-6 text-producttrack-olive" />
-    </div>
-    <div className="min-w-0 flex-1">
-      <div className="flex flex-wrap items-center gap-2">
-        <h2 className="text-lg font-semibold text-producttrack-olive truncate">{member.name}</h2>
-        <span
-          className={`text-xs font-medium px-2 py-1 rounded ${
-            member.role === "EDITOR"
-              ? "bg-producttrack-olive text-white"
-              : member.role === "COMENTARISTA"
-              ? "bg-producttrack-yellow text-black"
-              : "bg-gray-300 text-gray-800"
-          }`}
-        >
-          {member.role}
-        </span>
-        <span
-          className={`text-xs font-medium px-2 py-1 rounded ${
-            member.status === "activo"
-              ? "bg-producttrack-olive text-white"
-              : "bg-gray-300 text-gray-800"
-          }`}
-        >
-          {member.status.charAt(0).toUpperCase() + member.status.slice(1)}
-        </span>
-      </div>
-      <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-2 text-sm text-gray-600 mt-1">
-        <span className="flex items-center gap-1 truncate">
-          <Mail className="h-4 w-4" />
-          <span className="truncate">{member.email}</span>
-        </span>
-        {member.phone && (
-          <span className="flex items-center gap-1">
-            <Phone className="h-4 w-4" />
-            {member.phone}
-          </span>
-        )}
-      </div>
-    </div>
-  </div>
-
-  <div className="flex gap-2 shrink-0">
-    <button
-      onClick={() => {
-        setSelectedMember(member);
-        setIsEditModalOpen(true);
-      }}
-      className="border border-producttrack-olive text-producttrack-olive hover:bg-producttrack-olive/10 p-2 rounded"
-      title="Editar"
-    >
-      <Edit className="h-4 w-4" />
-    </button>
-    <button
-      onClick={() => {
-        setSelectedMember(member);
-        setIsDeleteModalOpen(true);
-      }}
-      className="border border-producttrack-wine text-producttrack-wine hover:bg-producttrack-wine/10 p-2 rounded"
-      title="Eliminar"
-    >
-      <Trash2 className="h-4 w-4" />
-    </button>
-  </div>
-</div>
-
+            key={member.id}
+            className="flex flex-col sm:flex-row sm:items-center sm:justify-between bg-white border border-gray-200 rounded-xl p-4 gap-4"
+          >
+            <div className="flex items-center gap-4 flex-1 min-w-0">
+              <div className="w-12 h-12 bg-producttrack-olive/10 rounded-full flex items-center justify-center">
+                <User className="h-6 w-6 text-producttrack-olive" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-lg font-semibold text-producttrack-olive truncate">{member.name}</h2>
+                  <span className={`text-xs font-medium px-2 py-1 rounded ${member.role === "EDITOR" ? "bg-producttrack-olive text-white" : member.role === "COMENTARISTA" ? "bg-producttrack-yellow text-black" : "bg-gray-300 text-gray-800"}`}>{member.role}</span>
+                  <span className={`text-xs font-medium px-2 py-1 rounded ${member.status === "activo" ? "bg-producttrack-olive text-white" : "bg-gray-300 text-gray-800"}`}>{member.status.charAt(0).toUpperCase() + member.status.slice(1)}</span>
+                </div>
+                <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-2 text-sm text-gray-600 mt-1">
+                  <span className="flex items-center gap-1 truncate">
+                    <Mail className="h-4 w-4" />
+                    <span className="truncate">{member.email}</span>
+                  </span>
+                  {member.phone && (
+                    <span className="flex items-center gap-1">
+                      <Phone className="h-4 w-4" />
+                      {member.phone}
+                    </span>
+                  )}
+                </div>
+              </div>
+            </div>
+            <div className="flex gap-2 shrink-0">
+              <button
+                onClick={() => {
+                  setSelectedMember(member);
+                  setIsEditModalOpen(true);
+                }}
+                className="border border-producttrack-olive text-producttrack-olive hover:bg-producttrack-olive/10 p-2 rounded"
+                title="Editar"
+              >
+                <Edit className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => {
+                  setSelectedMember(member);
+                  setIsDeleteModalOpen(true);
+                }}
+                className="border border-producttrack-wine text-producttrack-wine hover:bg-producttrack-wine/10 p-2 rounded"
+                title="Eliminar"
+              >
+                <Trash2 className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
         ))}
       </div>
 
