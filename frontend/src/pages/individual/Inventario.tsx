@@ -21,10 +21,24 @@ const Inventario: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
 
+  // ✅ CAMBIO: función que puedes usar en cualquier parte
+  const fetchProductos = async () => {
+    try {
+      const res = await getProductos();
+      setProducts(res.data);
+    } catch (error) {
+      console.error("Error al cargar productos:", error);
+    }
+  };
+
   const openCommentsModal = (product: Product) => {
     setSelectedProduct(product);
     setShowCommentsModal(true);
   };
+
+  useEffect(() => {
+    fetchProductos(); // llamada inicial
+  }, []);
 
   useEffect(() => {
     async function fetchProductos() {
@@ -59,8 +73,7 @@ const Inventario: React.FC = () => {
 
     try {
       if (nuevaCategoria === '') {
-        const res = await getProductos(); // 🔁 volver a mostrar todos
-        setProducts(res.data);
+        fetchProductos();
       } else {
         const res = await getProductosPorCategoria(nuevaCategoria);
         setProducts(res.data);
@@ -74,36 +87,38 @@ const Inventario: React.FC = () => {
 
   const handleSaveProduct = async (product: Product) => {
     try {
-      // Obtener el usuarioId del localStorage (o donde lo tengas)
-      const userId = Number(localStorage.getItem("userId")); // o el nombre real que usaste
+      const userId = Number(localStorage.getItem("userId"));
 
       const productoConUsuario = {
         ...product,
-        usuarioId: userId, // sobreescribe con el ID correcto
+        usuarioId: userId,
       };
 
-      const res = await crearProducto(productoConUsuario);
-      setProducts(prev => [...prev, res.data]);
+      await crearProducto(productoConUsuario);
+      toast.success("Producto creado correctamente");
       setShowProductModal(false);
+
+      await fetchProductos(); // ✅ CAMBIO: recarga la lista actualizada
     } catch {
-      alert("Error al guardar producto");
+      toast.error("Error al guardar producto");
     }
   };
 
   const handleEditProduct = async (updatedProduct: Product) => {
     if (updatedProduct.id === undefined) {
-      alert("Producto sin ID, no se puede editar");
+      toast.error("Producto sin ID, no se puede editar");
       return;
     }
 
     try {
       await editarProducto(updatedProduct.id, updatedProduct);
-      setProducts(prev =>
-        prev.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
-      );
+      toast.success("Producto editado correctamente");
       setProductToEdit(null);
+      setShowProductModal(false);
+
+      await fetchProductos(); // ✅ CAMBIO: recarga lista tras editar
     } catch {
-      alert("Error al editar producto");
+      toast.error("Error al editar producto");
     }
   };
 
@@ -121,10 +136,10 @@ const Inventario: React.FC = () => {
     if (productToDelete !== null) {
       try {
         await eliminarProducto(productToDelete);
-        setProducts(prev =>
-          prev.filter(product => product.id !== productToDelete)
-        );
         toast.success("Producto eliminado exitosamente");
+
+        await fetchProductos(); // ✅ CAMBIO: lista actualizada tras borrar
+
         setShowConfirmModal(false);
         setProductToDelete(null);
       } catch {
