@@ -1,16 +1,27 @@
 import axiosInstance from "../utils/axiosInstance";
 
-interface CreateTeamMemberDTO {
-    username: string;
-    correo: string;
-    password: string;
-    nombreCompleto: string;
-    rol: "EQUIPO";
-    rolEquipo: "LECTOR" | "COMENTARISTA" | "EDITOR";
-    empresaId: number;
+export interface CreateTeamMemberDTO {
+  username: string;
+  correo: string;
+  password: string;
+  nombreCompleto: string;
+  rolEquipo: "LECTOR" | "COMENTARISTA" | "EDITOR";
+  telefono: string;
+  direccion: string;
+  fotoPerfil?: string;
+  estado?: "activo" | "inactivo";
+  empresaId?: number; // porque es opcional si no es admin
 }
 
 export async function createTeamMember(data: CreateTeamMemberDTO) {
-    const response = await axiosInstance.post("/usuarios", data);
+    const response = await axiosInstance.post("/equipo", data);
     return response.data;
 }
+
+export const getAllTeamMembers = async () => {
+
+    const token = localStorage.getItem("token");
+  console.log("🔑 Token desde service:", token);
+  const response = await axiosInstance.get("/equipo");
+  return response.data;
+};

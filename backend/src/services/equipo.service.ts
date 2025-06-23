@@ -1,20 +1,32 @@
 import prisma from '../utils/prismaClient'; // cliente separado
 import { EquipoDTO } from "../models/EquipoDTO";
 import { equipoSchema } from "../models/EquipoModel";
+import bcrypt from 'bcryptjs';
+
+console.log("📁 ESTE ES EL EQUIPO.SERVICE QUE SE ESTÁ EJECUTANDO");
 
 export class EquipoService {
   // Crear usuario tipo equipo
   async crearEquipo(data: EquipoDTO, empresaId: number) {
     const datosValidados = equipoSchema.parse(data);
+    console.log("🚨 Password original:", datosValidados.password);
+    const hashedPassword = await bcrypt.hash(datosValidados.password, 10);
+    console.log("✅ Password encriptado:", hashedPassword);
+
+    // 💡 Remover empresaId si viene en data para evitar sobreescribir el correcto
+    const { empresaId: _omitEmpresaId, ...datosSinEmpresaId } = datosValidados;
 
     const nuevoEquipo = await prisma.users.create({
       data: {
-        ...datosValidados,
+        ...datosSinEmpresaId,
+        password: hashedPassword,
         tipoUsuario: "EMPRESARIAL",
         rol: "EQUIPO",
-        empresaId,
+        empresaId, // ✅ Este es el valor correcto desde el controller
       },
     });
+
+    console.log("📦 Password guardado en la base de datos:", nuevoEquipo.password);
 
     return nuevoEquipo;
   }

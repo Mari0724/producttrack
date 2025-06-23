@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Plus,
   Edit,
@@ -6,7 +6,6 @@ import {
   Mail,
   Phone,
   User,
-  Users,
   Search,
 } from "lucide-react";
 import type { TeamMember } from "../types/team";
@@ -14,12 +13,27 @@ import { AddMemberModal } from "../../src/components/team/AddMemberModal";
 import { EditMemberModal } from "../../src/components/team/EditMemberModal";
 import { DeleteConfirmModal } from "../../src/components/team/DeleteConfirmModal";
 import { useUser } from "../context/UserContext";
-import { createTeamMember } from "../services/teamService";
+import {
+  createTeamMember,
+  getAllTeamMembers,
+  type CreateTeamMemberDTO,
+} from "../services/teamService";
 import { useToast } from "../hooks/useToast";
 
 interface TeamMemberWithStatus extends TeamMember {
   status: "activo" | "pendiente";
   phone?: string;
+}
+
+interface MemberFromAPI {
+  idUsuario: number;
+  nombreCompleto: string;
+  correo: string;
+  rolEquipo: "LECTOR" | "COMENTARISTA" | "EDITOR";
+  estado: "activo" | "inactivo";
+  telefono?: string;
+  empresaId: number;
+  rol: string;
 }
 
 const TeamManagement = () => {
@@ -32,44 +46,57 @@ const TeamManagement = () => {
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const { toast } = useToast();
 
-  if (!usuario || usuario.tipoUsuario !== "EMPRESARIAL" || usuario.rol !== "USUARIO") {
-    return (
-      <div className="text-center py-20">
-        <h2 className="text-2xl font-bold text-red-600">Acceso no autorizado</h2>
-        <p className="text-gray-700 mt-2">
-          Esta sección está disponible solo para empresas con rol de usuario.
-        </p>
-      </div>
-    );
-  }
+  useEffect(() => {
+    const fetchMembers = async () => {
+      if (!usuario) return;
+      try {
+        const members = await getAllTeamMembers();
+        const parsed: TeamMemberWithStatus[] = members
+          .filter((m: MemberFromAPI) =>
+            m.rol === "EQUIPO" &&
+            m.empresaId === usuario.id &&
+            m.idUsuario != null
+          )
+          .map((m: MemberFromAPI) => ({
+            id: m.idUsuario.toString(),
+            name: m.nombreCompleto,
+            email: m.correo,
+            role: m.rolEquipo,
+            status: m.estado || "activo",
+            phone: m.telefono,
+          }));
 
-  const filteredMembers = teamMembers.filter(
-    (member) =>
-      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+        setTeamMembers(parsed);
+      } catch (error) {
+        console.error("❌ Error al obtener los miembros del equipo:", error);
+      }
+    };
+
+    fetchMembers();
+  }, [usuario]);
 
   const handleAddMember = async (data: Omit<TeamMember, "id"> & { password: string }) => {
     try {
-      const payload = {
+      const payload: CreateTeamMemberDTO = {
         username: data.email.split("@")[0],
         correo: data.email,
         password: data.password,
         nombreCompleto: data.name,
-        rol: "EQUIPO" as const,
         rolEquipo: data.role as "LECTOR" | "COMENTARISTA" | "EDITOR",
-        empresaId: usuario.id,
-        telefono: "0000000000", // temporal hasta que se añadan esos campos en UI
-        direccion: "pendiente", // temporal también
+        telefono: "0000000000",
+        direccion: "pendiente",
+        empresaId: usuario?.id, // ✅ SIEMPRE incluirlo
       };
-      await createTeamMember(payload);
 
+      
+      const created = await createTeamMember(payload);
       const newMember: TeamMemberWithStatus = {
-        id: crypto.randomUUID(),
-        name: data.name,
-        email: data.email,
-        role: data.role,
-        status: "activo",
+        id: created.idUsuario.toString(),
+        name: created.nombreCompleto,
+        email: created.correo,
+        role: created.rolEquipo,
+        status: created.estado || "activo",
+        phone: created.telefono,
       };
 
       setTeamMembers((prev) => [...prev, newMember]);
@@ -96,10 +123,27 @@ const TeamManagement = () => {
     setSelectedMember(null);
   };
 
+  const filteredMembers = teamMembers.filter(
+    (member) =>
+      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (!usuario || usuario.tipoUsuario !== "EMPRESARIAL" || usuario.rol !== "USUARIO") {
+    return (
+      <div className="text-center py-20">
+        <h2 className="text-2xl font-bold text-red-600">Acceso no autorizado</h2>
+        <p className="text-gray-700 mt-2">
+          Esta sección está disponible solo para empresas con rol de usuario.
+        </p>
+      </div>
+    );
+  }
+
   if (teamMembers.length === 0) {
     return (
       <div className="text-center py-20">
-        <Users className="h-24 w-24 text-producttrack-olive mx-auto mb-6" />
+        <User className="h-24 w-24 text-producttrack-olive mx-auto mb-6" />
         <h1 className="text-3xl font-bold text-producttrack-olive mb-4 font-nunito">
           ¡Bienvenido a la gestión de tu equipo!
         </h1>
