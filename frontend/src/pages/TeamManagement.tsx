@@ -1,23 +1,11 @@
 import { useState, useEffect } from "react";
-import {
-  Plus,
-  Edit,
-  Trash2,
-  Mail,
-  Phone,
-  User,
-  Search,
-} from "lucide-react";
+import { Plus, Edit, Trash2, Mail, Phone, User, Search } from "lucide-react";
 import type { TeamMember } from "../types/team";
 import { AddMemberModal } from "../../src/components/team/AddMemberModal";
 import { EditMemberModal } from "../../src/components/team/EditMemberModal";
 import { DeleteConfirmModal } from "../../src/components/team/DeleteConfirmModal";
 import { useUser } from "../context/UserContext";
-import {
-  createTeamMember,
-  getAllTeamMembers,
-  type CreateTeamMemberDTO,
-} from "../services/teamService";
+import { createTeamMember, getAllTeamMembers, updateTeamMember, deleteTeamMember, type CreateTeamMemberDTO, } from "../services/teamService";
 import { useToast } from "../hooks/useToast";
 
 interface TeamMemberWithStatus extends TeamMember {
@@ -55,6 +43,7 @@ const TeamManagement = () => {
           .filter((m: MemberFromAPI) =>
             m.rol === "EQUIPO" &&
             m.empresaId === usuario.id &&
+            m.estado === "activo" &&
             m.idUsuario != null
           )
           .map((m: MemberFromAPI) => ({
@@ -88,7 +77,7 @@ const TeamManagement = () => {
         empresaId: usuario?.id, // ✅ SIEMPRE incluirlo
       };
 
-      
+
       const created = await createTeamMember(payload);
       const newMember: TeamMemberWithStatus = {
         id: created.idUsuario.toString(),
@@ -108,20 +97,50 @@ const TeamManagement = () => {
     }
   };
 
-  const handleEditMember = (updatedData: Omit<TeamMember, "id">) => {
+  const handleEditMember = async (updatedData: Omit<TeamMember, "id">) => {
     if (!selectedMember) return;
-    setTeamMembers((prev) =>
-      prev.map((m) => (m.id === selectedMember.id ? { ...m, ...updatedData } : m))
-    );
-    setIsEditModalOpen(false);
-    setSelectedMember(null);
+
+    try {
+      // Llama al backend para actualizar
+      await updateTeamMember(Number(selectedMember.id), {
+        nombreCompleto: updatedData.name,
+        correo: updatedData.email,
+        rolEquipo: updatedData.role,
+      });
+
+      // Actualiza el estado local
+      setTeamMembers((prev) =>
+        prev.map((m) =>
+          m.id === selectedMember.id
+            ? { ...m, name: updatedData.name, email: updatedData.email, role: updatedData.role }
+            : m
+        )
+      );
+
+      toast(`✅ ${updatedData.name} actualizado correctamente.`);
+      setIsEditModalOpen(false);
+      setSelectedMember(null);
+    } catch (err) {
+      console.error("❌ Error actualizando miembro:", err);
+      toast("❌ No se pudo actualizar el miembro.");
+    }
   };
 
-  const handleDeleteMember = (id: string) => {
-    setTeamMembers((prev) => prev.filter((m) => m.id !== id));
-    setIsDeleteModalOpen(false);
-    setSelectedMember(null);
+
+  const handleDeleteMember = async (id: string) => {
+    try {
+      await deleteTeamMember(Number(id));
+      setTeamMembers((prev) => prev.filter((m) => m.id !== id));
+      toast("✅ Miembro eliminado correctamente.");
+    } catch (error) {
+      console.error("❌ Error al eliminar miembro:", error);
+      toast("❌ No se pudo eliminar el miembro.");
+    } finally {
+      setIsDeleteModalOpen(false);
+      setSelectedMember(null);
+    }
   };
+
 
   const filteredMembers = teamMembers.filter(
     (member) =>
@@ -202,8 +221,7 @@ const TeamManagement = () => {
                 <div className="flex flex-wrap items-center gap-2">
                   <h2 className="text-lg font-semibold text-producttrack-olive truncate">{member.name}</h2>
                   <span className={`text-xs font-medium px-2 py-1 rounded ${member.role === "EDITOR" ? "bg-producttrack-olive text-white" : member.role === "COMENTARISTA" ? "bg-producttrack-yellow text-black" : "bg-gray-300 text-gray-800"}`}>{member.role}</span>
-                  <span className={`text-xs font-medium px-2 py-1 rounded ${member.status === "activo" ? "bg-producttrack-olive text-white" : "bg-gray-300 text-gray-800"}`}>{member.status.charAt(0).toUpperCase() + member.status.slice(1)}</span>
-                </div>
+                  </div>
                 <div className="flex flex-col sm:flex-row sm:flex-wrap items-start sm:items-center gap-2 text-sm text-gray-600 mt-1">
                   <span className="flex items-center gap-1 truncate">
                     <Mail className="h-4 w-4" />

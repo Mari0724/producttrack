@@ -36,6 +36,8 @@ export class EquipoService {
     return await prisma.users.findMany({
       where: {
         rol: "EQUIPO",
+        estado: "activo",
+        deletedAt: null,
       },
     });
   }
@@ -96,8 +98,8 @@ export class EquipoService {
     });
   }
 
-  // Eliminar usuario equipo individual
-  async eliminarEquipo(id: number, empresaId?: number) {
+  // Borrado lógico de un usuario equipo
+  async marcarComoEliminado(id: number, empresaId?: number) {
     const condiciones: any = {
       idUsuario: id,
       rol: "EQUIPO",
@@ -113,8 +115,12 @@ export class EquipoService {
 
     if (!equipo) throw new Error("Equipo no encontrado o no pertenece a esta empresa");
 
-    return await prisma.users.delete({
+    return await prisma.users.update({
       where: { idUsuario: id },
+      data: {
+        estado: "inactivo",
+        deletedAt: new Date(),
+      },
     });
   }
 

@@ -22,12 +22,40 @@ module.exports = {
         nunito: ['Nunito', 'sans-serif'],
       },
       colors: {
+        // ✅ Colores por alias directo
+        olive: '#808000',
+        burgundy: '#800020',
+        golden: '#F2C94C',
+        lightgray: '#E0E0E0',
+        white: '#FFFFFF',
+
+        // ✅ También agrupados por organización
+        producttrack: {
+          olive: '#808000',
+          wine: '#800020',
+          yellow: '#F2C94C',
+          lightgray: '#E0E0E0',
+          white: '#FFFFFF',
+        },
+
+        // ✅ Alias retrocompatibles
+        'producttrack-olive': '#808000',
+        'producttrack-yellow': '#F2C94C',
+        'producttrack-wine': '#800020',
+        'producttrack-lightgray': '#E0E0E0',
+        'producttrack-white': '#FFFFFF',
+        'wine-red': '#800020',
+        'olive-green': '#808000',
+        'food-yellow': '#F2C94C',
+        'light-gray': '#E0E0E0',
+        'white-pt': '#FFFFFF',
+
+        // ✅ System HSL-based for theme switching
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
-
         primary: {
           DEFAULT: '#808000',
           foreground: '#FFFFFF',
@@ -66,29 +94,6 @@ module.exports = {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
-
-        // ✅ Colores plano
-        'producttrack-olive': '#808000',
-        'producttrack-yellow': '#F2C94C',
-        'producttrack-wine': '#800020',
-        'producttrack-lightgray': '#E0E0E0',
-        'producttrack-white': '#FFFFFF',
-
-        // ✅ Agrupado
-        producttrack: {
-          olive: '#808000',
-          yellow: '#F2C94C',
-          wine: '#800020',
-          lightgray: '#E0E0E0',
-          white: '#FFFFFF',
-        },
-
-        // ✅ Alias retrocompatibles (los que usabas antes)
-        "wine-red": "#800020",
-        "olive-green": "#808000",
-        "food-yellow": "#F2C94C",
-        "light-gray": "#E0E0E0",
-        "white-pt": "#FFFFFF",
       },
       borderRadius: {
         lg: 'var(--radius)',

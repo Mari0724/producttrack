@@ -106,24 +106,27 @@ async crearEquipo(@Body() data: EquipoDTO, @Request() req: any) {
   }
 
   @Security("jwt")
-  @Delete("{id}")
-  async eliminarEquipo(@Path() id: number, @Request() req: any) {
-    if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
-      this.setStatus(403);
-      return { mensaje: "Acceso denegado. Solo empresas o administradores pueden eliminar miembros del equipo." };
-    }
-
-    const equipo = await equipoService.obtenerEquipoPorId(id);
-
-    if (req.user.rol !== "ADMIN" && equipo.empresaId !== req.user.id) {
-      this.setStatus(403);
-      return { mensaje: "Este equipo no pertenece a tu empresa." };
-    }
-
-    const empresaId = req.user.rol === "ADMIN" ? undefined : req.user.id;
-
-    return await equipoService.eliminarEquipo(id, empresaId);
+@Delete("{id}")
+async eliminarEquipo(@Path() id: number, @Request() req: any) {
+  if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
+    this.setStatus(403);
+    return { mensaje: "Acceso denegado. Solo empresas o administradores pueden eliminar miembros del equipo." };
   }
+
+  const equipo = await equipoService.obtenerEquipoPorId(id);
+  if (!equipo) {
+    this.setStatus(404);
+    return { mensaje: "Miembro no encontrado." };
+  }
+
+  if (req.user.rol !== "ADMIN" && equipo.empresaId !== req.user.id) {
+    this.setStatus(403);
+    return { mensaje: "Este miembro no pertenece a tu empresa." };
+  }
+
+  return await equipoService.marcarComoEliminado(id);
+}
+
 
   @Security("jwt")
   @Delete("todos/{empresaId}")
