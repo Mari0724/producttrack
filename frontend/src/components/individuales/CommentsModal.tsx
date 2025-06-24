@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
-import { getComentariosPorProducto, crearComentario } from '../api/comentarios';
+import { getComentariosPorProducto, crearComentario } from '../../api/comentarios';
 import toast from 'react-hot-toast';
 
 // ✅ Tipo que viene del backend

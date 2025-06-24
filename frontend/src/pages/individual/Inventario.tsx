@@ -6,7 +6,7 @@ import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 import type { Product } from '../../types/Product';
 import { getProductos, crearProducto, editarProducto, eliminarProducto, getCategorias, getProductosPorCategoria } from '../../api/productos';
 import toast from 'react-hot-toast';
-import ProductCommentsModal from '../../components/CommentsModal';
+import ProductCommentsModal from '../../components/individuales/CommentsModal';
 
 const Inventario: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -37,18 +37,18 @@ const Inventario: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchProductos(); // llamada inicial
-  }, []);
-
-  useEffect(() => {
-    async function fetchProductos() {
+    const fetchProductos = async () => {
       try {
         const res = await getProductos();
-        setProducts(res.data);
+        const tipoUsuarioStorage = localStorage.getItem("tipoUsuario")?.toUpperCase();
+        const soloDelUsuario = res.data.filter(
+          (p) => p.usuario?.tipoUsuario === tipoUsuarioStorage
+        );
+        setProducts(soloDelUsuario);
       } catch (error) {
         console.error("Error al cargar productos:", error);
       }
-    }
+    };
 
     fetchProductos();
   }, []);
@@ -56,7 +56,8 @@ const Inventario: React.FC = () => {
   useEffect(() => {
     const fetchCategorias = async () => {
       try {
-        const res = await getCategorias();
+        const tipoUsuarioStorage = localStorage.getItem("tipoUsuario") || "";
+        const res = await getCategorias(tipoUsuarioStorage.toUpperCase());
         setCategorias(res.data);
       } catch (error) {
         console.error(error);
@@ -72,12 +73,22 @@ const Inventario: React.FC = () => {
     setCategoriaSeleccionada(nuevaCategoria);
 
     try {
+      let productosFiltrados;
       if (nuevaCategoria === '') {
-        fetchProductos();
+        const res = await getProductos();
+        productosFiltrados = res.data;
       } else {
         const res = await getProductosPorCategoria(nuevaCategoria);
-        setProducts(res.data);
+        productosFiltrados = res.data;
       }
+
+      // Aplicar filtro por tipo de usuario también
+      const tipoUsuarioStorage = localStorage.getItem("tipoUsuario")?.toUpperCase();
+      const soloDelUsuario = productosFiltrados.filter(
+        (p) => p.usuario?.tipoUsuario === tipoUsuarioStorage
+      );
+
+      setProducts(soloDelUsuario);
     } catch (error) {
       console.error(error);
       toast.error('No se pudieron cargar los productos');
@@ -171,7 +182,12 @@ const Inventario: React.FC = () => {
           <h2 className="text-2xl font-bold text-[#81203D] mb-6">Inventario de Productos</h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
-            {products.map((product) => (
+            {products
+            .filter(product =>
+              (!categoriaSeleccionada || product.categoria === categoriaSeleccionada) &&
+              product.usuario?.tipoUsuario === tipoUsuario?.toUpperCase()
+            )
+            .map((product) => (
               <div key={product.id} className="relative">
                 <ProductCard 
                   product={product}

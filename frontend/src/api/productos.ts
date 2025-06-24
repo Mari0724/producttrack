@@ -15,8 +15,8 @@ export const eliminarProducto = (id: number) =>
   axiosInstance.delete(`/productos/${id}`);
 
 // ✅ Categorías
-export const getCategorias = () =>
-  axiosInstance.get<string[]>('/productos/categorias');
+export const getCategorias = (tipoUsuario: string) =>
+  axiosInstance.get<string[]>(`/productos/categorias?tipoUsuario=${tipoUsuario}`);
 
 export const getProductosPorCategoria = (categoria: string) =>
   axiosInstance.get<Product[]>(`/productos/por-categoria?categoria=${encodeURIComponent(categoria)}`);

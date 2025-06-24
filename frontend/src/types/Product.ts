@@ -15,5 +15,7 @@ export interface Product {
   estado: EstadoProducto;
   imagen: string;
   categoria?: string;
-  tipoUsuario?: 'INDIVIDUAL' | 'EMPRESARIAL';
+  usuario?: {
+    tipoUsuario: 'INDIVIDUAL' | 'EMPRESARIAL';
+  };
 }

@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-import ProductActions from './ProductActions'
-import { BadgeCheck, CalendarDays } from 'lucide-react'
-import CommentsModalProps from './CommentsModal'
-import type { Product } from '../types/Product'
+import React, { useState } from 'react';
+import ProductActions from './ProductActions';
+import { BadgeCheck, CalendarDays } from 'lucide-react';
+import CommentsModalProps from './individuales/CommentsModal';
+import CompanyCommentsModalProps from './empresarial/CompanyCommentsModal';
+import type { Product } from '../types/Product';
 
 interface ProductCardProps {
   product: Product;
@@ -15,33 +16,33 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onEdit,
   onDelete
 }) => {
-  const [showDetails, setShowDetails] = useState(false)
-  const [showCommentsModal, setShowCommentsModal] = useState(false)
+  const [showDetails, setShowDetails] = useState(false);
+  const [showCommentsModal, setShowCommentsModal] = useState(false);
 
   const {
     nombre,
     categoria,
     cantidad,
     fechaVencimiento,
-    tipoUsuario ='INDIVIDUAL',
-    imagen
-  } = product
+    imagen,
+    usuario
+  } = product;
 
-  const isLowStock = tipoUsuario === 'EMPRESARIAL' ? cantidad <= 30 : cantidad <= 1
+  const tipoUsuario = usuario?.tipoUsuario || 'INDIVIDUAL';
 
+  const isLowStock = tipoUsuario === 'EMPRESARIAL' ? cantidad <= 30 : cantidad <= 1;
+  
   const getStockStyle = () => {
     return isLowStock
       ? 'bg-red-100 text-red-700 border border-red-300'
-      : 'bg-green-100 text-green-700 border border-green-300'
-  }
+      : 'bg-green-100 text-green-700 border border-green-300';
+  };
 
   const handleView = () => {
-    if (tipoUsuario === 'INDIVIDUAL') {
-      setShowCommentsModal(true)
-    } else {
-      console.log('Este usuario no puede ver los comentarios.')
-    }
-  }
+    setShowCommentsModal(true);
+  };
+
+  console.log("Producto recibido:", product);
 
   return (
     <>
@@ -78,24 +79,35 @@ const ProductCard: React.FC<ProductCardProps> = ({
               <p><strong>Vence:</strong> {fechaVencimiento}</p>
             </div>
 
+            {/* Acciones con botón que adapta texto y color */}
             <ProductActions
               onEdit={onEdit}
               onDelete={onDelete}
               onView={handleView}
+              tipoUsuario={tipoUsuario}
             />
           </div>
         )}
 
-        {tipoUsuario === 'INDIVIDUAL' && showCommentsModal && (
-          <CommentsModalProps
-            productId={product.id!}
-            productName={nombre}
-            onClose={() => setShowCommentsModal(false)}
-          />
+        {/* Modal que cambia según el tipo de usuario */}
+        {showCommentsModal && (
+          tipoUsuario === 'INDIVIDUAL' ? (
+            <CommentsModalProps
+              productId={product.id!}
+              productName={nombre}
+              onClose={() => setShowCommentsModal(false)}
+            />
+          ) : (
+            <CompanyCommentsModalProps
+              productId={product.id!}
+              productName={nombre}
+              onClose={() => setShowCommentsModal(false)}
+            />
+          )
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default ProductCard
+export default ProductCard;

@@ -24,20 +24,27 @@ const Login: React.FC = () => {
 
       const data = await response.json();
 
+      // Guardar datos en localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("tipoUsuario", data.tipoUsuario);
       localStorage.setItem("rol", data.rol);
       localStorage.setItem("username", data.username);
-      
+
       if (data.usuario && data.usuario.id) {
         localStorage.setItem("userId", data.usuario.id.toString());
-      } else {
-        console.warn("El campo 'usuario.id' no vino en la respuesta:", data);
-        localStorage.setItem("userId", "0"); // O puedes no guardarlo en absoluto
       }
 
       alert("Inicio de sesión exitoso ✅");
-      navigate("/app/individual/home");
+
+      // Redirigir según tipo de usuario
+      if (data.tipoUsuario === "INDIVIDUAL") {
+        navigate("/app/individual/home");
+      } else if (data.tipoUsuario === "EMPRESARIAL") {
+        navigate("/app/empresarial/home");
+      } else {
+        navigate("/app"); // por si acaso
+      }
+
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       alert("Error al iniciar sesión ❌");

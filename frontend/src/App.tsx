@@ -1,31 +1,35 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './layout/Layout';
-import Dashboard from './pages/individual/Home';
-import ProductList from './pages/individual/Inventario';
+import HomeIndividual from './pages/individual/Home';
+import InventarioIndividual from './pages/individual/Inventario';
+import HomeEmpresarial from './pages/empresarial/Home';
+import InventarioEmpresarial from './pages/empresarial/Inventario';
 import Register from "./pages/Register";
 import Login from "./pages/Login";
-import { Toaster } from 'react-hot-toast'; // ✅ Toast para notificaciones
+import { Toaster } from 'react-hot-toast';
 
 function App() {
   return (
     <Router>
-      {/* ✅ Componente que muestra los toasts */}
       <Toaster position="top-right" reverseOrder={false} />
 
       <Routes>
-        {/* Redirección raíz a /register */}
         <Route path="/" element={<Navigate to="/register" />} />
-
-        {/* Rutas públicas */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        {/* Rutas protegidas con layout */}
-        <Route path="/app" element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="individual/home" element={<Dashboard />} />
-          <Route path="inventario" element={<ProductList />} />
-          {/* Más rutas aquí si las necesitas */}
+        {/* INDIVIDUAL */}
+        <Route path="/app/individual" element={<Layout />}>
+          <Route index element={<Navigate to="home" />} />
+          <Route path="home" element={<HomeIndividual />} />
+          <Route path="inventario" element={<InventarioIndividual />} />
+        </Route>
+
+        {/* EMPRESARIAL */}
+        <Route path="/app/empresarial" element={<Layout />}>
+          <Route index element={<Navigate to="home" />} />
+          <Route path="home" element={<HomeEmpresarial />} />
+          <Route path="inventario" element={<InventarioEmpresarial />} />
         </Route>
       </Routes>
     </Router>

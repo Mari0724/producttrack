@@ -1,13 +1,26 @@
-import React from 'react'
-import { FaEdit, FaTrash, FaEye } from 'react-icons/fa'
+import React from 'react';
+import { FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 
 interface ProductActionsProps {
-  onEdit: () => void
-  onDelete: () => void
-  onView: () => void
+  onEdit: () => void;
+  onDelete: () => void;
+  onView: () => void;
+  tipoUsuario: string;
 }
 
-const ProductActions: React.FC<ProductActionsProps> = ({ onEdit, onDelete, onView }) => {
+const ProductActions: React.FC<ProductActionsProps> = ({
+  onEdit,
+  onDelete,
+  onView,
+  tipoUsuario
+}) => {
+  const isIndividual = tipoUsuario === 'INDIVIDUAL';
+
+  const viewLabel = isIndividual ? 'Notas personales' : 'Ver más';
+  const viewColor = isIndividual
+    ? 'bg-[#81203D] hover:bg-[#60162F]'
+    : 'bg-[#81203D] hover:bg-[#60162F]';
+
   return (
     <div className="flex gap-3 pt-3 text-white">
       <button
@@ -16,20 +29,22 @@ const ProductActions: React.FC<ProductActionsProps> = ({ onEdit, onDelete, onVie
       >
         <FaEdit /> Editar
       </button>
+
       <button
         onClick={onDelete}
         className="flex items-center gap-1 bg-[#FFBA00] hover:bg-[#E6A700] px-3 py-1.5 rounded-lg text-sm text-black"
       >
         <FaTrash /> Eliminar
       </button>
+
       <button
         onClick={onView}
-        className="flex items-center gap-1 bg-[#405057] hover:bg-[#303D42] px-3 py-1.5 rounded-lg text-sm"
+        className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-white ${viewColor}`}
       >
-        <FaEye /> Notas personales
+        <FaEye /> {viewLabel}
       </button>
     </div>
-  )
-}
+  );
+};
 
-export default ProductActions
+export default ProductActions;
