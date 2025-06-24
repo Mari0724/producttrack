@@ -947,10 +947,17 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {
-										"type": "string"
-									},
-									"type": "array"
+									"anyOf": [
+										{
+											"items": {
+												"type": "string"
+											},
+											"type": "array"
+										},
+										{
+											"$ref": "#/components/schemas/ResponseMessage"
+										}
+									]
 								}
 							}
 						}
@@ -960,7 +967,16 @@
 					"Productos"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [
+					{
+						"in": "query",
+						"name": "tipoUsuario",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/Productos/por-categoria": {

@@ -63,12 +63,21 @@ export class ProductosController extends Controller {
 
   // ✅ Obtener categorías únicas
   @Get("/categorias")
-  public async obtenerCategorias(): Promise<string[]> {
+  public async obtenerCategorias(
+    @Query() tipoUsuario?: string
+  ): Promise<string[] | ResponseMessage> {
     try {
-      return await getCategoriasUnicas();
+      if (!tipoUsuario) {
+        this.setStatus(400);
+        return { message: "Se requiere el tipoUsuario para obtener las categorías." };
+      }
+
+      const categorias = await getCategoriasUnicas(tipoUsuario);
+      return categorias;
     } catch (error) {
+      console.error("🚨 Error al obtener categorías:", error);
       this.setStatus(500);
-      return [];
+      return { message: "Error interno al obtener categorías" };
     }
   }
 

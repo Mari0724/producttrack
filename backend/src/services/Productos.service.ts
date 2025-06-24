@@ -2,9 +2,10 @@ import prisma from '../utils/prismaClient';
 import { ProductosDTO } from '../models/ProductosDTO';
 import { EstadoProducto } from "@prisma/client";
 import { v2 as cloudinary } from "cloudinary";
+import { TipoUsuario } from '@prisma/client'; // 👈 Asegúrate de importar esto
 
 // 🔍 Obtener productos con filtros
-export const getAllProductos = async (filters: any) => {
+export const getAllProductos = async (filters: any): Promise<any[]> => {
   const where: any = {};
 
   // Filtrar por ID
@@ -65,6 +66,13 @@ export const getAllProductos = async (filters: any) => {
     orderBy: {
       fechaAdquisicion: "desc",
     },
+    include: {
+      usuario: {
+        select: {
+          tipoUsuario: true,
+        },
+      },
+    },
   });
 };
 
@@ -76,22 +84,21 @@ export async function getProductoById(id: number) {
 }
 
 // 📂 Obtener categorías únicas
-export async function getCategoriasUnicas(): Promise<string[]> {
+export async function getCategoriasUnicas(tipoUsuario: string): Promise<string[]> {
   try {
-    // 👇 Tipamos explícitamente el tipo que devuelve el findMany
-    const categorias: { categoria: string | null }[] = await prisma.productos.findMany({
+    const categorias = await prisma.productos.findMany({
       select: {
         categoria: true,
       },
       distinct: ['categoria'],
       where: {
-        categoria: {
-          not: null,
+        categoria: { not: null },
+        usuario: {
+          tipoUsuario: tipoUsuario.toUpperCase() as TipoUsuario,
         },
       },
     });
 
-    // Filtrar para que TypeScript entienda que no hay nulls
     return categorias
       .map((c) => c.categoria)
       .filter((c): c is string => c !== null);
@@ -119,7 +126,14 @@ export async function getProductosPorCategoria(categoria: string) {
       where: {
         categoria: {
           equals: categoria,
-          mode: "insensitive", // opcional: ignora mayúsculas/minúsculas
+          mode: "insensitive",
+        },
+      },
+      include: {
+        usuario: {
+          select: {
+            tipoUsuario: true,
+          },
         },
       },
     });

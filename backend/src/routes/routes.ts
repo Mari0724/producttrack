@@ -399,6 +399,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsProductosController_obtenerCategorias: Record<string, TsoaRoute.ParameterSchema> = {
+                tipoUsuario: {"in":"query","name":"tipoUsuario","dataType":"string"},
         };
         app.get('/Productos/categorias',
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
