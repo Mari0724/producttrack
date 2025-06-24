@@ -128,6 +128,7 @@ const FoodAnalyzer = ({ analizarImagen, confirmarConsulta }: FoodAnalyzerProps) 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-olive-green/10 to-food-yellow/10 py-8 px-4">
+
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-const config = {
+module.exports = {
   darkMode: ["class"],
   content: [
     "./index.html",
@@ -22,12 +22,12 @@ const config = {
         nunito: ['Nunito', 'sans-serif'],
       },
       colors: {
-        // Variables HSL (para dark mode o configuración CSS)
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+
         primary: {
           DEFAULT: '#808000',
           foreground: '#FFFFFF',
@@ -67,14 +67,14 @@ const config = {
           ring: 'hsl(var(--sidebar-ring))',
         },
 
-        // ✅ Plano (para usar como text-producttrack-olive, etc.)
+        // ✅ Colores plano
         'producttrack-olive': '#808000',
         'producttrack-yellow': '#F2C94C',
         'producttrack-wine': '#800020',
         'producttrack-lightgray': '#E0E0E0',
         'producttrack-white': '#FFFFFF',
 
-        // ✅ Agrupado (por si usas lógica dinámica con clsx o JS)
+        // ✅ Agrupado
         producttrack: {
           olive: '#808000',
           yellow: '#F2C94C',
@@ -82,6 +82,13 @@ const config = {
           lightgray: '#E0E0E0',
           white: '#FFFFFF',
         },
+
+        // ✅ Alias retrocompatibles (los que usabas antes)
+        "wine-red": "#800020",
+        "olive-green": "#808000",
+        "food-yellow": "#F2C94C",
+        "light-gray": "#E0E0E0",
+        "white-pt": "#FFFFFF",
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -127,5 +134,3 @@ const config = {
   },
   plugins: [require("tailwindcss-animate")],
 };
-
-module.exports = config;

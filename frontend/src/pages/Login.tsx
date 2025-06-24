@@ -35,8 +35,8 @@ const Login: React.FC = () => {
       localStorage.setItem("rol", data.rol);
       localStorage.setItem("username", data.username);
 
-      alert("Inicio de sesión exitoso ✅");
-      navigate("/nutriscan");
+      
+      navigate("/");
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       alert("Error al iniciar sesión ❌");
