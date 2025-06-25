@@ -1,15 +1,18 @@
 import prisma from '../utils/prismaClient'; // cliente separado
 import { EquipoDTO } from "../models/EquipoDTO";
 import { equipoSchema } from "../models/EquipoModel";
-
+import bcrypt from 'bcryptjs';
 export class EquipoService {
   // Crear usuario tipo equipo
   async crearEquipo(data: EquipoDTO, empresaId: number) {
     const datosValidados = equipoSchema.parse(data);
 
+    const passwordHasheada = await bcrypt.hash(datosValidados.password, 10);
+
     const nuevoEquipo = await prisma.users.create({
       data: {
         ...datosValidados,
+        password: passwordHasheada,
         tipoUsuario: "EMPRESARIAL",
         rol: "EQUIPO",
         empresaId,
