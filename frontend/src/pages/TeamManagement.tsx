@@ -64,7 +64,8 @@ const TeamManagement = () => {
     fetchMembers();
   }, [usuario]);
 
-  const handleAddMember = async (data: Omit<TeamMember, "id"> & { password: string; perfil_completo?: boolean }) => {
+   
+  const handleAddMember = async (data: Omit<TeamMember, "id"> & { password: string; perfilCompleto?: boolean }) => {
     try {
       const payload: CreateTeamMemberDTO = {
         username: data.email.split("@")[0],
@@ -78,6 +79,7 @@ const TeamManagement = () => {
         perfilCompleto: data.perfilCompleto ?? true, 
       };
 
+console.log("🔍 Payload que se enviará:", payload);
 
     const created = await createTeamMember(payload);
     const newMember: TeamMemberWithStatus = {
@@ -99,6 +101,7 @@ const TeamManagement = () => {
 };
 
 const handleEditMember = async (updatedData: Omit<TeamMember, "id">) => {
+  
   if (!selectedMember) return;
 
   try {

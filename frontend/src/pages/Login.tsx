@@ -3,11 +3,13 @@ import { FaEnvelope, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import LandingInfo from "../components/LandingInfo";
 import Footer from "../components/Footer";
+import { useUser } from "../context/UserContext";
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { setUsuario } = useUser();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -18,9 +20,7 @@ const Login: React.FC = () => {
     try {
       const response = await fetch("http://localhost:3000/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo: email, password }),
       });
 
@@ -29,14 +29,25 @@ const Login: React.FC = () => {
       }
 
       const data = await response.json();
+      console.log("📥 Login response:", data);
 
+      // Guarda token y datos de usuario en localStorage
       localStorage.setItem("token", data.token);
-      localStorage.setItem("tipoUsuario", data.tipoUsuario);
-      localStorage.setItem("rol", data.rol);
-      localStorage.setItem("username", data.username);
+      localStorage.setItem("tipoUsuario", data.user.tipoUsuario);
+      localStorage.setItem("rol", data.user.rol);
+      localStorage.setItem("username", data.user.username);
+      localStorage.setItem("perfilCompleto", data.user.perfilCompleto ? "true" : "false");
 
-      
-      navigate("/");
+      // Guarda el usuario en contexto
+      setUsuario(data.user);
+
+      // ⚠️ En este sistema, perfilCompleto = true significa que DEBE completar su perfil
+      if (data.user.rol === "EQUIPO" && data.user.perfilCompleto) {
+        navigate("/completar-perfil");
+      } else {
+        navigate("/");
+      }
+
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
       alert("Error al iniciar sesión ❌");
@@ -101,7 +112,6 @@ const Login: React.FC = () => {
         </div>
       </div>
 
-      {/* Aquí va el contenido adicional */}
       <LandingInfo />
       <Footer />
     </>

@@ -5,9 +5,15 @@ export interface LoginRequest {
 
 export interface LoginResponse {
   token: string;
-  username: string;
-  rol: string;
-  tipoUsuario?: string | null;
-  rolEquipo?: string;
   requiereCompletarPerfil: boolean;
+  user: {
+    idUsuario: number;
+    username: string;
+    correo: string;
+    rol: string;
+    tipoUsuario: string | null;
+    rolEquipo: string;
+    perfilCompleto: boolean;
+    empresaId: number | null;
+  };
 }

@@ -14,11 +14,17 @@ export class AuthController extends Controller {
 
     return {
       token,
-      username: user.username,
-      rol: user.rol,
-      tipoUsuario: user.tipoUsuario,
-      rolEquipo: user.rolEquipo || "",
-      requiereCompletarPerfil, // ✅ Ya lo devuelve tu servicio
+      requiereCompletarPerfil,
+      user: {
+        idUsuario: user.idUsuario,
+        username: user.username,
+        correo: user.correo,
+        rol: user.rol,
+        tipoUsuario: user.tipoUsuario,
+        rolEquipo: user.rolEquipo || "",
+        perfilCompleto: user.perfilCompleto,
+        empresaId: user.empresaId,
+      },
     };
   }
 }

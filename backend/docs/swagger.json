@@ -235,28 +235,57 @@
 					"token": {
 						"type": "string"
 					},
-					"username": {
-						"type": "string"
-					},
-					"rol": {
-						"type": "string"
-					},
-					"tipoUsuario": {
-						"type": "string",
-						"nullable": true
-					},
-					"rolEquipo": {
-						"type": "string"
-					},
 					"requiereCompletarPerfil": {
 						"type": "boolean"
+					},
+					"user": {
+						"properties": {
+							"empresaId": {
+								"type": "number",
+								"format": "double",
+								"nullable": true
+							},
+							"perfilCompleto": {
+								"type": "boolean"
+							},
+							"rolEquipo": {
+								"type": "string"
+							},
+							"tipoUsuario": {
+								"type": "string",
+								"nullable": true
+							},
+							"rol": {
+								"type": "string"
+							},
+							"correo": {
+								"type": "string"
+							},
+							"username": {
+								"type": "string"
+							},
+							"idUsuario": {
+								"type": "number",
+								"format": "double"
+							}
+						},
+						"required": [
+							"empresaId",
+							"perfilCompleto",
+							"rolEquipo",
+							"tipoUsuario",
+							"rol",
+							"correo",
+							"username",
+							"idUsuario"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
 					"token",
-					"username",
-					"rol",
-					"requiereCompletarPerfil"
+					"requiereCompletarPerfil",
+					"user"
 				],
 				"type": "object",
 				"additionalProperties": false

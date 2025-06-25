@@ -11,6 +11,8 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TeamManagement from "./pages/TeamManagement";
 import { UserProvider } from "./context/UserContext";
 
+import CompleteProfile from "./pages/CompletaProfile";
+
 // Componente que verifica si hay usuario para la ruta "/"
 function RutaRaiz() {
   const token = localStorage.getItem("token");
@@ -42,7 +44,8 @@ function App() {
             <Route path="/nutriscan" element={<NutriScan />} />
             <Route path="/equipo" element={<TeamManagement />} />
           </Route>
-
+          {/* aquí puedes agregar la temporal 👇 */}
+          <Route path="/completar-perfil" element={<CompleteProfile />} />
           {/* Ruta fallback */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>

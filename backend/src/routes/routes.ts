@@ -93,11 +93,8 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "token": {"dataType":"string","required":true},
-            "username": {"dataType":"string","required":true},
-            "rol": {"dataType":"string","required":true},
-            "tipoUsuario": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
-            "rolEquipo": {"dataType":"string"},
             "requiereCompletarPerfil": {"dataType":"boolean","required":true},
+            "user": {"dataType":"nestedObjectLiteral","nestedProperties":{"empresaId":{"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},"perfilCompleto":{"dataType":"boolean","required":true},"rolEquipo":{"dataType":"string","required":true},"tipoUsuario":{"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}],"required":true},"rol":{"dataType":"string","required":true},"correo":{"dataType":"string","required":true},"username":{"dataType":"string","required":true},"idUsuario":{"dataType":"double","required":true}},"required":true},
         },
         "additionalProperties": false,
     },

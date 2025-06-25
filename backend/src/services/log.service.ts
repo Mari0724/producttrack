@@ -1,7 +1,7 @@
 import { compare } from "bcryptjs";
 import jwt from "jsonwebtoken";
 import prisma from "../utils/prismaClient";
-import { JWT_SECRET, TOKEN_EXPIRES_IN } from "../config/token"; // ✅ Importaste desde tu config central
+import { JWT_SECRET, TOKEN_EXPIRES_IN } from "../config/token";
 
 export class LogService {
   async login(correo: string, password: string) {
@@ -19,23 +19,34 @@ export class LogService {
       { 
         id: user.idUsuario, 
         rol: user.rol,
-        tipoUsuario: user.tipoUsuario,  // <-- aquí
-        rolEquipo: user.rolEquipo       // <-- opcional, si es relevante
+        tipoUsuario: user.tipoUsuario,
+        rolEquipo: user.rolEquipo,
+        perfilCompleto: user.perfilCompleto,
       },
-    JWT_SECRET,
-    { expiresIn: TOKEN_EXPIRES_IN }
-  );
+      JWT_SECRET,
+      { expiresIn: TOKEN_EXPIRES_IN }
+    );
+
     // Verificar si necesita completar perfil
     let requiereCompletarPerfil = false;
-
     if (user.rol === "EQUIPO") {
       if (!user.telefono || !user.direccion) {
         requiereCompletarPerfil = true;
       }
     }
 
+    // ✅ Solo retornar los datos relevantes del usuario
     return {
-      user,
+      user: {
+        idUsuario: user.idUsuario,
+        username: user.username,
+        correo: user.correo,
+        rol: user.rol,
+        tipoUsuario: user.tipoUsuario,
+        rolEquipo: user.rolEquipo,
+        perfilCompleto: user.perfilCompleto,
+        empresaId: user.empresaId,
+      },
       token,
       requiereCompletarPerfil,
     };

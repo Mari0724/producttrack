@@ -3,8 +3,6 @@ import { EquipoDTO } from "../models/EquipoDTO";
 import { equipoSchema } from "../models/EquipoModel";
 import bcrypt from 'bcryptjs';
 
-console.log("📁 ESTE ES EL EQUIPO.SERVICE QUE SE ESTÁ EJECUTANDO");
-
 export class EquipoService {
   // Crear usuario tipo equipo
   async crearEquipo(data: EquipoDTO, empresaId: number) {
@@ -16,7 +14,8 @@ export class EquipoService {
     // 💡 Remover empresaId si viene en data para evitar sobreescribir el correcto
     const { empresaId: _omitEmpresaId, ...datosSinEmpresaId } = datosValidados;
 
-    datosSinEmpresaId.perfilCompleto = false;
+    datosSinEmpresaId.perfilCompleto ??= false;
+
  
 
     const nuevoEquipo = await prisma.users.create({
