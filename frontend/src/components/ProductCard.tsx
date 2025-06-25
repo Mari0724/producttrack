@@ -7,8 +7,8 @@ import type { Product } from '../types/Product';
 
 interface ProductCardProps {
   product: Product;
-  onEdit: () => void;
-  onDelete: () => void;
+  onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -81,8 +81,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
             {/* Acciones con botón que adapta texto y color */}
             <ProductActions
-              onEdit={onEdit}
-              onDelete={onDelete}
+              {...(onEdit && { onEdit })}
+              {...(onDelete && { onDelete })}
               onView={handleView}
               tipoUsuario={tipoUsuario}
             />

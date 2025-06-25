@@ -171,32 +171,33 @@ const InventarioEmpresarial: React.FC = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
             {products
-            .filter(product =>
-              (!categoriaSeleccionada || product.categoria === categoriaSeleccionada) &&
-              product.usuario?.tipoUsuario === tipoUsuario?.toUpperCase()
-            )
-            .map((product) => (
-              <div key={product.id} className="relative">
-                <ProductCard 
-                  product={product}
-                  onEdit={() => openEditModal(product)}
-                  onDelete={() => handleAskDelete(product.id!)}
-                />
+              .filter(product =>
+                (!categoriaSeleccionada || product.categoria === categoriaSeleccionada) &&
+                product.usuario?.tipoUsuario === tipoUsuario
+              )
+              .map((product) => (
+                <div key={product.id} className="relative">
+                  <ProductCard
+                    product={product}
+                    onEdit={userRol === "EDITOR" ? () => openEditModal(product) : undefined}
+                    onDelete={userRol === "EDITOR" ? () => handleAskDelete(product.id!) : undefined}
+                  />
 
-                {/* Mostrar Ver más solo para comentarista */}
-                {userRol === "COMENTARISTA" && (
-                  <button
-                    onClick={() => openCommentsModal(product)}
-                    className="mt-2 ml-1 text-xs text-blue-600 hover:underline"
-                  >
-                    Ver más
-                  </button>
-                )}
-              </div>
-            ))}
+                  {(userRol === "COMENTARISTA" || userRol === "EDITOR") && (
+                    <button
+                      onClick={() => openCommentsModal(product)}
+                      className="mt-2 ml-1 text-xs text-blue-600 hover:underline"
+                    >
+                      Ver más
+                    </button>
+                  )}
+                </div>
+              ))}
           </div>
 
-          <FloatingButton onAddProduct={() => setShowProductModal(true)} />
+          {userRol === "EDITOR" && (
+            <FloatingButton onAddProduct={() => setShowProductModal(true)} />
+          )}
 
           <ConfirmDeleteModal
             isOpen={showConfirmModal}
