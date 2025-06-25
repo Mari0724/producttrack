@@ -6,13 +6,15 @@ interface ProductActionsProps {
   onDelete?: () => void;
   onView: () => void;
   tipoUsuario: string;
+  rol?: string;
 }
 
 const ProductActions: React.FC<ProductActionsProps> = ({
   onEdit,
   onDelete,
   onView,
-  tipoUsuario
+  tipoUsuario,
+  rol,
 }) => {
   const isIndividual = tipoUsuario === 'INDIVIDUAL';
 
@@ -23,30 +25,32 @@ const ProductActions: React.FC<ProductActionsProps> = ({
 
   return (
     <div className="flex gap-3 pt-3 text-white">
-      {onEdit && (
-        <button
-          onClick={onEdit}
-          className="flex items-center gap-1 bg-[#81203D] hover:bg-[#60162F] px-3 py-1.5 rounded-lg text-sm"
-        >
-          <FaEdit /> Editar
-        </button>
+      {rol === "EDITOR" && (
+        <>
+          <button
+            onClick={onEdit}
+            className="flex items-center gap-1 bg-[#81203D] hover:bg-[#60162F] px-3 py-1.5 rounded-lg text-sm"
+          >
+            <FaEdit /> Editar
+          </button>
+
+          <button
+            onClick={onDelete}
+            className="flex items-center gap-1 bg-[#FFBA00] hover:bg-[#E6A700] px-3 py-1.5 rounded-lg text-sm text-black"
+          >
+            <FaTrash /> Eliminar
+          </button>
+        </>
       )}
 
-      {onDelete && (
+      {(rol === "EDITOR" || rol === "COMENTARISTA") && (
         <button
-          onClick={onDelete}
-          className="flex items-center gap-1 bg-[#FFBA00] hover:bg-[#E6A700] px-3 py-1.5 rounded-lg text-sm text-black"
+          onClick={onView}
+          className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-white ${viewColor}`}
         >
-          <FaTrash /> Eliminar
+          <FaEye /> {viewLabel}
         </button>
       )}
-
-      <button
-        onClick={onView}
-        className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-white ${viewColor}`}
-      >
-        <FaEye /> {viewLabel}
-      </button>
     </div>
   );
 };

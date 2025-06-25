@@ -9,12 +9,16 @@ interface ProductCardProps {
   product: Product;
   onEdit?: () => void;
   onDelete?: () => void;
+  onView?: () => void;
+  rol?: string;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onEdit,
-  onDelete
+  onDelete,
+  onView,
+  rol
 }) => {
   const [showDetails, setShowDetails] = useState(false);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
@@ -81,10 +85,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
             {/* Acciones con botón que adapta texto y color */}
             <ProductActions
-              {...(onEdit && { onEdit })}
-              {...(onDelete && { onDelete })}
-              onView={handleView}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onView={onView ?? handleView}
               tipoUsuario={tipoUsuario}
+              rol={rol}
             />
           </div>
         )}

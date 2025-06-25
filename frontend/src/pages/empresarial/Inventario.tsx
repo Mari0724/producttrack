@@ -17,11 +17,11 @@ const InventarioEmpresarial: React.FC = () => {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<string>('');
 
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const [selectedProduct] = useState<Product | null>(null);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
 
   const userId = Number(localStorage.getItem("userId"));
-  const userRol = localStorage.getItem("rol"); // comentarista, administrador, etc.
+  const userRol = localStorage.getItem("rolEquipo") || localStorage.getItem("rol") || "";
 
   const tipoUsuario = localStorage.getItem('tipoUsuario');
 
@@ -143,11 +143,6 @@ const InventarioEmpresarial: React.FC = () => {
     }
   };
 
-  const openCommentsModal = (product: Product) => {
-    setSelectedProduct(product);
-    setShowCommentsModal(true);
-  };
-
   return (
     <>
       <div className="mb-4">
@@ -181,16 +176,8 @@ const InventarioEmpresarial: React.FC = () => {
                     product={product}
                     onEdit={userRol === "EDITOR" ? () => openEditModal(product) : undefined}
                     onDelete={userRol === "EDITOR" ? () => handleAskDelete(product.id!) : undefined}
+                    rol={userRol}
                   />
-
-                  {(userRol === "COMENTARISTA" || userRol === "EDITOR") && (
-                    <button
-                      onClick={() => openCommentsModal(product)}
-                      className="mt-2 ml-1 text-xs text-blue-600 hover:underline"
-                    >
-                      Ver más
-                    </button>
-                  )}
                 </div>
               ))}
           </div>

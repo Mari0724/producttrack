@@ -29,6 +29,7 @@ const Login: React.FC = () => {
       localStorage.setItem("tipoUsuario", data.tipoUsuario);
       localStorage.setItem("rol", data.rol);
       localStorage.setItem("username", data.username);
+      localStorage.setItem("rolEquipo", data.rolEquipo);
 
       if (data.usuario && data.usuario.id) {
         localStorage.setItem("userId", data.usuario.id.toString());

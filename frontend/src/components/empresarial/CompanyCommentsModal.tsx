@@ -32,6 +32,7 @@ const CompanyCommentsModal: React.FC<CompanyCommentsModalProps> = ({ productId, 
 
   const userId = parseInt(localStorage.getItem("userId") || "0", 10);
   const userName = localStorage.getItem("userName") || "Usuario";
+  const userRol = localStorage.getItem("rolEquipo") || localStorage.getItem("rol") || "";
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -114,20 +115,26 @@ const CompanyCommentsModal: React.FC<CompanyCommentsModalProps> = ({ productId, 
           </div>
         )}
 
-        <div>
-          <textarea
-            placeholder="Escribe tu comentario..."
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            className="w-full border rounded-lg p-2 text-sm"
-          />
-          <button
-            onClick={handleAddComment}
-            className="mt-2 bg-[#81203D] hover:bg-[#60162F] text-white px-4 py-2 rounded-lg text-sm"
-          >
-            Enviar comentario
-          </button>
-        </div>
+        {(userRol === "EDITOR" || userRol === "COMENTARISTA") ? (
+          <div>
+            <textarea
+              placeholder="Escribe tu comentario..."
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              className="w-full border rounded-lg p-2 text-sm"
+            />
+            <button
+              onClick={handleAddComment}
+              className="mt-2 bg-[#81203D] hover:bg-[#60162F] text-white px-4 py-2 rounded-lg text-sm"
+            >
+              Enviar comentario
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm text-gray-500 italic">
+            Tu rol no tiene permisos para enviar comentarios.
+          </p>
+        )}
       </div>
     </div>
   );
