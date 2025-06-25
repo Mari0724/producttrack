@@ -68,67 +68,69 @@ export const userSchema = z.object({
         .optional(),
 
     empresaId: z
-    .number()
+        .number()
         .int("El ID de empresa debe ser un número entero")
         .positive("El ID de empresa debe ser positivo")
         .optional(),
+    
+    perfilCompleto: z.boolean().optional(),
 
 })
 
-// 1️⃣ Validación: tipoUsuario es obligatorio si rol es USUARIO
-.refine(
-    (data) => {
-        if (data.rol === "USUARIO") {
-            return !!data.tipoUsuario;
+    // 1️⃣ Validación: tipoUsuario es obligatorio si rol es USUARIO
+    .refine(
+        (data) => {
+            if (data.rol === "USUARIO") {
+                return !!data.tipoUsuario;
+            }
+            return true;
+        },
+        {
+            message: "El tipo de usuario es obligatorio si el rol es USUARIO.",
+            path: ["tipoUsuario"],
         }
-        return true;
-    },
-    {
-    message: "El tipo de usuario es obligatorio si el rol es USUARIO.",
-    path: ["tipoUsuario"],
-    }
-)
+    )
 
-// 1️⃣ Validación: Si es EMPRESARIAL, debe tener nombreEmpresa y nit
-.refine(
-    (data) => {
-        if (data.tipoUsuario === "EMPRESARIAL") {
-            return !!data.nombreEmpresa && !!data.nit;
+    // 1️⃣ Validación: Si es EMPRESARIAL, debe tener nombreEmpresa y nit
+    .refine(
+        (data) => {
+            if (data.tipoUsuario === "EMPRESARIAL") {
+                return !!data.nombreEmpresa && !!data.nit;
+            }
+            return true;
+        },
+        {
+            message: "El nombre de la empresa y el NIT son obligatorios para los usuarios empresariales.",
+            path: ["nombreEmpresa", "nit"],
         }
-        return true;
-    },
-    {
-        message: "El nombre de la empresa y el NIT son obligatorios para los usuarios empresariales.",
-        path: ["nombreEmpresa", "nit"],
-    }
-)
+    )
 
-  // 2️⃣ Validación: Si el rol es EQUIPO, debe tener empresaId
-.refine(
-    (data) => {
-        if (data.rol === "EQUIPO") {
-            return typeof data.empresaId === "number";
+    // 2️⃣ Validación: Si el rol es EQUIPO, debe tener empresaId
+    .refine(
+        (data) => {
+            if (data.rol === "EQUIPO") {
+                return typeof data.empresaId === "number";
+            }
+            return true;
+        },
+        {
+            message: "El campo 'empresaId' es obligatorio para usuarios con rol EQUIPO.",
+            path: ["empresaId"],
         }
-        return true;
-    },
-    {
-        message: "El campo 'empresaId' es obligatorio para usuarios con rol EQUIPO.",
-        path: ["empresaId"],
-    }
-)
+    )
 
-.refine(
-  (data) => {
-    if (data.tipoUsuario === "INDIVIDUAL") {
-      return !data.nombreEmpresa && !data.nit;
-    }
-    return true;
-  },
-  {
-    message: "Los usuarios individuales no deben tener nombre de empresa ni NIT.",
-    path: ["nombreEmpresa", "nit"],
-  }
-);
+    .refine(
+        (data) => {
+            if (data.tipoUsuario === "INDIVIDUAL") {
+                return !data.nombreEmpresa && !data.nit;
+            }
+            return true;
+        },
+        {
+            message: "Los usuarios individuales no deben tener nombre de empresa ni NIT.",
+            path: ["nombreEmpresa", "nit"],
+        }
+    );
 
 
 

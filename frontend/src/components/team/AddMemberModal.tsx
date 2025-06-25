@@ -65,7 +65,7 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
 
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      onAdd(formData);
+      onAdd({ ...formData, perfilCompleto: true });
       toast(`✅ ${formData.name} agregado al equipo exitosamente.`);
       setFormData({ name: "", email: "", password: "", role: "LECTOR" });
       setErrors({});

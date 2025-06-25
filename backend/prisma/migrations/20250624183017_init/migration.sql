@@ -44,6 +44,7 @@ CREATE TABLE "users" (
     "rol" TEXT NOT NULL,
     "tipoUsuario" "TipoUsuario" DEFAULT 'INDIVIDUAL',
     "rolEquipo" "rolEquipo",
+    "perfilCompleto" BOOLEAN NOT NULL DEFAULT false,
     "empresaId" INTEGER,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -53,19 +54,18 @@ CREATE TABLE "users" (
 );
 
 -- CreateTable
-CREATE TABLE "auteRest" (
+CREATE TABLE "passwordReset" (
     "idSeguridad" SERIAL NOT NULL,
     "idUsuario" INTEGER NOT NULL,
-    "googleId" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "fechaSolicitud" TIMESTAMP(3) NOT NULL,
     "fechaExpiracion" TIMESTAMP(3) NOT NULL,
-    "usado" BOOLEAN NOT NULL,
-    "confirmado" BOOLEAN NOT NULL,
+    "usado" BOOLEAN NOT NULL DEFAULT false,
+    "confirmado" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "auteRest_pkey" PRIMARY KEY ("idSeguridad")
+    CONSTRAINT "passwordReset_pkey" PRIMARY KEY ("idSeguridad")
 );
 
 -- CreateTable
@@ -182,15 +182,18 @@ CREATE TABLE "alertVen" (
 );
 
 -- CreateTable
-CREATE TABLE "analisisImagenes" (
+CREATE TABLE "NutriScan" (
     "id" SERIAL NOT NULL,
     "usuarioId" INTEGER NOT NULL,
     "esAlimento" BOOLEAN NOT NULL,
     "consulta" TEXT NOT NULL,
     "respuesta" JSONB NOT NULL,
-    "fechaAnalisis" TIMESTAMP(3) NOT NULL,
+    "tipoAnalisis" TEXT NOT NULL,
+    "fechaAnalisis" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "actualizadoEn" TIMESTAMP(3) NOT NULL,
+    "isTest" BOOLEAN NOT NULL DEFAULT false,
 
-    CONSTRAINT "analisisImagenes_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "NutriScan_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -271,10 +274,7 @@ CREATE UNIQUE INDEX "users_correo_key" ON "users"("correo");
 CREATE UNIQUE INDEX "users_nit_key" ON "users"("nit");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "auteRest_idUsuario_key" ON "auteRest"("idUsuario");
-
--- CreateIndex
-CREATE UNIQUE INDEX "auteRest_googleId_key" ON "auteRest"("googleId");
+CREATE UNIQUE INDEX "passwordReset_idUsuario_key" ON "passwordReset"("idUsuario");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "productos_codigoBarras_key" ON "productos"("codigoBarras");
@@ -286,7 +286,7 @@ CREATE UNIQUE INDEX "productos_codigoQR_key" ON "productos"("codigoQR");
 ALTER TABLE "users" ADD CONSTRAINT "users_empresaId_fkey" FOREIGN KEY ("empresaId") REFERENCES "users"("idUsuario") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "auteRest" ADD CONSTRAINT "auteRest_idUsuario_fkey" FOREIGN KEY ("idUsuario") REFERENCES "users"("idUsuario") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "passwordReset" ADD CONSTRAINT "passwordReset_idUsuario_fkey" FOREIGN KEY ("idUsuario") REFERENCES "users"("idUsuario") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "notificaciones" ADD CONSTRAINT "notificaciones_idUsuario_fkey" FOREIGN KEY ("idUsuario") REFERENCES "users"("idUsuario") ON DELETE RESTRICT ON UPDATE CASCADE;
@@ -316,7 +316,7 @@ ALTER TABLE "ajustInven" ADD CONSTRAINT "ajustInven_idUsuario_fkey" FOREIGN KEY 
 ALTER TABLE "alertVen" ADD CONSTRAINT "alertVen_idProducto_fkey" FOREIGN KEY ("idProducto") REFERENCES "productos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "analisisImagenes" ADD CONSTRAINT "analisisImagenes_usuarioId_fkey" FOREIGN KEY ("usuarioId") REFERENCES "users"("idUsuario") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "NutriScan" ADD CONSTRAINT "NutriScan_usuarioId_fkey" FOREIGN KEY ("usuarioId") REFERENCES "users"("idUsuario") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "colaboraciones" ADD CONSTRAINT "colaboraciones_productoId_fkey" FOREIGN KEY ("productoId") REFERENCES "productos"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

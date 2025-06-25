@@ -16,6 +16,9 @@ export class EquipoService {
     // 💡 Remover empresaId si viene en data para evitar sobreescribir el correcto
     const { empresaId: _omitEmpresaId, ...datosSinEmpresaId } = datosValidados;
 
+    datosSinEmpresaId.perfilCompleto = false;
+ 
+
     const nuevoEquipo = await prisma.users.create({
       data: {
         ...datosSinEmpresaId,

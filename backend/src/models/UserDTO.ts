@@ -7,11 +7,11 @@ export interface UserDTO {
     direccion: string;
     fotoPerfil?: string;
     tipoUsuario?: "INDIVIDUAL" | "EMPRESARIAL";
-    nombreEmpresa?: string; // opcional según tipoUsuario
-    nit?: string;           // opcional según tipoUsuario
+    nombreEmpresa?: string;
+    nit?: string;
     rol: "USUARIO" | "EQUIPO" | "ADMIN" | "DESARROLLADOR";
-    rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR"; // se elimino admin
+    rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR";
     estado?: "activo" | "inactivo";
-    empresaId?: number; // NUEVO
+    empresaId?: number;
+    perfilCompleto?: boolean; // 👈 nuevo campo agregado como opcional
 }
-

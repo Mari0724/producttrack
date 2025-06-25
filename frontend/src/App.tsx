@@ -9,34 +9,44 @@ import Index from "./pages/Index";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TeamManagement from "./pages/TeamManagement";
-import { UserProvider } from "./context/UserContext"; // 👈 Asegúrate de importar esto
+import { UserProvider } from "./context/UserContext";
+
+// Componente que verifica si hay usuario para la ruta "/"
+function RutaRaiz() {
+  const token = localStorage.getItem("token");
+  return token ? (
+    <Navigate to="/home" replace />
+  ) : (
+    <Navigate to="/register" replace />
+  );
+}
+
 
 function App() {
   return (
-    <UserProvider> {/* ✅ Envolver todo en el contexto */}
+    <UserProvider>
       <Router>
         <Routes>
           {/* Rutas públicas */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-
-          {/* Rutas legales */}
           <Route path="/terminos-y-condiciones" element={<TermsOfService />} />
           <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
 
+          {/* Ruta raíz redirecciona según sesión */}
+          <Route path="/" element={<RutaRaiz />} />
+
           {/* Rutas privadas con Layout */}
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Index />} />
-            <Route path="home" element={<Navigate to="/" />} />
-            <Route path="nutriscan" element={<NutriScan />} />
-            <Route path="equipo" element={<TeamManagement />} />
+          <Route element={<Layout />}>
+            <Route path="/home" element={<Index />} />
+            <Route path="/nutriscan" element={<NutriScan />} />
+            <Route path="/equipo" element={<TeamManagement />} />
           </Route>
 
-          {/* Cualquier otra ruta no encontrada */}
+          {/* Ruta fallback */}
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
 
-        {/* Sonner toaster */}
         <Toaster richColors position="top-right" />
       </Router>
     </UserProvider>

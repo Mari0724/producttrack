@@ -6,6 +6,7 @@ export interface TeamMember {
   email: string;
   role: UserRole;
   avatar?: string;
+  perfilCompleto?: boolean;
 }
 
 export interface TeamStats {

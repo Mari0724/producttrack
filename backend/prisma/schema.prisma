@@ -30,7 +30,7 @@ model users {
   rol            String
   tipoUsuario TipoUsuario? @default(INDIVIDUAL)
   rolEquipo      rolEquipo?
-  
+  perfilCompleto Boolean   @default(false) // 👈 NUEVO CAMPO
   empresaId     Int?
   jefe       users?   @relation("EmpresaMiembros", fields: [empresaId], references: [idUsuario])
   miembros users[]  @relation("EmpresaMiembros")
@@ -40,7 +40,7 @@ model users {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
 
-  auteRest         auteRest?
+  passwordReset        passwordReset?
   notificaciones   notificaciones[]
   productos        productos[]
   comentarios      comentarios[]

@@ -11,6 +11,7 @@ export interface CreateTeamMemberDTO {
   fotoPerfil?: string;
   estado?: "activo" | "inactivo";
   empresaId?: number; // porque es opcional si no es admin
+  perfilCompleto?: boolean;
 }
 
 export interface UpdateTeamMemberDTO {
