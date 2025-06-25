@@ -21,7 +21,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
   const viewLabel = isIndividual ? 'Notas personales' : 'Ver más';
   const viewColor = isIndividual
     ? 'bg-[#81203D] hover:bg-[#60162F]'
-    : 'bg-[#81203D] hover:bg-[#60162F]';
+    : 'bg-gray-700 hover:bg-gray-800';
 
   return (
     <div className="flex gap-3 pt-3 text-white">
