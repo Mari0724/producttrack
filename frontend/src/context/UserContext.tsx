@@ -2,12 +2,15 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
 // 🎭 Interfaz del usuario que extraemos del token
-interface Usuario {
+export interface Usuario {
   id: number;
+  username: string;
+  correo: string;
   tipoUsuario: "INDIVIDUAL" | "EMPRESARIAL";
   rol: "ADMIN" | "DESARROLLADOR" | "LECTOR" | "EDITOR" | string;
-  perfilCompleto: boolean; // 👈 añade esto
-  [key: string]: unknown;
+  rolEquipo?: string;
+  empresaId?: number;
+  perfilCompleto: boolean;
 }
 
 // 📦 Tipo del contexto

@@ -78,14 +78,40 @@ if (typeof data.perfilCompleto === 'boolean') { userData.perfilCompleto = data.p
   const newUser = await prisma.users.create({ data: userData });
 
   const token = jwt.sign(
-    { idUsuario: newUser.idUsuario, username: newUser.username, rol: newUser.rol },
-    JWT_SECRET,
-    { expiresIn: '24h' }
-  );
+  {
+    id: newUser.idUsuario,
+    username: newUser.username,
+    correo: newUser.correo,
+    rol: newUser.rol,
+    tipoUsuario: newUser.tipoUsuario,
+    rolEquipo: newUser.rolEquipo,
+    perfilCompleto: newUser.perfilCompleto,
+    empresaId: newUser.empresaId
+  },
+  JWT_SECRET,
+  { expiresIn: '24h' }
+);
+
 
   return { user: newUser, token };
 }
 
+// 🔍 Obtener una empresa por ID
+export async function getEmpresaById(id: number) {
+  const empresa = await prisma.users.findUnique({
+    where: { idUsuario: id },
+  });
+
+  if (!empresa) {
+    throw new Error("Empresa no encontrada");
+  }
+
+  if (empresa.tipoUsuario !== "EMPRESARIAL") {
+    throw new Error("El usuario no es de tipo EMPRESARIAL");
+  }
+
+  return empresa;
+}
 
 
 

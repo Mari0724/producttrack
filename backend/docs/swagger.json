@@ -687,6 +687,40 @@
 				]
 			}
 		},
+		"/usuarios/empresa/{id}": {
+			"get": {
+				"operationId": "GetEmpresaByIdController",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/nutriscan": {
 			"post": {
 				"operationId": "Create",

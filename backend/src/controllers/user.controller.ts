@@ -1,7 +1,7 @@
-import { Body, Delete,Controller, Get, Post, Route, Response, Tags, Query, SuccessResponse, Put, Path } from "tsoa";
+import { Body, Delete, Controller, Get, Post, Route, Response, Tags, Query, SuccessResponse, Put, Path, Security } from "tsoa";
 import { userSchema } from "../models/UserModel";
 import { zodValidate } from "../utils/zodValidate";
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser } from "../services/user.service";
+import { getAllUsers, getUserById, createUser, updateUser, deleteUser, getEmpresaById } from "../services/user.service";
 import { UserDTO } from "../models/UserDTO";
 import { ResponseMessage, ResponseMessageWithToken } from "../interfaces/ResponseMenssage";
 
@@ -79,13 +79,13 @@ export class UserController extends Controller {
     return user;
   }
 
-   // 🆕 Crear usuario
+  // 🆕 Crear usuario
   @SuccessResponse("201", "Usuario creado correctamente")
   @Response("400", "Datos inválidos")
   @Post("/")
   public async create(@Body() requestBody: UserDTO): Promise<ResponseMessageWithToken> {
     const parsed = zodValidate(userSchema, requestBody);
-    
+
     if (!parsed.success) {
       this.setStatus(400);
       return {
@@ -107,7 +107,7 @@ export class UserController extends Controller {
         message: "Solo se debe asignar empresaId a usuarios con rol EQUIPO",
       };
     }
-    
+
 
     try {
       const { user, token } = await createUser(parsed.data);
@@ -124,6 +124,31 @@ export class UserController extends Controller {
     }
   }
 
+  //buscar por empresa 
+  @Security("jwt")
+  @Get("/empresa/{id}")
+  public async getEmpresaByIdController(@Path() id: number): Promise<any> {
+    try {
+      const empresa = await getEmpresaById(id);
+
+      return {
+        idUsuario: empresa.idUsuario,
+        nombreEmpresa: empresa.nombreEmpresa,
+        nit: empresa.nit,
+        correo: empresa.correo,
+        direccion: empresa.direccion,
+        telefono: empresa.telefono,
+      };
+    } catch (error: any) {
+      if (error.message.includes("no encontrada")) {
+        this.setStatus(404);
+      } else {
+        this.setStatus(400);
+      }
+      return { message: error.message };
+    }
+  }
+
 
   //🐉 Modificar usuaro con su ID
   @Put("{id}")
@@ -134,7 +159,7 @@ export class UserController extends Controller {
     @Path() id: number,
     @Body() body: Partial<UserDTO>
   ): Promise<ResponseMessage> {
-    
+
     // 🚫 Validación especial para evitar mal uso del campo empresaId
     try {
       if (body.rol && body.rol !== "EQUIPO" && body.empresaId) {
@@ -142,11 +167,11 @@ export class UserController extends Controller {
         return {
           message: "No se puede asignar empresaId a usuarios que no son del rol EQUIPO",
         };
-    }
-    
+      }
+
       // ✅ Actualizar usuario (incluye hash de contraseña si se envía)
       await updateUser(id, body);
-      
+
       return { message: "Usuario actualizado correctamente" };
     } catch (error) {
       console.error(error);
@@ -159,8 +184,8 @@ export class UserController extends Controller {
       return { message: "Error al actualizar usuario" };
     }
   }
-  
-  
+
+
   //🛑 Eliminar (soft delete) un usuario por su ID
 
   @Delete("{id}")
@@ -183,6 +208,6 @@ export class UserController extends Controller {
     }
   }
 
-  
+
 }
 

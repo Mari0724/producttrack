@@ -8,6 +8,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "../docs/swagger.json";
 import { RegisterRoutes } from "../src/routes/routes";
 import nutriscanOCRRoutes from './routes/ocr.routes';
+import userRoutes from "./routes/user.routes";
 
 const app = express();
 
@@ -25,6 +26,7 @@ app.use(bodyParser.urlencoded({ extended: true, limit: "3mb" }));
 
 // 📌 Rutas OCR manuales primero, bajo /api/ocr
 app.use('/api/ocr', nutriscanOCRRoutes);
+app.use("/api", userRoutes);
 
 // 📌 Luego las rutas generadas por tsoa
 RegisterRoutes(app);

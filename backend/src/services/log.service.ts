@@ -16,12 +16,13 @@ export class LogService {
 
     // Generar token
     const token = jwt.sign(
-      { 
-        id: user.idUsuario, 
+      {
+        id: user.idUsuario,
         rol: user.rol,
         tipoUsuario: user.tipoUsuario,
         rolEquipo: user.rolEquipo,
         perfilCompleto: user.perfilCompleto,
+        empresaId: user.empresaId, // 👈 este faltaba
       },
       JWT_SECRET,
       { expiresIn: TOKEN_EXPIRES_IN }

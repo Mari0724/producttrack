@@ -1,21 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Eye, EyeOff, CheckCircle,
-  User,
-  Building2,
-  Mail,
-  Phone,
-  MapPin,
-  Lock,
-  Image as ImageIcon,
+  User, Building2, Mail, Phone, MapPin, Lock, Image as ImageIcon
 } from "lucide-react";
+import { getEmpresaById, getUserById, updateUsuario, subirFotoPerfil } from "../services/userService";
+import { AxiosError } from "axios";
+import type { UserDTO } from "../types/UserDTO";
+import { useUser } from "../context/UserContext";
 
 const CompleteProfile = () => {
   const navigate = useNavigate();
+  const { usuario } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [usernameError, setUsernameError] = useState("");
 
   const [formData, setFormData] = useState({
     phone: "",
@@ -26,35 +26,81 @@ const CompleteProfile = () => {
     profilePhoto: null as File | null,
   });
 
-  const preRegisteredData = {
-    email: "carlos.rodriguez@techsolutions.com",
-    companyName: "Tech Solutions S.A.S",
-    role: "COMENTARISTA",
-    fullName: "Carlos Rodríguez",
-  };
+  const [empresaNombre, setEmpresaNombre] = useState("Sin empresa");
+  const [correoUsuario, setCorreoUsuario] = useState("");
 
-  const handleInputChange = (
-    field: keyof typeof formData,
-    value: string | File | null
-  ) => {
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        if (usuario?.id) {
+          const userData = await getUserById(usuario.id);
+          setCorreoUsuario(userData.correo);
+
+          if (userData.empresaId) {
+            const empresaData = await getEmpresaById(Number(userData.empresaId));
+            setEmpresaNombre(empresaData.nombreEmpresa || "Sin empresa");
+          }
+        }
+      } catch (error) {
+        console.error("Error cargando datos:", error);
+      }
+    };
+
+    cargarDatos();
+  }, [usuario]);
+
+
+
+  const handleInputChange = (field: keyof typeof formData, value: string | File | null) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
+    if (field === "username") setUsernameError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    if (formData.newPassword && formData.newPassword !== formData.confirmPassword) {
+    if (!formData.newPassword) {
+      alert("Debes ingresar una nueva contraseña.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (formData.newPassword !== formData.confirmPassword) {
       alert("Las contraseñas no coinciden.");
       setIsSubmitting(false);
       return;
     }
 
-    // Simulación de envío
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    alert("Tu información ha sido actualizada exitosamente.");
-    setIsSubmitting(false);
-    navigate("/");
+    const dataToSend: Partial<UserDTO> & { password: string } = {
+      password: formData.newPassword,
+      perfilCompleto: false,
+    };
+
+    if (formData.username) dataToSend.username = formData.username;
+    if (formData.phone) dataToSend.telefono = formData.phone;
+    if (formData.address) dataToSend.direccion = formData.address;
+    if (formData.profilePhoto) {
+      const subida = await subirFotoPerfil(usuario?.id || 0, formData.profilePhoto);
+      console.log("✅ Imagen subida:", subida.url);
+      dataToSend.fotoPerfil = subida.url;
+    }
+
+    try {
+      const response = await updateUsuario(usuario?.id || 0, dataToSend);
+      alert(response.message);
+      navigate("/");
+    } catch (error) {
+      const err = error as AxiosError<{ message: string }>;
+      const errorMsg = err.response?.data?.message || "Error al actualizar.";
+      if (errorMsg.includes("Unique constraint failed") || errorMsg.includes("ya está en uso")) {
+        setUsernameError("Ese nombre de usuario ya está en uso.");
+      } else {
+        alert(errorMsg);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -65,7 +111,7 @@ const CompleteProfile = () => {
         </div>
         <h1 className="text-3xl font-bold text-[#800000]">¡Completa tu perfil!</h1>
         <p className="text-gray-600 mt-2 max-w-md mx-auto">
-          Para comenzar a usar ProductTrack, necesitamos que completes tu información personal.
+          Para comenzar a usar ProductTrack, completa tu información personal.
         </p>
       </div>
 
@@ -73,54 +119,47 @@ const CompleteProfile = () => {
         <h2 className="flex items-center text-yellow-800 font-semibold">
           <CheckCircle className="h-5 w-5 mr-2" /> Información ya registrada
         </h2>
-        <p className="text-sm text-gray-600">
-          Esta información fue proporcionada por tu empresa y no se puede modificar.
-        </p>
         <ul className="mt-3 space-y-1 text-sm">
-          <li className="flex items-center">
-            <Mail className="h-4 w-4 text-gray-500 mr-2" />{" "}
-            <strong>Correo:</strong> {preRegisteredData.email}
-          </li>
-          <li className="flex items-center">
-            <Building2 className="h-4 w-4 text-gray-500 mr-2" />{" "}
-            <strong>Empresa:</strong> {preRegisteredData.companyName}
-          </li>
-          <li className="flex items-center">
-            <User className="h-4 w-4 text-gray-500 mr-2" />{" "}
-            <strong>Nombre:</strong> {preRegisteredData.fullName}
-          </li>
-          <li className="flex items-center">
-            <User className="h-4 w-4 text-gray-500 mr-2" />{" "}
-            <strong>Rol:</strong> {preRegisteredData.role}
-          </li>
+          <li className="flex items-center"><Mail className="h-4 w-4 mr-2 text-gray-500" /> <strong>Correo:</strong> {correoUsuario}</li>
+          <li className="flex items-center"><Building2 className="h-4 w-4 mr-2 text-gray-500" /> <strong>Empresa:</strong> {empresaNombre}</li>
+          <li className="flex items-center"><User className="h-4 w-4 mr-2 text-gray-500" /> <strong>Rol en equipo:</strong> {usuario?.rolEquipo}</li>
         </ul>
       </div>
 
       <form onSubmit={handleSubmit} className="bg-white shadow rounded p-6 space-y-6">
         <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="username">
-            Nombre de usuario *
-          </label>
-          <input
-            id="username"
-            type="text"
-            value={formData.username}
-            onChange={(e) => handleInputChange("username", e.target.value)}
-            className="w-full border rounded px-3 py-2"
-            required
-          />
+          <label className="block text-sm font-medium mb-1">Foto de perfil</label>
+          <div className="relative">
+            <ImageIcon className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleInputChange("profilePhoto", e.target.files?.[0] || null)}
+              className="pl-10 w-full border rounded px-3 py-2 file:bg-[#800000] file:text-white file:border-none file:rounded file:py-1 file:px-2 file:cursor-pointer"
+            />
+          </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="phone">
-            Teléfono
-          </label>
+          <label className="block text-sm font-medium mb-1">Nombre de usuario</label>
+          <input
+            type="text"
+            value={formData.username}
+            placeholder="Ej: IUNI"
+            onChange={(e) => handleInputChange("username", e.target.value)}
+            className={`w-full border rounded px-3 py-2 ${usernameError ? "border-red-500" : ""}`}
+          />
+          {usernameError && <p className="text-sm text-red-600 mt-1">{usernameError}</p>}
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium mb-1">Teléfono</label>
           <div className="relative">
             <Phone className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
             <input
-              id="phone"
               type="tel"
               value={formData.phone}
+              placeholder="Ej: +57 3001234567"
               onChange={(e) => handleInputChange("phone", e.target.value)}
               className="pl-10 w-full border rounded px-3 py-2"
             />
@@ -128,15 +167,13 @@ const CompleteProfile = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="address">
-            Dirección
-          </label>
+          <label className="block text-sm font-medium mb-1">Dirección</label>
           <div className="relative">
             <MapPin className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
             <input
-              id="address"
               type="text"
               value={formData.address}
+              placeholder="Ej: Calle 10 #20-30 Bogotá"
               onChange={(e) => handleInputChange("address", e.target.value)}
               className="pl-10 w-full border rounded px-3 py-2"
             />
@@ -144,95 +181,46 @@ const CompleteProfile = () => {
         </div>
 
         <div>
-          <label className="block text-sm font-medium mb-1" htmlFor="profilePhoto">
-            Foto de perfil
-          </label>
-          <div className="relative">
-            <ImageIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              id="profilePhoto"
-              type="file"
-              accept="image/*"
-              onChange={(e) =>
-                handleInputChange("profilePhoto", e.target.files?.[0] || null)
-              }
-              className="pl-10 w-full border rounded px-3 py-2 file:bg-[#800000] file:text-white file:border-none file:rounded file:py-1 file:px-2 file:cursor-pointer"
-            />
-          </div>
-        </div>
-
-
-
-        <div className="border-t pt-4">
-          <h3 className="text-lg font-semibold text-yellow-800 mb-2 flex items-center">
-            <Lock className="h-5 w-5 mr-2" /> Cambiar Contraseña (Opcional)
-          </h3>
-
-          <label className="block text-sm font-medium mb-1" htmlFor="newPassword">
-            Nueva contraseña
+          <label className="block text-sm font-medium mb-1 flex items-center">
+            <Lock className="h-4 w-4 mr-2 text-gray-600" /> Nueva contraseña *
           </label>
           <div className="relative">
             <input
-              id="newPassword"
               type={showNewPassword ? "text" : "password"}
               value={formData.newPassword}
               onChange={(e) => handleInputChange("newPassword", e.target.value)}
               className="w-full border rounded px-3 py-2 pr-10"
+              required
             />
-            <button
-              type="button"
-              className="absolute right-3 top-2.5 text-gray-500"
-              onClick={() => setShowNewPassword((prev) => !prev)}
-              tabIndex={-1}
-            >
+            <button type="button" className="absolute right-3 top-2.5 text-gray-500" onClick={() => setShowNewPassword((prev) => !prev)}>
               {showNewPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
             </button>
           </div>
-
-          {formData.newPassword && (
-            <div className="mt-4">
-              <label className="block text-sm font-medium mb-1" htmlFor="confirmPassword">
-                Confirmar nueva contraseña
-              </label>
-              <div className="relative">
-                <input
-                  id="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  value={formData.confirmPassword}
-                  onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
-                  className="w-full border rounded px-3 py-2 pr-10"
-                />
-                <button
-                  type="button"
-                  className="absolute right-3 top-2.5 text-gray-500"
-                  onClick={() => setShowConfirmPassword((prev) => !prev)}
-                  tabIndex={-1}
-                >
-                  {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                </button>
-              </div>
-
-              {formData.confirmPassword && formData.newPassword !== formData.confirmPassword && (
-                <p className="text-sm text-red-600 mt-1">Las contraseñas no coinciden</p>
-              )}
-            </div>
-          )}
         </div>
 
+        <div>
+          <label className="block text-sm font-medium mb-1">Confirmar contraseña</label>
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              value={formData.confirmPassword}
+              onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+              className="w-full border rounded px-3 py-2 pr-10"
+            />
+            <button type="button" className="absolute right-3 top-2.5 text-gray-500" onClick={() => setShowConfirmPassword((prev) => !prev)}>
+              {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+            </button>
+          </div>
+        </div>
 
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className="w-full bg-[#800000] hover:bg-[#700000] text-white py-3 rounded"
-        >
-          {isSubmitting ? "Completando perfil..." : "Completar Perfil"}
+        <button type="submit" disabled={isSubmitting} className="w-full bg-[#800000] hover:bg-[#700000] text-white py-3 rounded">
+          {isSubmitting ? "Guardando..." : "Completar Perfil"}
         </button>
       </form>
 
       <div className="mt-6 p-4 bg-yellow-100 rounded">
         <p className="text-sm text-gray-700">
-          <strong>Nota:</strong> Los campos marcados con * son obligatorios. Una vez completes tu
-          perfil, podrás acceder a todas las funcionalidades de ProductTrack según tu rol asignado.
+          <strong>Nota:</strong> Los campos marcados con * son obligatorios. Una vez completes tu perfil, podrás acceder a todas las funcionalidades de ProductTrack según tu rol asignado.
         </p>
       </div>
     </div>
