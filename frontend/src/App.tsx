@@ -10,6 +10,9 @@ import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TeamManagement from "./pages/TeamManagement";
 import { UserProvider } from "./context/UserContext";
+import AuditoriaIndex from "./pages/AuditoriaIndex";
+import NutriScanAuditoria from "./pages/NutriScanAuditoria";
+
 
 import CompleteProfile from "./pages/CompletaProfile";
 
@@ -43,6 +46,9 @@ function App() {
             <Route path="/home" element={<Index />} />
             <Route path="/nutriscan" element={<NutriScan />} />
             <Route path="/equipo" element={<TeamManagement />} />
+            <Route path="/auditoria" element={<AuditoriaIndex />} />
+            <Route path="/auditoria/nutriscan" element={<NutriScanAuditoria />} />
+
           </Route>
           {/* aquí puedes agregar la temporal 👇 */}
           <Route path="/completar-perfil" element={<CompleteProfile />} />

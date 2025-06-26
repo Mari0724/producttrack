@@ -14,6 +14,11 @@ const Index = () => {
   const { usuario } = useUser();
   const [empresaData, setEmpresaData] = useState<EmpresaInfo | null>(null);
 
+  const [totalEquipo, setTotalEquipo] = useState(0);
+  const [totalEditores, setTotalEditores] = useState(0);
+  const [totalComentaristas, setTotalComentaristas] = useState(0);
+  const [totalLectores, setTotalLectores] = useState(0);
+
   useEffect(() => {
     const fetchEmpresaInfo = async () => {
       if (usuario?.id && usuario?.tipoUsuario === 'EMPRESARIAL') {
@@ -35,6 +40,37 @@ const Index = () => {
     fetchEmpresaInfo();
   }, [usuario]);
 
+
+  // 👉 Efecto para obtener el resumen
+  useEffect(() => {
+    const fetchResumen = async () => {
+      if (!usuario || usuario.tipoUsuario !== "EMPRESARIAL") return;
+      const token = localStorage.getItem("token");
+      if (!token) return;
+
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
+
+        const [todos, editores, comentaristas, lectores] = await Promise.all([
+          axiosInstance.get(`/equipo/filtrar`, { headers }),
+          axiosInstance.get(`/equipo/filtrar?rolEquipo=EDITOR`, { headers }),
+          axiosInstance.get(`/equipo/filtrar?rolEquipo=COMENTARISTA`, { headers }),
+          axiosInstance.get(`/equipo/filtrar?rolEquipo=LECTOR`, { headers }),
+        ]);
+
+        setTotalEquipo(todos.data.length);
+        setTotalEditores(editores.data.length);
+        setTotalComentaristas(comentaristas.data.length);
+        setTotalLectores(lectores.data.length);
+      } catch (error) {
+        console.error("❌ Error al cargar resumen del equipo:", error);
+      }
+    };
+
+    fetchResumen();
+  }, [usuario]);
+
+
   return (
     <div className="p-6 bg-[#fffaf0]">
       {/* Hero */}
@@ -49,7 +85,7 @@ const Index = () => {
 
       <div className="grid md:grid-cols-3 gap-6 mb-12">
         {/* Gestión de Equipo */}
-        {usuario?.tipoUsuario === 'EMPRESARIAL' && (
+        {usuario?.tipoUsuario === 'EMPRESARIAL' && !usuario?.rolEquipo && (
           <div className="border-l-4 border-l-producttrack-olive bg-white rounded-lg shadow hover:shadow-lg transition-all duration-200">
             <div className="p-4">
               <div className="flex items-center space-x-3 mb-3">
@@ -118,30 +154,30 @@ const Index = () => {
       </div>
 
       {/* Resumen del Sistema */}
-      {usuario?.tipoUsuario === 'EMPRESARIAL' && (
+      {usuario?.tipoUsuario === 'EMPRESARIAL' && !usuario?.rolEquipo && (
         <div className="bg-white rounded-lg shadow-md p-6">
           <h2 className="text-2xl font-semibold text-producttrack-olive mb-6 font-nunito">Resumen del Sistema</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="text-center p-4 bg-producttrack-olive/10 rounded-lg">
-              <div className="text-2xl font-bold text-producttrack-olive">12</div>
+              <div className="text-2xl font-bold text-producttrack-olive">{totalEquipo}</div>
               <div className="text-sm text-gray-600">Miembros del Equipo</div>
             </div>
             <div className="text-center p-4 bg-producttrack-yellow/20 rounded-lg">
-              <div className="text-2xl font-bold text-producttrack-olive">8</div>
+              <div className="text-2xl font-bold text-producttrack-olive">{totalEditores}</div>
               <div className="text-sm text-gray-600">Editores</div>
             </div>
             <div className="text-center p-4 bg-producttrack-wine/10 rounded-lg">
-              <div className="text-2xl font-bold text-producttrack-olive">3</div>
+              <div className="text-2xl font-bold text-producttrack-olive">{totalComentaristas}</div>
               <div className="text-sm text-gray-600">Comentaristas</div>
             </div>
             <div className="text-center p-4 bg-producttrack-lightgray rounded-lg">
-              <div className="text-2xl font-bold text-producttrack-olive">1</div>
+              <div className="text-2xl font-bold text-producttrack-olive">{totalLectores}</div>
               <div className="text-sm text-gray-600">Lectores</div>
             </div>
           </div>
         </div>
       )}
-    </div>
+  </div>
   );
 };
 
