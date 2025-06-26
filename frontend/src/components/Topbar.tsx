@@ -6,11 +6,6 @@ const Topbar = () => {
 
   return (
     <header className="topbar flex items-center justify-between px-6 py-3 bg-white shadow">
-        <input
-            type="text"
-            placeholder="Buscar"
-            className="flex-1 max-w-md mx-auto px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#81203D] text-base"
-        />
         <div className="flex items-center gap-4 ml-4">
             <MdNotifications className="text-2xl" />
             <MdHelp className="text-2xl" />

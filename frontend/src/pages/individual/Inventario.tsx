@@ -7,6 +7,8 @@ import type { Product } from '../../types/Product';
 import { getProductos, crearProducto, editarProducto, eliminarProducto, getCategorias, getProductosPorCategoria } from '../../api/productos';
 import toast from 'react-hot-toast';
 import ProductCommentsModal from '../../components/individuales/CommentsModal';
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
+
 
 const Inventario: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -21,6 +23,10 @@ const Inventario: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
 
+  const [searchTerm, setSearchTerm] = useState('');
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
   // ✅ CAMBIO: función que puedes usar en cualquier parte
   const fetchProductos = async () => {
     try {
@@ -161,12 +167,19 @@ const Inventario: React.FC = () => {
 
   return (
     <>
-      <div className="mb-4">
+  <div className="main px-4 sm:px-0">
+    {/* Título bonito */}
+    <h2 className="text-2xl font-bold text-[#81203D] mb-4">Inventario de Productos</h2>
+
+    {/* Filtros alineados */}
+    <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-6">
+      {/* Filtrar por categoría */}
+      <div className="w-full sm:w-1/2">
         <label className="block text-sm font-medium text-gray-700 mb-1">Filtrar por categoría:</label>
         <select
           value={categoriaSeleccionada}
           onChange={handleCategoriaChange}
-          className="border border-gray-300 rounded-lg px-3 py-2 w-full max-w-xs text-sm"
+          className="border border-gray-300 rounded-lg px-3 py-2 w-full text-sm shadow-sm"
         >
           <option value="">-- Selecciona una categoría --</option>
           {categorias.map((cat) => (
@@ -177,65 +190,81 @@ const Inventario: React.FC = () => {
         </select>
       </div>
 
-      <div className="main">
-        <div className="content">
-          <h2 className="text-2xl font-bold text-[#81203D] mb-6">Inventario de Productos</h2>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
-            {products
-            .filter(product =>
-              (!categoriaSeleccionada || product.categoria === categoriaSeleccionada) &&
-              product.usuario?.tipoUsuario === tipoUsuario?.toUpperCase()
-            )
-            .map((product) => (
-              <div key={product.id} className="relative">
-                <ProductCard 
-                  product={product}
-                  onEdit={() => openEditModal(product)}
-                  onDelete={() => handleAskDelete(product.id!)}
-                />
-
-                {/* ✅ Mostrar "Notas personales" solo si el usuario es individual */}
-                {tipoUsuario === "individual" && (
-                  <button
-                    onClick={() => openCommentsModal(product)}
-                    className="mt-2 ml-1 text-xs text-blue-600 hover:underline"
-                  >
-                    Notas personales
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-
-          <FloatingButton onAddProduct={() => setShowProductModal(true)} />
-
-          <ConfirmDeleteModal
-            isOpen={showConfirmModal}
-            onClose={() => setShowConfirmModal(false)}
-            onConfirm={handleConfirmDelete}
-            productName={productToDelete?.toString() || ''}
+      {/* Buscar por nombre */}
+      <div className="w-full sm:w-1/2">
+        <label className="block text-sm font-medium text-gray-700 mb-1">Buscar por nombre:</label>
+        <div className="relative">
+          <MagnifyingGlassIcon className="absolute w-5 h-5 left-3 top-2.5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Buscar producto..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg text-sm text-gray-700 shadow-sm focus:outline-none focus:ring-2 focus:ring-[#81203D]"
           />
-
-          <ProductModal
-            isOpen={showProductModal}
-            onClose={() => {
-              setShowProductModal(false);
-              setProductToEdit(null);
-            }}
-            onSave={productToEdit ? handleEditProduct : handleSaveProduct}
-            initialData={productToEdit ?? undefined}
-          />
-          {selectedProduct && showCommentsModal && (
-            <ProductCommentsModal
-              productId={selectedProduct.id!}
-              productName={selectedProduct.nombre}
-              onClose={() => setShowCommentsModal(false)}
-            />
-          )}
         </div>
       </div>
-    </>
+    </div>
+
+    {/* Lista de productos */}
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
+      {products
+        .filter(product =>
+          (!categoriaSeleccionada || product.categoria === categoriaSeleccionada) &&
+          product.usuario?.tipoUsuario === tipoUsuario?.toUpperCase() &&
+          product.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+        .map((product) => (
+          <div key={product.id} className="relative">
+            <ProductCard 
+              product={product}
+              onEdit={() => openEditModal(product)}
+              onDelete={() => handleAskDelete(product.id!)}
+            />
+
+            {/* ✅ Notas personales si es usuario individual */}
+            {tipoUsuario === "individual" && (
+              <button
+                onClick={() => openCommentsModal(product)}
+                className="mt-2 ml-1 text-xs text-blue-600 hover:underline"
+              >
+                Notas personales
+              </button>
+            )}
+          </div>
+        ))}
+    </div>
+
+    {/* Botón de agregar producto */}
+    <FloatingButton onAddProduct={() => setShowProductModal(true)} />
+
+    {/* Modales */}
+    <ConfirmDeleteModal
+      isOpen={showConfirmModal}
+      onClose={() => setShowConfirmModal(false)}
+      onConfirm={handleConfirmDelete}
+      productName={productToDelete?.toString() || ''}
+    />
+
+    <ProductModal
+      isOpen={showProductModal}
+      onClose={() => {
+        setShowProductModal(false);
+        setProductToEdit(null);
+      }}
+      onSave={productToEdit ? handleEditProduct : handleSaveProduct}
+      initialData={productToEdit ?? undefined}
+    />
+
+    {selectedProduct && showCommentsModal && (
+      <ProductCommentsModal
+        productId={selectedProduct.id!}
+        productName={selectedProduct.nombre}
+        onClose={() => setShowCommentsModal(false)}
+      />
+    )}
+  </div>
+</>
   );
 };
 
