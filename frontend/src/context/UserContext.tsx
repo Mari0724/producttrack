@@ -11,6 +11,7 @@ export interface Usuario {
   rolEquipo?: string;
   empresaId?: number;
   perfilCompleto: boolean;
+  nombreEmpresa?: string;
 }
 
 // 📦 Tipo del contexto

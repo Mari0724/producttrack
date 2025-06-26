@@ -64,7 +64,7 @@ const NutriScanAuditoria = () => {
     setFiltroFecha("");
     setError(null);
     cargarTodos();
-  } ;
+  };
 
 
   const manejarEditar = (registro: Registro) => {
@@ -77,30 +77,30 @@ const NutriScanAuditoria = () => {
   };
 
   const guardarCambios = async () => {
-  if (!registroEditando) return;
-  const token = localStorage.getItem("token");
-  if (!token) return;
+    if (!registroEditando) return;
+    const token = localStorage.getItem("token");
+    if (!token) return;
 
-  const datosActualizados = {
-    consulta: registroEditando.consulta,
-    respuesta: {
-      mensaje: registroEditando.respuesta?.mensaje,
-      generadoPor: registroEditando.respuesta?.generadoPor || "GPT"
-    },
-    tipoAnalisis: registroEditando.tipoAnalisis,
-    esAlimento: registroEditando.esAlimento,
-    isTest: registroEditando.isTest,
+    const datosActualizados = {
+      consulta: registroEditando.consulta,
+      respuesta: {
+        mensaje: registroEditando.respuesta?.mensaje,
+        generadoPor: registroEditando.respuesta?.generadoPor || "GPT"
+      },
+      tipoAnalisis: registroEditando.tipoAnalisis,
+      esAlimento: registroEditando.esAlimento,
+      isTest: registroEditando.isTest,
+    };
+
+    await axios.put(
+      `http://localhost:3000/nutriscan/${registroEditando.id}`,
+      datosActualizados,
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+
+    setModalAbierto(false);
+    cargarTodos();
   };
-
-  await axios.put(
-    `http://localhost:3000/nutriscan/${registroEditando.id}`,
-    datosActualizados,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-
-  setModalAbierto(false);
-  cargarTodos();
-};
 
 
   const confirmarEliminar = (id: number) => setConfirmEliminarId(id);
@@ -135,39 +135,39 @@ const NutriScanAuditoria = () => {
       <h1 className="text-3xl font-bold mb-6 text-wine-red">🧾 Auditoría de Análisis Nutricionales</h1>
 
       <div className="flex flex-wrap gap-3 mb-5">
-  <input
-    type="number"
-    placeholder="Buscar por ID de usuario"
-    value={usuarioId}
-    onChange={(e) => setUsuarioId(e.target.value)}
-    className="border rounded px-3 py-2 w-52"
-  />
-  <button
-    onClick={buscarPorUsuarioId}
-    className="bg-wine-red text-white px-4 py-2 rounded"
-  >
-    Buscar
-  </button>
-  <button
-    onClick={limpiarFiltros}
-    className="bg-gray-300 px-4 py-2 rounded"
-  >
-    Limpiar
-  </button>
-  <input
-    type="text"
-    placeholder="Filtrar por nombre"
-    value={filtroNombre}
-    onChange={(e) => setFiltroNombre(e.target.value)}
-    className="border rounded px-3 py-2"
-  />
-  <input
-    type="date"
-    value={filtroFecha}
-    onChange={(e) => setFiltroFecha(e.target.value)}
-    className="border rounded px-3 py-2"
-  />
-</div>
+        <input
+          type="number"
+          placeholder="Buscar por ID de usuario"
+          value={usuarioId}
+          onChange={(e) => setUsuarioId(e.target.value)}
+          className="border rounded px-3 py-2 w-52"
+        />
+        <button
+          onClick={buscarPorUsuarioId}
+          className="bg-wine-red text-white px-4 py-2 rounded"
+        >
+          Buscar
+        </button>
+        <button
+          onClick={limpiarFiltros}
+          className="bg-gray-300 px-4 py-2 rounded"
+        >
+          Limpiar
+        </button>
+        <input
+          type="text"
+          placeholder="Filtrar por nombre"
+          value={filtroNombre}
+          onChange={(e) => setFiltroNombre(e.target.value)}
+          className="border rounded px-3 py-2"
+        />
+        <input
+          type="date"
+          value={filtroFecha}
+          onChange={(e) => setFiltroFecha(e.target.value)}
+          className="border rounded px-3 py-2"
+        />
+      </div>
 
 
       {error && <p className="text-red-600 mb-2">{error}</p>}

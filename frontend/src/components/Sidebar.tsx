@@ -12,7 +12,12 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import clsx from "clsx";
 
-const Sidebar = () => {
+interface SidebarProps {
+  userType: 'INDIVIDUAL' | 'EMPRESARIAL' | 'EQUIPO';
+  companyName?: string;
+}
+
+const Sidebar = ({ userType, companyName }: SidebarProps) => {
   const location = useLocation();
   const [tipoUsuario, setTipoUsuario] = useState<string | null>(null);
   const [rol, setRol] = useState<string | null>(null);
@@ -30,6 +35,13 @@ const Sidebar = () => {
         "group hover:w-60 w-20 bg-[#404D2C] text-white h-screen p-4 transition-all duration-300 ease-in-out relative"
       )}
     >
+
+      {/* Mostrar props que vienen del Layout */}
+      <div className="text-sm mb-2 hidden group-hover:block">
+        <strong>{companyName || userType}</strong>
+      </div>
+
+      <div className="flex flex-col gap-6 w-full mt-4"></div>
       <div className="flex flex-col gap-6 w-full mt-12">
         <div className="overflow-hidden transition-all duration-300">
           <h2 className="text-2xl font-bold mb-6 whitespace-nowrap hidden group-hover:block">

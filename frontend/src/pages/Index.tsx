@@ -20,25 +20,39 @@ const Index = () => {
   const [totalLectores, setTotalLectores] = useState(0);
 
   useEffect(() => {
-    const fetchEmpresaInfo = async () => {
-      if (usuario?.id && usuario?.tipoUsuario === 'EMPRESARIAL') {
-        try {
-          const response = await axiosInstance.get(`/usuarios/${usuario.id}`);
-          const data = response.data;
+  const fetchEmpresaInfo = async () => {
+    const token = localStorage.getItem("token");
+    if (!token || !usuario) return;
 
-          setEmpresaData({
-            nombreEmpresa: data.nombreEmpresa || 'Sin nombre',
-            nit: data.nit || 'Sin NIT',
-            telefono: data.telefono || 'Sin teléfono',
-          });
-        } catch (error) {
-          console.error("❌ Error al obtener datos de empresa:", error);
-        }
+    try {
+      const headers = { Authorization: `Bearer ${token}` };
+
+      let empresa;
+
+      if (usuario.rol === 'EQUIPO' && usuario.empresaId) {
+        // Si es miembro de equipo
+        const response = await axiosInstance.get(`/usuarios/empresa/${usuario.empresaId}`, { headers });
+        empresa = response.data;
+      } else if (usuario.tipoUsuario === 'EMPRESARIAL') {
+        // Si es empresa (admin)
+        const response = await axiosInstance.get(`/usuarios/${usuario.id}`, { headers });
+        empresa = response.data;
       }
-    };
 
-    fetchEmpresaInfo();
-  }, [usuario]);
+      if (empresa) {
+        setEmpresaData({
+          nombreEmpresa: empresa.nombreEmpresa || 'Sin nombre',
+          nit: empresa.nit || 'Sin NIT',
+          telefono: empresa.telefono || 'Sin teléfono',
+        });
+      }
+    } catch (error) {
+      console.error("❌ Error al obtener datos de empresa:", error);
+    }
+  };
+
+  fetchEmpresaInfo();
+}, [usuario]);
 
 
   // 👉 Efecto para obtener el resumen
@@ -70,6 +84,7 @@ const Index = () => {
     fetchResumen();
   }, [usuario]);
 
+  console.log("📦 Componente Index montado");
 
   return (
     <div className="p-6 bg-[#fffaf0]">
