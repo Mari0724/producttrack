@@ -1,8 +1,8 @@
 import { Body, Delete, Controller, Get, Post, Route, Response, Tags, Query, SuccessResponse, Put, Path, Security } from "tsoa";
 import { userSchema } from "../models/UserModel";
 import { zodValidate } from "../utils/zodValidate";
-import { getAllUsers, getUserById, createUser, updateUser, deleteUser, getEmpresaById } from "../services/user.service";
-import { UserDTO } from "../models/UserDTO";
+import { getAllUsers, changeUserPassword, getUserById, createUser, updateUser, deleteUser, getEmpresaById } from "../services/user.service";
+import { UserDTO, ChangePasswordDTO } from "../models/UserDTO";
 import { ResponseMessage, ResponseMessageWithToken } from "../interfaces/ResponseMenssage";
 
 
@@ -149,6 +149,29 @@ export class UserController extends Controller {
     }
   }
 
+  /**
+  * Cambia la contraseña de un usuario.
+  */
+
+  @Put("/cambiarContrasena")
+  @Tags("Usuarios")
+  public async cambiarContrasena(
+    @Body() body: ChangePasswordDTO
+  ): Promise<{ message: string }> {
+    const { id, currentPassword, newPassword } = body;
+
+    console.log("Cambiando contraseña para:", body);
+
+    try {
+      const result = await changeUserPassword(id, currentPassword, newPassword);
+      return result;
+    } catch (error: any) {
+      this.setStatus(400);
+      throw new Error(error.message || "Error al cambiar la contraseña");
+    }
+  }
+
+
 
   //🐉 Modificar usuaro con su ID
   @Put("{id}")
@@ -169,6 +192,8 @@ export class UserController extends Controller {
         };
       }
 
+
+
       // ✅ Actualizar usuario (incluye hash de contraseña si se envía)
       await updateUser(id, body);
 
@@ -184,6 +209,8 @@ export class UserController extends Controller {
       return { message: "Error al actualizar usuario" };
     }
   }
+
+
 
 
   //🛑 Eliminar (soft delete) un usuario por su ID

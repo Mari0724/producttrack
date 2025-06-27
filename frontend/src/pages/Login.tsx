@@ -37,6 +37,11 @@ const Login: React.FC = () => {
       localStorage.setItem("rol", data.user.rol);
       localStorage.setItem("username", data.user.username);
       localStorage.setItem("perfilCompleto", data.user.perfilCompleto ? "true" : "false");
+      if (!data.user?.idUsuario) {
+        throw new Error("El usuario no tiene ID. Verifica la respuesta del backend.");
+      }
+      localStorage.setItem("idUsuario", data.user.idUsuario.toString());
+
 
       // Guarda el usuario en contexto
       setUsuario(data.user);

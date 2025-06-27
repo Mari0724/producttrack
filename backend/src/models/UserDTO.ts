@@ -15,3 +15,10 @@ export interface UserDTO {
     empresaId?: number;
     perfilCompleto?: boolean; // 👈 nuevo campo agregado como opcional
 }
+
+// nueva interfaz para cambiar contraseña
+export interface ChangePasswordDTO {
+  id: number;
+  currentPassword: string;
+  newPassword: string;
+}

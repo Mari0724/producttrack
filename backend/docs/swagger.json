@@ -103,6 +103,27 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ChangePasswordDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"currentPassword": {
+						"type": "string"
+					},
+					"newPassword": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"currentPassword",
+					"newPassword"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ResponseMessage": {
 				"properties": {
 					"message": {
@@ -719,6 +740,48 @@
 						}
 					}
 				]
+			}
+		},
+		"/usuarios/cambiarContrasena": {
+			"put": {
+				"operationId": "CambiarContrasena",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Cambia la contraseña de un usuario.",
+				"tags": [
+					"Usuarios",
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ChangePasswordDTO"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/nutriscan": {

@@ -1,11 +1,13 @@
 import './config/env';
+import fs from "fs";
+import path from "path";
 
 import cors from 'cors';
 import "reflect-metadata";
 import express from 'express';
 import bodyParser from 'body-parser';
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "../docs/swagger.json";
+
 import { RegisterRoutes } from "../src/routes/routes";
 import nutriscanOCRRoutes from './routes/ocr.routes';
 import userRoutes from "./routes/user.routes";
@@ -32,6 +34,10 @@ app.use("/api", userRoutes);
 RegisterRoutes(app);
 
 // Swagger docs
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const swaggerFilePath = path.join(__dirname, "../docs/swagger.json");
+const swaggerRaw = fs.readFileSync(swaggerFilePath, "utf8");
+const swaggerData = JSON.parse(JSON.stringify(JSON.parse(swaggerRaw))); // forzamos instancia nueva
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerData));
 
 export default app;
