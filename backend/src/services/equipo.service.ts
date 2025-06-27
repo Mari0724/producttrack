@@ -1,22 +1,23 @@
-import prisma from '../utils/prismaClient'; // cliente separado
+import prisma from '../utils/prismaClient';
 import { EquipoDTO } from "../models/EquipoDTO";
 import { equipoSchema } from "../models/EquipoModel";
+import { sendTeamWelcomeEmail } from '../services/email.service';
 import bcrypt from 'bcryptjs';
 
 export class EquipoService {
   // Crear usuario tipo equipo
   async crearEquipo(data: EquipoDTO, empresaId: number) {
     const datosValidados = equipoSchema.parse(data);
-    console.log("🚨 Password original:", datosValidados.password);
+    
     const hashedPassword = await bcrypt.hash(datosValidados.password, 10);
-    console.log("✅ Password encriptado:", hashedPassword);
-
-    // 💡 Remover empresaId si viene en data para evitar sobreescribir el correcto
+  
     const { empresaId: _omitEmpresaId, ...datosSinEmpresaId } = datosValidados;
-
     datosSinEmpresaId.perfilCompleto ??= false;
 
- 
+    // 🔍 Buscar nombre real de la empresa
+    const empresa = await prisma.users.findUnique({
+      where: { idUsuario: empresaId },
+    });
 
     const nuevoEquipo = await prisma.users.create({
       data: {
@@ -24,14 +25,20 @@ export class EquipoService {
         password: hashedPassword,
         tipoUsuario: "EMPRESARIAL",
         rol: "EQUIPO",
-        empresaId, // ✅ Este es el valor correcto desde el controller
+        empresaId,
       },
     });
 
-    console.log("📦 Password guardado en la base de datos:", nuevoEquipo.password);
+    // 💌 Enviar correo con nombre real de la empresa
+    await sendTeamWelcomeEmail(
+      nuevoEquipo.correo,
+      datosValidados.password,
+      empresa?.nombreEmpresa || 'Tu empresa'
+    );
 
     return nuevoEquipo;
   }
+
 
   // Obtener todos los usuarios equipo (sin filtros)
   async obtenerTodosLosEquipos() {
