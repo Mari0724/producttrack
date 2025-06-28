@@ -27,34 +27,54 @@ export async function notificarStockBajo() {
       const mensaje = `El producto "${producto.nombre}" tiene solo ${producto.cantidad} unidades disponibles.`;
 
       if (usuario.tipoUsuario === 'INDIVIDUAL') {
-        // No enviar notificación a usuarios individuales
-        continue; // Salta a la siguiente iteración
-      } else if (usuario.tipoUsuario === 'EMPRESARIAL') {
-        const miembros = await prisma.users.findMany({
-          where: {
-            empresaId: usuario.empresaId,
+        // ✅ Solo enviarle si él es el dueño del producto
+        await prisma.notificaciones.create({
+          data: {
+            idUsuario: usuario.idUsuario,
+            tipo: TipoNotificacion.STOCK_BAJO,
+            titulo,
+            mensaje,
           },
         });
 
-        for (const miembro of miembros) {
-          await prisma.notificaciones.create({
-            data: {
-              idUsuario: miembro.idUsuario,
-              tipo: TipoNotificacion.STOCK_BAJO,
-              titulo,
-              mensaje,
-            },
-          });
-        }
+        // Marcar como enviado
+        await prisma.recorStock.update({
+          where: {
+            idRecordatorio: recordatorio.idRecordatorio,
+          },
+          data: {
+            estado: EstadoRecordatorio.ENVIADO,
+          },
+        });
+
+        continue; // Salta a la siguiente iteración
       }
 
-      // Marcar el recordatorio como ATENDIDO
+      // ✅ Si es EMPRESARIAL, busca todos los miembros de la empresa
+      const miembros = await prisma.users.findMany({
+        where: {
+          empresaId: usuario.empresaId,
+        },
+      });
+
+      for (const miembro of miembros) {
+        await prisma.notificaciones.create({
+          data: {
+            idUsuario: miembro.idUsuario,
+            tipo: TipoNotificacion.STOCK_BAJO,
+            titulo,
+            mensaje,
+          },
+        });
+      }
+
+      // Marcar como enviado
       await prisma.recorStock.update({
         where: {
           idRecordatorio: recordatorio.idRecordatorio,
         },
         data: {
-          estado: EstadoRecordatorio.ENVIADO, // Acceso correcto al enum
+          estado: EstadoRecordatorio.ENVIADO,
         },
       });
     }

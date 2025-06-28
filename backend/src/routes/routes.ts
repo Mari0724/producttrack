@@ -458,6 +458,36 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsProductosController_getNombresProductosDelUsuario: Record<string, TsoaRoute.ParameterSchema> = {
+                idUsuario: {"in":"path","name":"idUsuario","required":true,"dataType":"double"},
+        };
+        app.get('/Productos/nombres/:idUsuario',
+            ...(fetchMiddlewares<RequestHandler>(ProductosController)),
+            ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getNombresProductosDelUsuario)),
+
+            async function ProductosController_getNombresProductosDelUsuario(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsProductosController_getNombresProductosDelUsuario, request, response });
+
+                const controller = new ProductosController();
+
+              await templateService.apiHandler({
+                methodName: 'getNombresProductosDelUsuario',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsProductosController_getCantidadPorCategoria: Record<string, TsoaRoute.ParameterSchema> = {
         };
         app.get('/Productos/cantidad-por-categoria',
@@ -779,6 +809,66 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'enviarNotificacionActualizacionApp',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificacionesController_obtenerNotificacionesPorUsuario: Record<string, TsoaRoute.ParameterSchema> = {
+                idUsuario: {"in":"path","name":"idUsuario","required":true,"dataType":"double"},
+        };
+        app.get('/notificaciones/usuario/:idUsuario',
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController.prototype.obtenerNotificacionesPorUsuario)),
+
+            async function NotificacionesController_obtenerNotificacionesPorUsuario(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificacionesController_obtenerNotificacionesPorUsuario, request, response });
+
+                const controller = new NotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'obtenerNotificacionesPorUsuario',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificacionesController_marcarComoLeida: Record<string, TsoaRoute.ParameterSchema> = {
+                idNotificacion: {"in":"path","name":"idNotificacion","required":true,"dataType":"double"},
+        };
+        app.patch('/notificaciones/:idNotificacion',
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController.prototype.marcarComoLeida)),
+
+            async function NotificacionesController_marcarComoLeida(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificacionesController_marcarComoLeida, request, response });
+
+                const controller = new NotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'marcarComoLeida',
                 controller,
                 response,
                 next,

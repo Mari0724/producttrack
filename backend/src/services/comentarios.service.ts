@@ -1,5 +1,6 @@
 import prisma from '../utils/prismaClient';
 import { ComentarioDTO } from '../models/ComentarioDTO';
+import { notificarComentarioProducto } from '../services/notificaciones/comentarioProducto.service';
 
 export async function obtenerComentariosPorProducto(productoId: number): Promise<ComentarioDTO[]> {
   const comentarios = await prisma.comentarios.findMany({
@@ -33,6 +34,8 @@ export async function crearComentario(
       estado: 'pendiente',
     },
   });
+
+  await notificarComentarioProducto(nuevo.idComentario);
 
   return {
     idComentario: nuevo.idComentario,

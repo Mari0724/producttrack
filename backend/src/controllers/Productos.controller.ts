@@ -1,4 +1,5 @@
-import { Body,Controller,Delete,Get,Path,Put,Query,Security,Request,Res,Route,Post,SuccessResponse,Response,Tags } from "tsoa";
+import prisma from '../utils/prismaClient';
+import { Body, Controller, Delete, Get, Path, Put, Query, Security, Request, Res, Route, Post, SuccessResponse, Response, Tags } from "tsoa";
 import { ProductosDTO } from "../models/ProductosDTO";
 import { zodValidate } from "../utils/zodValidate";
 import { productoSchema } from "../models/ProductosModel";
@@ -11,7 +12,8 @@ import {
   getCategoriasUnicas,
   getCantidadPorCategoria,
   getProductosPorCategoria,
-  getCantidadPorRangoPrecio
+  getCantidadPorRangoPrecio,
+  obtenerNombresProductosUsuario
 } from "../services/productos.service";
 import {
   ResponseMessage,
@@ -104,6 +106,17 @@ export class ProductosController extends Controller {
     }
   }
 
+  // ✅ Devuelve los nombres de los productos del usuario
+  @Get('/nombres/:idUsuario')
+  public async getNombresProductosDelUsuario(@Path() idUsuario: number) {
+    const productos = await prisma.productos.findMany({
+      where: { usuarioId: idUsuario, eliminadoEn: null },
+      select: { nombre: true },
+    });
+
+    return productos.map(p => p.nombre); // 👈 debe devolver solo los nombres
+  }
+
   // ✅ Cantidad de productos por categoría
   @Get("/cantidad-por-categoria")
   public async getCantidadPorCategoria(): Promise<any> {
@@ -183,9 +196,9 @@ export class ProductosController extends Controller {
 
     try {
       const nuevoProducto = await createProducto({
-      ...parsed.data,
-      precio: Number(parsed.data.precio),
-    });
+        ...parsed.data,
+        precio: Number(parsed.data.precio),
+      });
       this.setStatus(201);
       return {
         message: "Producto creado correctamente",
@@ -214,7 +227,7 @@ export class ProductosController extends Controller {
       return { message: "No tienes permiso para editar productos." };
     }
     const { id: _, ...bodySinId } = body; // quitar id antes de validar
-    
+
     const parsed = zodValidate(productoSchema.partial(), body);
 
     if (!parsed.success) {

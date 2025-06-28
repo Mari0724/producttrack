@@ -26,17 +26,24 @@ export async function notificarComentarioProducto(idComentario: number) {
     return;
   }
 
-  const miembros = await prisma.users.findMany({
+  // ✅ Buscar solo los miembros con rol EDITOR
+  const editores = await prisma.users.findMany({
     where: {
       empresaId: usuarioProducto.empresaId,
+      rolEquipo: 'EDITOR', // Filtra solo editores
     },
   });
+
+  if (editores.length === 0) {
+    console.warn('⚠️ No se encontraron editores en la empresa.');
+    return;
+  }
 
   const titulo = `Nuevo comentario en producto: ${comentario.producto.nombre}`;
   const mensaje = `Se ha comentado el producto "${comentario.producto.nombre}": "${comentario.comentario}"`;
 
-  const notificaciones = miembros.map((miembro) => ({
-    idUsuario: miembro.idUsuario,
+  const notificaciones = editores.map((editor) => ({
+    idUsuario: editor.idUsuario,
     tipo: TipoNotificacion.COMENTARIO_EQUIPO,
     titulo,
     mensaje,
@@ -47,5 +54,5 @@ export async function notificarComentarioProducto(idComentario: number) {
     data: notificaciones,
   });
 
-  console.log('✅ Notificaciones creadas para el comentario', idComentario);
+  console.log('✅ Notificaciones enviadas a editores para el comentario', idComentario);
 }

@@ -143,6 +143,26 @@ export async function getProductosPorCategoria(categoria: string) {
   }
 }
 
+// ✅ Devuelve los nombres de los productos del usuario
+export async function obtenerNombresProductosUsuario(idUsuario: number): Promise<string[]> {
+  const productos = await prisma.productos.findMany({
+    where: {
+      usuario: {
+        idUsuario: idUsuario, // ✅ correcto
+      },
+      eliminadoEn: null,
+    },
+    select: {
+      nombre: true,
+    },
+  });
+
+  console.log("📦 Productos del usuario", productos);
+
+  return productos.map(p => p.nombre);
+}
+
+
 export async function getCantidadPorRangoPrecio() {
   const resultados = await prisma.productos.findMany({
     select: { precio: true },

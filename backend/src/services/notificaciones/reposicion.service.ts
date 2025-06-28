@@ -10,44 +10,53 @@ export async function notificarReposicionRecomendada() {
         },
       },
     },
-    where: {
-      producto: {
-        eliminadoEn: null,
-        usuario: {
-          tipoUsuario: 'EMPRESARIAL',
-        },
-      },
-    },
   });
 
   for (const recordatorio of productosConStockBajo) {
-    const producto = recordatorio.producto;
+    const { producto } = recordatorio;
+    const { usuario } = producto;
     const cantidadActual = producto.cantidad;
     const cantidadMinima = recordatorio.cantidadMinima;
 
+    // Si el stock no está bajo, no hacemos nada
     if (cantidadActual >= cantidadMinima) continue;
-
-    const empresaId = producto.usuario.empresaId;
-    if (!empresaId) continue;
-
-    const miembros = await prisma.users.findMany({
-      where: { empresaId },
-    });
 
     const titulo = `Reposición recomendada: ${producto.nombre}`;
     const mensaje = `El producto "${producto.nombre}" tiene ${cantidadActual} unidades, por debajo del mínimo recomendado (${cantidadMinima}).`;
 
-    for (const miembro of miembros) {
+    // 🔸 Notificación para usuario INDIVIDUAL (solo al dueño del producto)
+    if (usuario.tipoUsuario === 'INDIVIDUAL') {
       await prisma.notificaciones.create({
         data: {
-          idUsuario: miembro.idUsuario,
+          idUsuario: usuario.idUsuario,
           tipo: TipoNotificacion.REPOSICION_RECOMENDADA,
           titulo,
           mensaje,
         },
       });
+      continue;
+    }
+
+    // 🔹 Notificación para todos los miembros EMPRESARIALES
+    if (usuario.tipoUsuario === 'EMPRESARIAL' && usuario.empresaId) {
+      const miembros = await prisma.users.findMany({
+        where: {
+          empresaId: usuario.empresaId,
+        },
+      });
+
+      for (const miembro of miembros) {
+        await prisma.notificaciones.create({
+          data: {
+            idUsuario: miembro.idUsuario,
+            tipo: TipoNotificacion.REPOSICION_RECOMENDADA,
+            titulo,
+            mensaje,
+          },
+        });
+      }
     }
   }
 
-  console.log('✅ Notificaciones de reposición recomendada enviadas');
+  console.log('✅ Notificaciones de reposición recomendada enviadas correctamente');
 }

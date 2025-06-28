@@ -1008,6 +1008,41 @@
 				]
 			}
 		},
+		"/Productos/nombres/{idUsuario}": {
+			"get": {
+				"operationId": "GetNombresProductosDelUsuario",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"type": "string"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Productos"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idUsuario",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/Productos/cantidad-por-categoria": {
 			"get": {
 				"operationId": "GetCantidadPorCategoria",
@@ -1346,6 +1381,111 @@
 				}
 			}
 		},
+		"/notificaciones/usuario/{idUsuario}": {
+			"get": {
+				"operationId": "ObtenerNotificacionesPorUsuario",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"properties": {
+											"fechaEnvio": {
+												"type": "string",
+												"format": "date-time"
+											},
+											"leida": {
+												"type": "boolean"
+											},
+											"mensaje": {
+												"type": "string"
+											},
+											"titulo": {
+												"type": "string"
+											},
+											"tipo": {
+												"type": "string"
+											},
+											"idNotificacion": {
+												"type": "number",
+												"format": "double"
+											}
+										},
+										"required": [
+											"fechaEnvio",
+											"leida",
+											"mensaje",
+											"titulo",
+											"tipo",
+											"idNotificacion"
+										],
+										"type": "object"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notificaciones"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idUsuario",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
+		"/notificaciones/{idNotificacion}": {
+			"patch": {
+				"operationId": "MarcarComoLeida",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Notificaciones"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idNotificacion",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		},
 		"/auth/login": {
 			"post": {
 				"operationId": "Login",
@@ -1394,6 +1534,10 @@
 													"type": "string",
 													"format": "date-time"
 												},
+												"idUsuario": {
+													"type": "number",
+													"format": "double"
+												},
 												"updatedAt": {
 													"type": "string",
 													"format": "date-time"
@@ -1401,10 +1545,6 @@
 												"createdAt": {
 													"type": "string",
 													"format": "date-time"
-												},
-												"idUsuario": {
-													"type": "number",
-													"format": "double"
 												},
 												"empresaId": {
 													"type": "number",
@@ -1452,9 +1592,9 @@
 											},
 											"required": [
 												"deletedAt",
+												"idUsuario",
 												"updatedAt",
 												"createdAt",
-												"idUsuario",
 												"empresaId",
 												"estado",
 												"rolEquipo",
@@ -1525,6 +1665,10 @@
 														"type": "string",
 														"format": "date-time"
 													},
+													"idUsuario": {
+														"type": "number",
+														"format": "double"
+													},
 													"updatedAt": {
 														"type": "string",
 														"format": "date-time"
@@ -1532,10 +1676,6 @@
 													"createdAt": {
 														"type": "string",
 														"format": "date-time"
-													},
-													"idUsuario": {
-														"type": "number",
-														"format": "double"
 													},
 													"empresaId": {
 														"type": "number",
@@ -1583,9 +1723,9 @@
 												},
 												"required": [
 													"deletedAt",
+													"idUsuario",
 													"updatedAt",
 													"createdAt",
-													"idUsuario",
 													"empresaId",
 													"estado",
 													"rolEquipo",
@@ -1650,6 +1790,10 @@
 														"type": "string",
 														"format": "date-time"
 													},
+													"idUsuario": {
+														"type": "number",
+														"format": "double"
+													},
 													"updatedAt": {
 														"type": "string",
 														"format": "date-time"
@@ -1657,10 +1801,6 @@
 													"createdAt": {
 														"type": "string",
 														"format": "date-time"
-													},
-													"idUsuario": {
-														"type": "number",
-														"format": "double"
 													},
 													"empresaId": {
 														"type": "number",
@@ -1708,9 +1848,9 @@
 												},
 												"required": [
 													"deletedAt",
+													"idUsuario",
 													"updatedAt",
 													"createdAt",
-													"idUsuario",
 													"empresaId",
 													"estado",
 													"rolEquipo",
@@ -1804,6 +1944,10 @@
 													"type": "string",
 													"format": "date-time"
 												},
+												"idUsuario": {
+													"type": "number",
+													"format": "double"
+												},
 												"updatedAt": {
 													"type": "string",
 													"format": "date-time"
@@ -1811,10 +1955,6 @@
 												"createdAt": {
 													"type": "string",
 													"format": "date-time"
-												},
-												"idUsuario": {
-													"type": "number",
-													"format": "double"
 												},
 												"empresaId": {
 													"type": "number",
@@ -1862,9 +2002,9 @@
 											},
 											"required": [
 												"deletedAt",
+												"idUsuario",
 												"updatedAt",
 												"createdAt",
-												"idUsuario",
 												"empresaId",
 												"estado",
 												"rolEquipo",
@@ -1934,6 +2074,10 @@
 													"type": "string",
 													"format": "date-time"
 												},
+												"idUsuario": {
+													"type": "number",
+													"format": "double"
+												},
 												"updatedAt": {
 													"type": "string",
 													"format": "date-time"
@@ -1941,10 +2085,6 @@
 												"createdAt": {
 													"type": "string",
 													"format": "date-time"
-												},
-												"idUsuario": {
-													"type": "number",
-													"format": "double"
 												},
 												"empresaId": {
 													"type": "number",
@@ -1992,9 +2132,9 @@
 											},
 											"required": [
 												"deletedAt",
+												"idUsuario",
 												"updatedAt",
 												"createdAt",
-												"idUsuario",
 												"empresaId",
 												"estado",
 												"rolEquipo",
@@ -2074,6 +2214,10 @@
 													"type": "string",
 													"format": "date-time"
 												},
+												"idUsuario": {
+													"type": "number",
+													"format": "double"
+												},
 												"updatedAt": {
 													"type": "string",
 													"format": "date-time"
@@ -2081,10 +2225,6 @@
 												"createdAt": {
 													"type": "string",
 													"format": "date-time"
-												},
-												"idUsuario": {
-													"type": "number",
-													"format": "double"
 												},
 												"empresaId": {
 													"type": "number",
@@ -2132,9 +2272,9 @@
 											},
 											"required": [
 												"deletedAt",
+												"idUsuario",
 												"updatedAt",
 												"createdAt",
-												"idUsuario",
 												"empresaId",
 												"estado",
 												"rolEquipo",
