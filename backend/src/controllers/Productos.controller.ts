@@ -226,6 +226,7 @@ export class ProductosController extends Controller {
     @Path() id: number,
     @Body() body: Partial<ProductosDTO>
   ): Promise<ResponseMessage> {
+    console.log("👤 Usuario recibido:", req.user);
     const rol = req.user?.rol;
     const idUsuarioToken = (req.user as any)?.idUsuario;
 
@@ -252,7 +253,10 @@ export class ProductosController extends Controller {
 
     // 🧩 Si no es dueño y no tiene un rol alto, rechaza
     const esPropietario = productoExistente.usuarioId === idUsuarioToken;
-    if (!esPropietario && rol !== "ADMIN") {
+    const esEditorConPermiso = rol === "EDITOR" || rol === "ADMIN";
+
+    // Solo bloquear si NO es el dueño y NO tiene un rol con permisos especiales
+    if (!esPropietario && !esEditorConPermiso) {
       this.setStatus(403);
       return { message: "No puedes editar productos de otro usuario." };
     }
