@@ -40,3 +40,25 @@ export const sendTeamWelcomeEmail = async (
 
     await transporter.sendMail(mailOptions);
 };
+
+
+export const sendPasswordResetEmail = async (to: string, token: string) => {
+  const mailOptions = {
+    from: `"ProductTrack" <${process.env.EMAIL_USER}>`,
+    to,
+    subject: 'Restablecimiento de contraseña - ProductTrack',
+    html: `
+      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
+        <h2 style="color: #800020;">Solicitud de restablecimiento de contraseña</h2>
+        <p>Hemos recibido una solicitud para restablecer tu contraseña en ProductTrack.</p>
+        <p>Este es tu código para restablecerla:</p>
+        <div style="font-size: 24px; font-weight: bold; color: #800020; margin: 20px 0;">${token}</div>
+        <p>Este código estará activo por <strong>15 minutos</strong>. Si no solicitaste este cambio, puedes ignorar este correo.</p>
+        <br />
+        <p style="font-size: 12px; color: gray;">No respondas a este correo. Este mensaje fue generado automáticamente.</p>
+      </div>
+    `,
+  };
+
+  await transporter.sendMail(mailOptions);
+};

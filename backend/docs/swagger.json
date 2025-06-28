@@ -327,6 +327,34 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"SolicitudResetDTO": {
+				"properties": {
+					"correo": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"correo"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConfirmacionResetDTO": {
+				"properties": {
+					"token": {
+						"type": "string"
+					},
+					"nuevaContrasena": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"token",
+					"nuevaContrasena"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"_36_Enums.rolEquipo": {
 				"type": "string",
 				"enum": [
@@ -1268,6 +1296,89 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/LoginRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/solicitar-reset": {
+			"post": {
+				"operationId": "SolicitarReset",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"tokenDeEjemplo": {
+											"type": "string"
+										},
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Autenticación"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SolicitudResetDTO"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/auth/confirmar-reset": {
+			"post": {
+				"operationId": "ConfirmarReset",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Autenticación"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ConfirmacionResetDTO"
 							}
 						}
 					}

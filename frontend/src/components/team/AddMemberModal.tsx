@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, User, Mail, Shield, Lock } from "lucide-react";
+import { X, User, Mail, Shield, Lock, Eye, EyeOff } from "lucide-react";
 import type { TeamMember, UserRole } from "../../types/team";
 import { useToast } from "../../hooks/useToast";
 
@@ -19,6 +19,8 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
   const { toast } = useToast();
 
   const validateForm = () => {
@@ -110,9 +112,8 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-producttrack-olive/20 focus:border-producttrack-olive transition-colors ${
-                  errors.name ? "border-red-300" : "border-gray-300"
-                }`}
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-producttrack-olive/20 focus:border-producttrack-olive transition-colors ${errors.name ? "border-red-300" : "border-gray-300"
+                  }`}
                 placeholder="Ej: Ana García López"
               />
             </div>
@@ -128,9 +129,8 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
                 type="email"
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-producttrack-olive/20 focus:border-producttrack-olive transition-colors ${
-                  errors.email ? "border-red-300" : "border-gray-300"
-                }`}
+                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-producttrack-olive/20 focus:border-producttrack-olive transition-colors ${errors.email ? "border-red-300" : "border-gray-300"
+                  }`}
                 placeholder="ana.garcia@ejemplo.com"
               />
             </div>
@@ -143,18 +143,26 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
             <div className="relative">
               <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
-                className={`w-full pl-10 pr-4 py-3 border rounded-lg focus:ring-2 focus:ring-producttrack-olive/20 focus:border-producttrack-olive transition-colors ${
-                  errors.password ? "border-red-300" : "border-gray-300"
-                }`}
+                className={`w-full pl-10 pr-10 py-3 border rounded-lg focus:ring-2 focus:ring-producttrack-olive/20 focus:border-producttrack-olive transition-colors ${errors.password ? "border-red-300" : "border-gray-300"
+                  }`}
                 placeholder="********"
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword((prev) => !prev)}
+                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                aria-label={showPassword ? "Ocultar contraseña" : "Mostrar contraseña"}
+              >
+                {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+              </button>
             </div>
             {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
           </div>
 
+          
           {/* Rol */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Rol asignado</label>
