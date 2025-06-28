@@ -291,6 +291,12 @@ export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
   });
 }
 
+// ✅ Obtener producto por ID (para validar dueño)
+export async function obtenerProductoPorId(id: number) {
+  return await prisma.productos.findUnique({ where: { id } });
+}
+
+
 // ❌ Eliminar (soft delete)
 export async function deleteProducto(id: number) {
   const producto = await prisma.productos.findUnique({ where: { id } });

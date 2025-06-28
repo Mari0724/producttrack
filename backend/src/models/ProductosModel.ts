@@ -19,7 +19,7 @@ export const productoSchema = z.object({
   fechaVencimiento: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: "fechaVencimiento debe ser una fecha válida (ISO string)",
   }),
-  usuarioId: z.number().int().positive(),
+  usuarioId: z.number().optional(),
   estado: estadoEnum,
   imagen: z.string().trim().url({ message: "imagen debe ser una URL válida" }),
 });

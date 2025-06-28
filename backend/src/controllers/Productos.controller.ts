@@ -13,7 +13,7 @@ import {
   getCantidadPorCategoria,
   getProductosPorCategoria,
   getCantidadPorRangoPrecio,
-  obtenerNombresProductosUsuario
+  obtenerProductoPorId
 } from "../services/productos.service";
 import {
   ResponseMessage,
@@ -178,7 +178,11 @@ export class ProductosController extends Controller {
     @Request() req: AuthenticatedRequest,
     @Body() requestBody: ProductosDTO
   ): Promise<ResponseMessageWithData<any> | ResponseMessage> {
-    const rol = req.user?.rol;
+    const { rol, idUsuario } = req.user || {};
+    if (!rol || typeof idUsuario !== "number") {
+      this.setStatus(401);
+      return { message: "No se pudo identificar al usuario." };
+    }
 
     if (!rol || !puede("crear", rol)) {
       this.setStatus(403);
@@ -198,6 +202,7 @@ export class ProductosController extends Controller {
       const nuevoProducto = await createProducto({
         ...parsed.data,
         precio: Number(parsed.data.precio),
+        usuarioId: idUsuario, // 🧩 este campo es clave
       });
       this.setStatus(201);
       return {
@@ -211,6 +216,7 @@ export class ProductosController extends Controller {
     }
   }
 
+
   // ✅ Actualizar producto
   @Put("/{id}")
   @Security("jwt")
@@ -221,11 +227,36 @@ export class ProductosController extends Controller {
     @Body() body: Partial<ProductosDTO>
   ): Promise<ResponseMessage> {
     const rol = req.user?.rol;
+    const idUsuarioToken = (req.user as any)?.idUsuario;
 
     if (!rol || !puede("editar", rol)) {
       this.setStatus(403);
       return { message: "No tienes permiso para editar productos." };
     }
+
+    // Si no es ADMIN o EDITOR, validar que sea el creador del producto
+    if (rol !== "EDITOR" && rol !== "ADMIN") {
+      const producto = await obtenerProductoPorId(id);
+      if (!producto || producto.usuarioId !== idUsuarioToken) {
+        this.setStatus(403);
+        return { message: "No tienes permiso para editar este producto." };
+      }
+    }
+
+    // 🔐 Verifica que el producto le pertenece (si no es ADMIN o similar)
+    const productoExistente = await obtenerProductoPorId(id); // crea esta función si no la tienes
+    if (!productoExistente) {
+      this.setStatus(404);
+      return { message: "Producto no encontrado." };
+    }
+
+    // 🧩 Si no es dueño y no tiene un rol alto, rechaza
+    const esPropietario = productoExistente.usuarioId === idUsuarioToken;
+    if (!esPropietario && rol !== "ADMIN") {
+      this.setStatus(403);
+      return { message: "No puedes editar productos de otro usuario." };
+    }
+
     const { id: _, ...bodySinId } = body; // quitar id antes de validar
 
     const parsed = zodValidate(productoSchema.partial(), body);

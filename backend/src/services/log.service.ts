@@ -17,7 +17,7 @@ export class LogService {
     // Generar token
     const token = jwt.sign(
       { 
-        id: user.idUsuario, 
+        idUsuario: user.idUsuario,
         rol: user.rol,
         tipoUsuario: user.tipoUsuario,  // <-- aquí
         rolEquipo: user.rolEquipo       // <-- opcional, si es relevante

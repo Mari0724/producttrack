@@ -2,8 +2,8 @@ import { Request } from "express";
 
 export interface AuthenticatedRequest extends Request {
   user?: {
-    id: number;
+    idUsuario: number;
     rol: string;
-    // puedes agregar más campos si los necesitas
+    [key: string]: any; // 👈 esto permite propiedades adicionales si las necesitas
   };
 }
