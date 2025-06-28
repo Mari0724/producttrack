@@ -32,6 +32,13 @@ const Login: React.FC = () => {
       localStorage.setItem("rolEquipo", data.rolEquipo);
 
       if (data.usuario && data.usuario.id) {
+        localStorage.setItem("idUsuario", data.usuario.id.toString());
+        localStorage.setItem("userId", data.usuario.id.toString());
+      } else {
+        console.warn("⚠️ No se recibió idUsuario en la respuesta del login");
+      }
+
+      if (data.usuario && data.usuario.id) {
         localStorage.setItem("userId", data.usuario.id.toString());
       }
 
