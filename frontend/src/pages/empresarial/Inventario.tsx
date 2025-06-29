@@ -5,7 +5,7 @@ import ProductModal from '../../components/ProductModal';
 import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
 import EnterpriseCommentsModal from '../../components/empresarial/CompanyCommentsModal';
 import type { Product } from '../../types/Product';
-import { getProductos, crearProducto, editarProducto, eliminarProducto, getCategorias , getProductosPorCategoria } from '../../api/productos';
+import { getProductos, getProductoPorId, crearProducto, editarProducto, eliminarProducto, getCategorias, getProductosPorCategoria } from '../../api/productos';
 import toast from 'react-hot-toast';
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 
@@ -112,15 +112,26 @@ const InventarioEmpresarial: React.FC = () => {
     }
 
     try {
+      // Actualiza el producto
       await editarProducto(updatedProduct.id, updatedProduct);
+
+      // Trae el producto actualizado desde el backend
+      const res = await getProductoPorId(updatedProduct.id);
+      const productoActualizado = res.data;
+
+      // Reemplaza el producto en el estado sin recargar
       setProducts(prev =>
-        prev.map(p => (p.id === updatedProduct.id ? updatedProduct : p))
+        prev.map(p => (p.id === updatedProduct.id ? productoActualizado : p))
       );
+
+      toast.success("Producto actualizado correctamente");
       setProductToEdit(null);
+      setShowProductModal(false);
     } catch {
-      alert("Error al editar producto");
+      toast.error("Error al editar producto");
     }
   };
+
 
   const openEditModal = (product: Product) => {
     setProductToEdit(product);
@@ -208,14 +219,14 @@ const InventarioEmpresarial: React.FC = () => {
                 <ProductCard
                   product={product}
                   onEdit={
-                    userRol === "EDITOR" ? () => openEditModal(product) : undefined
+                    userRol.toUpperCase() === "EDITOR" ? () => openEditModal(product) : undefined
                   }
                   onDelete={
-                    userRol === "EDITOR"
+                    userRol.toUpperCase() === "EDITOR"
                       ? () => handleAskDelete(product.id!)
                       : undefined
                   }
-                  rol={userRol}
+                  rol={userRol.toUpperCase()}
                 />
               </div>
             ))}

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import ProductActions from './ProductActions';
 import { BadgeCheck, CalendarDays } from 'lucide-react';
-import CommentsModalProps from './individuales/CommentsModal';
-import CompanyCommentsModalProps from './empresarial/CompanyCommentsModal';
+import CommentsModal from './individuales/CommentsModal';
+import CompanyCommentsModal from './empresarial/CompanyCommentsModal';
 import type { Product } from '../types/Product';
 
 interface ProductCardProps {
@@ -29,13 +29,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
     cantidad,
     fechaVencimiento,
     imagen,
-    usuario
+    usuario,
   } = product;
 
-  const tipoUsuario = usuario?.tipoUsuario || 'INDIVIDUAL';
+  const userId = Number(localStorage.getItem("userId") || 0);
+  const tipoUsuario = (usuario?.tipoUsuario || 'INDIVIDUAL').toUpperCase();
 
   const isLowStock = tipoUsuario === 'EMPRESARIAL' ? cantidad <= 30 : cantidad <= 1;
-  
+
   const getStockStyle = () => {
     return isLowStock
       ? 'bg-red-100 text-red-700 border border-red-300'
@@ -46,7 +47,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
     setShowCommentsModal(true);
   };
 
-  console.log("Producto recibido:", product);
+  console.log("👀 Producto recibido:", product);
+  console.log("🙋‍♀️ Usuario actual:", userId);
 
   return (
     <>
@@ -83,27 +85,29 @@ const ProductCard: React.FC<ProductCardProps> = ({
               <p><strong>Vence:</strong> {fechaVencimiento}</p>
             </div>
 
-            {/* Acciones con botón que adapta texto y color */}
-            <ProductActions
-              onEdit={onEdit}
-              onDelete={onDelete}
-              onView={onView ?? handleView}
-              tipoUsuario={tipoUsuario}
-              rol={rol}
-            />
+            {/* ✅ Mostrar acciones solo si el producto es del usuario */}
+            {(rol === "EDITOR" || rol === "COMENTARISTA") && (
+              <ProductActions
+                onEdit={onEdit}
+                onDelete={onDelete}
+                onView={onView ?? handleView}
+                tipoUsuario={tipoUsuario}
+                rol={rol}
+              />
+            )}
           </div>
         )}
 
-        {/* Modal que cambia según el tipo de usuario */}
+        {/* ✅ Modal de comentarios según tipo de usuario */}
         {showCommentsModal && (
           tipoUsuario === 'INDIVIDUAL' ? (
-            <CommentsModalProps
+            <CommentsModal
               productId={product.id!}
               productName={nombre}
               onClose={() => setShowCommentsModal(false)}
             />
           ) : (
-            <CompanyCommentsModalProps
+            <CompanyCommentsModal
               productId={product.id!}
               productName={nombre}
               onClose={() => setShowCommentsModal(false)}

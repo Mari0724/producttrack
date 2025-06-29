@@ -43,7 +43,8 @@ const ProductActions: React.FC<ProductActionsProps> = ({
         </>
       )}
 
-      {(rol === "EDITOR" || rol === "COMENTARISTA") && (
+      {/* ✅ Mostrar botón para ver notas si es INDIVIDUAL o si tiene permiso */}
+      {(rol === "EDITOR" || rol === "COMENTARISTA" || isIndividual) && (
         <button
           onClick={onView}
           className={`flex items-center gap-1 px-3 py-1.5 rounded-lg text-sm text-white ${viewColor}`}
@@ -54,5 +55,6 @@ const ProductActions: React.FC<ProductActionsProps> = ({
     </div>
   );
 };
+
 
 export default ProductActions;

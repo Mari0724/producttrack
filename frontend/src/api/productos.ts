@@ -20,3 +20,6 @@ export const getCategorias = (tipoUsuario: string) =>
 
 export const getProductosPorCategoria = (categoria: string) =>
   axiosInstance.get<Product[]>(`/productos/por-categoria?categoria=${encodeURIComponent(categoria)}`);
+
+export const getProductoPorId = (id: number) =>
+  axiosInstance.get<Product>(`/productos/${id}`);
