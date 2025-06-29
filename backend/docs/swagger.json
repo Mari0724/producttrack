@@ -1217,7 +1217,34 @@
 					"Notificaciones"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"productos": {
+										"items": {
+											"properties": {
+												"id": {
+													"type": "number",
+													"format": "double"
+												}
+											},
+											"required": [
+												"id"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/notificaciones/producto-vencido": {
@@ -1247,7 +1274,34 @@
 					"Notificaciones"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"productos": {
+										"items": {
+											"properties": {
+												"id": {
+													"type": "number",
+													"format": "double"
+												}
+											},
+											"required": [
+												"id"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/notificaciones/comentario-producto": {
@@ -1326,7 +1380,34 @@
 					"Notificaciones"
 				],
 				"security": [],
-				"parameters": []
+				"parameters": [],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"productos": {
+										"items": {
+											"properties": {
+												"id": {
+													"type": "number",
+													"format": "double"
+												}
+											},
+											"required": [
+												"id"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/notificaciones/actualizacion-app": {

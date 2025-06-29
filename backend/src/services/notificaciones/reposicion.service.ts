@@ -1,30 +1,51 @@
 import prisma from '../../utils/prismaClient';
-import { TipoNotificacion } from '@prisma/client';
+import { TipoNotificacion, productos as Producto } from '@prisma/client';
 
-export async function notificarReposicionRecomendada() {
-  const productosConStockBajo = await prisma.recorStock.findMany({
-    include: {
-      producto: {
-        include: {
-          usuario: true, // dueño del producto
+/**
+ * Envía notificaciones de reposición recomendada, ya sea general o para productos específicos.
+ * @param productosOpcionales Arreglo opcional de productos a verificar.
+ */
+export async function notificarReposicionRecomendada(productosOpcionales?: Producto[]) {
+  let recordatorios: any[] = [];
+
+  if (productosOpcionales && productosOpcionales.length > 0) {
+    recordatorios = await prisma.recorStock.findMany({
+      where: {
+        productoId: {
+          in: productosOpcionales.map((p) => p.id),
         },
       },
-    },
-  });
+      include: {
+        producto: {
+          include: {
+            usuario: true,
+          },
+        },
+      },
+    });
+  } else {
+    recordatorios = await prisma.recorStock.findMany({
+      include: {
+        producto: {
+          include: {
+            usuario: true,
+          },
+        },
+      },
+    });
+  }
 
-  for (const recordatorio of productosConStockBajo) {
+  for (const recordatorio of recordatorios) {
     const { producto } = recordatorio;
     const { usuario } = producto;
     const cantidadActual = producto.cantidad;
     const cantidadMinima = recordatorio.cantidadMinima;
 
-    // Si el stock no está bajo, no hacemos nada
     if (cantidadActual >= cantidadMinima) continue;
 
     const titulo = `Reposición recomendada: ${producto.nombre}`;
     const mensaje = `El producto "${producto.nombre}" tiene ${cantidadActual} unidades, por debajo del mínimo recomendado (${cantidadMinima}).`;
 
-    // 🔸 Notificación para usuario INDIVIDUAL (solo al dueño del producto)
     if (usuario.tipoUsuario === 'INDIVIDUAL') {
       await prisma.notificaciones.create({
         data: {
@@ -37,7 +58,6 @@ export async function notificarReposicionRecomendada() {
       continue;
     }
 
-    // 🔹 Notificación para todos los miembros EMPRESARIALES
     if (usuario.tipoUsuario === 'EMPRESARIAL' && usuario.empresaId) {
       const miembros = await prisma.users.findMany({
         where: {

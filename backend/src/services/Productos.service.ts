@@ -80,8 +80,16 @@ export const getAllProductos = async (filters: any): Promise<any[]> => {
 export async function getProductoById(id: number) {
   return await prisma.productos.findUnique({
     where: { id: id },
+    include: {
+      usuario: {
+        select: {
+          tipoUsuario: true, // solo traes lo necesario
+        },
+      },
+    },
   });
 }
+
 
 // 📂 Obtener categorías únicas
 export async function getCategoriasUnicas(tipoUsuario: string): Promise<string[]> {
@@ -211,7 +219,7 @@ export const subirImagenCloudinary = async (imagenBase64: string): Promise<strin
 // 🆕 Crear producto con conversiones de tipo
 export async function createProducto(data: ProductosDTO) {
   try {
-    return await prisma.productos.create({
+    const nuevoProducto = await prisma.productos.create({
       data: {
         codigoBarras: data.codigoBarras,
         codigoQR: data.codigoQR,
@@ -227,6 +235,18 @@ export async function createProducto(data: ProductosDTO) {
         categoria: data.categoria,
       },
     });
+
+    // 🟡 Crear recordatorio automático de stock bajo con mínimo por defecto
+    await prisma.recorStock.create({
+      data: {
+        productoId: nuevoProducto.id,
+        cantidadMinima: 10, // ✅ valor por defecto, puedes ajustarlo
+        estado: "PENDIENTE", // o "ENVIADO" si no lo manejas aún
+        fechaRecordatorio: new Date(), // puedes dejar null si no usas fecha exacta
+      },
+    });
+
+    return nuevoProducto;
   } catch (error) {
     console.error("Error al crear el producto:", error);
     throw error;
@@ -293,7 +313,12 @@ export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
 
 // ✅ Obtener producto por ID (para validar dueño)
 export async function obtenerProductoPorId(id: number) {
-  return await prisma.productos.findUnique({ where: { id } });
+  return await prisma.productos.findUnique({
+    where: { id },
+    include: {
+      usuario: true, // ✅ esto es lo importante
+    },
+  });
 }
 
 

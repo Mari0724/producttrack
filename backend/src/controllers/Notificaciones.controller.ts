@@ -10,16 +10,29 @@ import prisma from '../utils/prismaClient';
 @Tags('Notificaciones')
 export class NotificacionesController extends Controller {
   @Post('/stock-bajo')
-  public async enviarNotificacionStockBajo(): Promise<{ mensaje: string }> {
-    await notificarStockBajo();
+  public async enviarNotificacionStockBajo(
+    @Body() body?: { productos?: { id: number }[] }
+  ): Promise<{ mensaje: string }> {
+    const productos = body?.productos;
+    await notificarStockBajo(productos as any);
     return { mensaje: 'Notificaciones de stock bajo enviadas correctamente' };
   }
 
   @Post('/producto-vencido')
-  public async enviarNotificacionProductoVencido(): Promise<{ mensaje: string }> {
-    await notificarProductoVencido();
+  public async enviarNotificacionProductoVencido(
+    @Body() body?: { productos?: { id: number }[] }
+  ): Promise<{ mensaje: string }> {
+    const productos = body?.productos;
+
+    if (productos && productos.length > 0) {
+      await notificarProductoVencido(productos as any); // También puedes tipar mejor si quieres
+    } else {
+      await notificarProductoVencido(); // Si no se pasan productos, notifica todos los vencidos
+    }
+
     return { mensaje: 'Notificaciones de producto vencido enviadas correctamente' };
   }
+
 
   @Post('/comentario-producto')
   public async enviarNotificacionComentarioProducto(
@@ -30,11 +43,14 @@ export class NotificacionesController extends Controller {
   }
 
   @Post('/reposicion-recomendada')
-  public async enviarNotificacionReposicionRecomendada(): Promise<{ mensaje: string }> {
-    await notificarReposicionRecomendada();
+  public async enviarNotificacionReposicionRecomendada(
+    @Body() body?: { productos?: { id: number }[] }
+  ): Promise<{ mensaje: string }> {
+    const productos = body?.productos;
+    await notificarReposicionRecomendada(productos as any); // puedes tiparlo mejor si quieres
     return { mensaje: 'Notificaciones de reposición recomendada enviadas correctamente' };
   }
-  
+
   @Post('/actualizacion-app')
   public async enviarNotificacionActualizacionApp(
     @Body() body: { titulo: string; mensaje: string }

@@ -674,6 +674,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsNotificacionesController_enviarNotificacionStockBajo: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","dataType":"nestedObjectLiteral","nestedProperties":{"productos":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double","required":true}}}}}},
         };
         app.post('/notificaciones/stock-bajo',
             ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
@@ -703,6 +704,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsNotificacionesController_enviarNotificacionProductoVencido: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","dataType":"nestedObjectLiteral","nestedProperties":{"productos":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double","required":true}}}}}},
         };
         app.post('/notificaciones/producto-vencido',
             ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
@@ -762,6 +764,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsNotificacionesController_enviarNotificacionReposicionRecomendada: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","dataType":"nestedObjectLiteral","nestedProperties":{"productos":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double","required":true}}}}}},
         };
         app.post('/notificaciones/reposicion-recomendada',
             ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),

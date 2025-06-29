@@ -23,6 +23,9 @@ import { AuthenticatedRequest } from "../types/express";
 import { puede } from "../utils/checkPermissions";
 import { Middlewares } from "tsoa";
 import { autenticarToken } from "../middleware/token.middleware";
+import { notificarStockBajo } from "../services/notificaciones/stockBajo.service";
+import { notificarReposicionRecomendada } from "../services/notificaciones/reposicion.service";
+import { notificarProductoVencido } from "../services/notificaciones/productoVencido.service";
 
 @Route("/Productos")
 @Tags("Productos")
@@ -284,6 +287,14 @@ export class ProductosController extends Controller {
         ...resto,
         ...(precio !== undefined && { precio: Number(precio) }),
       });
+      // ✅ Ahora sí obtenemos el producto actualizado y notificamos
+      const productoActualizado = await obtenerProductoPorId(id);
+
+      if (productoActualizado) {
+        await notificarStockBajo([productoActualizado]);
+        await notificarReposicionRecomendada([productoActualizado]);
+        await notificarProductoVencido([productoActualizado]);
+      }
 
       return { message: "Producto actualizado correctamente" };
     } catch (error) {
@@ -297,7 +308,6 @@ export class ProductosController extends Controller {
       this.setStatus(500);
       return { message: "Error al actualizar producto" };
     }
-
   }
 
   // ✅ Eliminar producto

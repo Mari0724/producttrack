@@ -1,29 +1,43 @@
 import prisma from '../../utils/prismaClient';
-import { TipoNotificacion } from '@prisma/client';
+import { TipoNotificacion, productos as Producto } from '@prisma/client';
 
-export async function notificarProductoVencido() {
+/**
+ * Envía notificaciones de productos vencidos.
+ * Si se proporcionan productos, solo evalúa esos.
+ */
+export async function notificarProductoVencido(productosOpcionales?: Producto[]) {
   const hoy = new Date();
+  let productosConUsuario: (Producto & { usuario: { idUsuario: number; tipoUsuario: string; empresaId: number | null } })[] = [];
 
-  // 1. Buscar todos los productos vencidos sin eliminar
-  const productos = await prisma.productos.findMany({
-    where: {
-      fechaVencimiento: { lt: hoy },
-      eliminadoEn: null,
-    },
-    include: {
-      usuario: true,
-    },
-  });
+  if (productosOpcionales && productosOpcionales.length > 0) {
+    productosConUsuario = await prisma.productos.findMany({
+      where: {
+        id: { in: productosOpcionales.map(p => p.id) },
+        fechaVencimiento: { lt: hoy },
+        eliminadoEn: null,
+      },
+      include: {
+        usuario: true, // 👈 aquí incluimos los datos del usuario dueño
+      },
+    });
+  } else {
+    productosConUsuario = await prisma.productos.findMany({
+      where: {
+        fechaVencimiento: { lt: hoy },
+        eliminadoEn: null,
+      },
+      include: {
+        usuario: true,
+      },
+    });
+  }
 
-  // 2. Recorrer productos
-  for (const producto of productos) {
+  for (const producto of productosConUsuario) {
     const usuario = producto.usuario;
 
-    // Mensaje de la notificación
     const titulo = `Producto vencido: ${producto.nombre}`;
     const mensaje = `El producto "${producto.nombre}" ha vencido el ${producto.fechaVencimiento?.toLocaleDateString()}.`;
 
-    // 3. Si es usuario individual
     if (usuario.tipoUsuario === 'INDIVIDUAL') {
       await prisma.notificaciones.create({
         data: {
@@ -36,7 +50,6 @@ export async function notificarProductoVencido() {
       continue;
     }
 
-    // 4. Si es empresarial y tiene empresa asociada
     if (usuario.tipoUsuario === 'EMPRESARIAL' && usuario.empresaId) {
       const miembros = await prisma.users.findMany({
         where: {
