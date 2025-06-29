@@ -4,7 +4,7 @@ const LandingInfo = () => {
   return (
     <>
       {/* Hero o texto de bienvenida */}
-      <section className="bg-gradient-to-r from-olive to-burgundy text-white py-8 text-center">
+      <section className="bg-olive text-white py-8 text-center">
         <h1 className="text-4xl font-bold mb-2">¿Qué hacemos?</h1>
         <p className="text-white/90 text-lg">
           Te ayudamos a llevar el control de tus productos, ya seas una empresa o una persona del común. ¡Escanea, organiza y recibe alertas fácilmente!

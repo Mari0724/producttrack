@@ -5,11 +5,14 @@ import { useNavigate } from "react-router-dom";
 import LandingInfo from "../components/LandingInfo";
 import Footer from "../components/Footer";
 import { useUser } from "../context/UserContext";
+import { useToast } from '../hooks/useToast';
+
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const { toast } = useToast();
   const navigate = useNavigate();
   const { setUsuario } = useUser();
 
@@ -57,7 +60,7 @@ const Login: React.FC = () => {
 
     } catch (error) {
       console.error("Error al iniciar sesión:", error);
-      alert("Error al iniciar sesión ❌");
+      toast.error("Correo o contraseña incorrecta. Por favor, verifica los datos e inténtalo nuevamente.");
     }
   };
 

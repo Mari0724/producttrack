@@ -5,7 +5,7 @@ const TermsOfService = () => {
     {
       title: "1. Aceptación de los Términos",
       content: [
-        "Al acceder y utilizar ProductTrack ('la Aplicación'), usted acepta cumplir con estos Términos y Condiciones. Si no está de acuerdo con alguno de estos términos, no debe utilizar nuestros servicios.",
+        "Al acceder y utilizar ProductTrack, usted acepta cumplir con estos Términos y Condiciones. Si no está de acuerdo con alguno de estos términos, no debe utilizar nuestros servicios.",
         "Estos términos constituyen un acuerdo legal vinculante entre usted y ProductTrack. Nos reservamos el derecho de modificar estos términos en cualquier momento, y dichas modificaciones entrarán en vigor inmediatamente después de su publicación en la aplicación."
       ]
     },

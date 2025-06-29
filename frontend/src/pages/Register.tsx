@@ -1,4 +1,3 @@
-// src/pages/Register.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -6,6 +5,7 @@ import LeftPanel from "../components/LeftPanel";
 import RegisterForm from "../components/RegisterForm";
 import LandingInfo from "../components/LandingInfo";
 import Footer from "../components/Footer";
+import { useToast } from "../hooks/useToast";
 
 interface RegistroUsuario {
   username: string;
@@ -32,7 +32,9 @@ const Register: React.FC = () => {
   const [nit, setNit] = useState("");
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(false);
+  const [acceptPolicies, setAcceptPolicies] = useState(false);
 
+  const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,6 +62,11 @@ const Register: React.FC = () => {
     e.preventDefault();
     if (!validate()) return;
 
+    if (!acceptPolicies) {
+      toast.error("Debes aceptar los términos y la política de privacidad.");
+      return;
+    }
+
     const datos: RegistroUsuario = {
       username,
       correo: email,
@@ -77,9 +84,8 @@ const Register: React.FC = () => {
 
     try {
       setLoading(true);
-      console.log("📤 Enviando datos:", datos);
       await axios.post("http://localhost:3000/usuarios", datos);
-      alert("Usuario registrado correctamente ✅");
+      toast.success("Usuario registrado correctamente 🎉");
       navigate("/login");
     } catch (error: unknown) {
       const mensaje =
@@ -87,7 +93,7 @@ const Register: React.FC = () => {
           ? error.response.data.message
           : "No se pudo registrar el usuario.";
       console.error("❌ Error al registrar usuario:", mensaje);
-      alert("Error: " + mensaje);
+      toast.error(mensaje);
     } finally {
       setLoading(false);
     }
@@ -120,6 +126,8 @@ const Register: React.FC = () => {
             setAddress={setAddress}
             setCompanyName={setCompanyName}
             setNit={setNit}
+            acceptPolicies={acceptPolicies}
+            setAcceptPolicies={setAcceptPolicies}
           />
         </div>
       </div>

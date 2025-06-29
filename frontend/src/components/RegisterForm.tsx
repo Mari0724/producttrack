@@ -1,6 +1,14 @@
-// src/components/register/RegisterForm.tsx
-import React from "react";
-import { FaUser, FaEnvelope, FaLock, FaPhone, FaHome, FaBuilding, FaIdCard, } from "react-icons/fa";
+import React, { useState } from "react";
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaHome,
+  FaBuilding,
+  FaIdCard,
+} from "react-icons/fa";
+import { FaLock } from "react-icons/fa6";
+import { Eye, EyeOff } from "lucide-react";
 
 interface Props {
   userType: string;
@@ -24,6 +32,10 @@ interface Props {
   setAddress: React.Dispatch<React.SetStateAction<string>>;
   setCompanyName: React.Dispatch<React.SetStateAction<string>>;
   setNit: React.Dispatch<React.SetStateAction<string>>;
+  acceptPolicies: boolean;
+  setAcceptPolicies: React.Dispatch<React.SetStateAction<boolean>>;
+
+
 }
 
 const RegisterForm: React.FC<Props> = ({
@@ -48,7 +60,11 @@ const RegisterForm: React.FC<Props> = ({
   setAddress,
   setCompanyName,
   setNit,
+  acceptPolicies,
+  setAcceptPolicies,
 }) => {
+  const [showPassword, setShowPassword] = useState(false);
+
   const renderError = (field: string) =>
     errors[field] && <p className="text-red-600 text-sm mt-1 ml-3">{errors[field]}</p>;
 
@@ -73,24 +89,51 @@ const RegisterForm: React.FC<Props> = ({
           {renderError("userType")}
         </div>
 
-        {/* Campos comunes */}
-        {[
-          { icon: FaUser, placeholder: "Nombre de Usuario", value: username, setter: setUsername, name: "username" },
-          { icon: FaEnvelope, placeholder: "Correo Electrónico", value: email, setter: setEmail, name: "email" },
-          { icon: FaLock, placeholder: "Contraseña", value: password, setter: setPassword, name: "password", type: "password" },
-        ].map(({ icon: Icon, placeholder, value, setter, name, type }) => (
-          <div key={name} className="relative">
-            <input
-              type={type || "text"}
-              placeholder={placeholder}
-              value={value}
-              onChange={(e) => setter(e.target.value)}
-              className="w-full border border-gray-300 rounded-full px-12 py-2 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-700"
-            />
-            <Icon className="absolute left-4 top-3 text-gray-500" />
-            {renderError(name)}
-          </div>
-        ))}
+        {/* Nombre de Usuario */}
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Nombre de Usuario"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            className="w-full border border-gray-300 rounded-full px-12 py-2 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-700"
+          />
+          <FaUser className="absolute left-4 top-3 text-gray-500" />
+          {renderError("username")}
+        </div>
+
+        {/* Correo Electrónico */}
+        <div className="relative">
+          <input
+            type="email"
+            placeholder="Correo Electrónico"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="w-full border border-gray-300 rounded-full px-12 py-2 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-700"
+          />
+          <FaEnvelope className="absolute left-4 top-3 text-gray-500" />
+          {renderError("email")}
+        </div>
+
+        {/* Contraseña */}
+        <div className="relative">
+          <input
+            type={showPassword ? "text" : "password"}
+            placeholder="Contraseña"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className="w-full border border-gray-300 rounded-full px-12 py-2 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-700"
+          />
+          <FaLock className="absolute left-4 top-3 text-gray-500" />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-4 top-2.5 text-gray-500 hover:text-gray-700"
+          >
+            {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+          </button>
+          {renderError("password")}
+        </div>
 
         {/* Datos comunes */}
         {(userType === "individual" || userType === "empresarial") && (
@@ -161,6 +204,29 @@ const RegisterForm: React.FC<Props> = ({
             </div>
           </>
         )}
+
+        <div className="flex items-start gap-2 text-sm text-gray-700">
+          <input
+            id="acceptPolicies"
+            type="checkbox"
+            checked={acceptPolicies}
+            onChange={(e) => setAcceptPolicies(e.target.checked)}
+            className="mt-1"
+          />
+          <label htmlFor="acceptPolicies" className="leading-snug">
+            He leído y acepto los{" "}
+            <a href="/terminos-y-condiciones" className="text-blue-600 hover:underline" target="_blank">
+              Términos y Condiciones
+            </a>{" "}
+            y la{" "}
+            <a href="/politica-de-privacidad" className="text-blue-600 hover:underline" target="_blank">
+              Política de Privacidad
+            </a>
+            .
+          </label>
+        </div>
+
+
 
         <button
           type="submit"

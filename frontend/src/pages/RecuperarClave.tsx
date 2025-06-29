@@ -53,7 +53,7 @@ const RecuperarClave = () => {
                 <div className="bg-white rounded-2xl shadow-xl border border-gris-claro p-8">
                     {/* Header */}
                     <div className="text-center mb-8">
-                        <div className="w-16 h-16 bg-gradient-to-br from-vinotinto to-verde-oliva rounded-full flex items-center justify-center mx-auto mb-4">
+                        <div className="w-16 h-16 bg-verde-oliva rounded-full flex items-center justify-center mx-auto mb-4">
                             <Mail className="w-8 h-8 text-white" />
                         </div>
                         <h1 className="text-2xl font-bold text-vinotinto mb-2">
@@ -86,7 +86,7 @@ const RecuperarClave = () => {
                         <button
                             type="submit"
                             disabled={isLoading}
-                            className="w-full h-12 bg-vinotinto hover:bg-vinotinto/90 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center"
+                            className="w-full h-12 bg-verde-oliva hover:bg-verde-oliva/90 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-medium rounded-lg transition-colors duration-200 flex items-center justify-center"
                         >
                             {isLoading ? (
                                 <div className="flex items-center justify-center">
@@ -103,7 +103,7 @@ const RecuperarClave = () => {
                     <div className="mt-6 text-center">
                         <button
                             onClick={() => navigate('/')}
-                            className="inline-flex items-center text-sm text-verde-oliva hover:text-verde-oliva/80 transition-colors duration-200"
+                            className="inline-flex items-center text-sm text-vinotinto hover:text-verde-oliva/80 transition-colors duration-200"
                         >
                             <ArrowLeft className="w-4 h-4 mr-1" />
                             Volver al inicio
