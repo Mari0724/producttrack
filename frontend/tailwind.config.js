@@ -49,6 +49,11 @@ module.exports = {
         'food-yellow': '#F2C94C',
         'light-gray': '#E0E0E0',
         'white-pt': '#FFFFFF',
+        vinotinto: '#800020',
+        'verde-oliva': '#808000',
+        amarillo: '#F2C94C',
+        'gris-claro': '#E0E0E0',
+
 
         // ✅ System HSL-based for theme switching
         border: 'hsl(var(--border))',

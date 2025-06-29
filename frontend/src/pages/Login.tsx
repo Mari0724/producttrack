@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import { Eye, EyeOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import LandingInfo from "../components/LandingInfo";
 import Footer from "../components/Footer";
@@ -8,6 +9,7 @@ import { useUser } from "../context/UserContext";
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const { setUsuario } = useUser();
 
@@ -97,13 +99,31 @@ const Login: React.FC = () => {
 
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   placeholder="Contraseña"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className="w-full border border-gray-300 rounded-full px-12 py-2 bg-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-green-700"
                 />
                 <FaLock className="absolute left-4 top-3 text-gray-500" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-2.5 text-gray-500 hover:text-gray-700 focus:outline-none"
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-5 h-5" />
+                  ) : (
+                    <Eye className="w-5 h-5" />
+                  )}
+                </button>
+              </div>
+
+
+              <div className="text-right text-sm text-[#35492c] hover:underline cursor-pointer">
+                <span onClick={() => navigate("/recuperar-clave")}>
+                  ¿Olvidaste tu contraseña?
+                </span>
               </div>
 
               <button

@@ -8,6 +8,9 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import RecuperarClave from "./pages/RecuperarClave";
+import VerificarCodigo from "./pages/VerificarCodigo";
+
 
 // Páginas privadas
 import Index from "./pages/Index";
@@ -52,6 +55,8 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/terminos-y-condiciones" element={<TermsOfService />} />
           <Route path="/politica-de-privacidad" element={<PrivacyPolicy />} />
+          <Route path="/recuperar-clave" element={<RecuperarClave />} />
+          <Route path="/verificar-codigo" element={<VerificarCodigo />} />
 
           {/* Redirección raíz */}
           <Route path="/" element={<RutaRaiz />} />
