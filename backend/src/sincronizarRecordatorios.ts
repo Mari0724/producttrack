@@ -1,6 +1,6 @@
 import prisma from './utils/prismaClient';
 
-const CANTIDAD_MINIMA_DEFECTO = 10;
+const CANTIDAD_MINIMA_DEFECTO = 30;
 
 async function insertarRecordatoriosFaltantes() {
     const productos = await prisma.productos.findMany({
