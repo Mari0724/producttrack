@@ -1,6 +1,10 @@
 import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import type { ReactNode, FC } from "react";
+import { useEffect, useState } from "react";
+import AdModal from "../components/AdModal"; // ajusta la ruta si no coincide
+import { useLocation } from "react-router-dom";
+
 
 interface LayoutProps {
   children: ReactNode;
@@ -8,8 +12,32 @@ interface LayoutProps {
   companyName?: string;
 }
 
-// 👇 Aquí definimos el componente como FC con props tipadas
 const Layout: FC<LayoutProps> = ({ children, userType, companyName }) => {
+  const location = useLocation();
+  const isLoginPage = location.pathname === '/login'; // o cambia según tu ruta real
+
+  const adImages = ['/ads/anuncio1.jpg', '/ads/anuncio2.jpg'];
+  const [showAd, setShowAd] = useState(false);
+  const [currentAd, setCurrentAd] = useState(0);
+  const [adCount, setAdCount] = useState(1); // Ya mostramos 1 al login
+
+  useEffect(() => {
+    setShowAd(true); // Mostrar el primero al iniciar
+
+    const interval = setInterval(() => {
+      if (adCount < 4) {
+        setCurrentAd((prev) => (prev + 1) % adImages.length);
+        setShowAd(true);
+        setAdCount((prev) => prev + 1);
+      }
+    }, 900000); // cada 15 minutos (900000 ms)
+
+    return () => clearInterval(interval);
+  }, [adCount, adImages.length]);
+
+  const closeAd = () => setShowAd(false);
+
+
   return (
     <div className="flex h-screen">
       <div className="transition-all duration-300">
@@ -21,7 +49,19 @@ const Layout: FC<LayoutProps> = ({ children, userType, companyName }) => {
           {children}
         </main>
       </div>
+
+      {!isLoginPage && adCount < 4 && (
+        <AdModal
+          imageUrl={adImages[currentAd]}
+          delayToClose={5}
+          open={showAd}
+          onClose={closeAd}
+        />
+      )}
+
     </div>
+
+
   );
 };
 
