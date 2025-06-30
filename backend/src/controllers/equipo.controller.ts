@@ -12,32 +12,32 @@ console.log("📍 CONTROLADOR DE EQUIPO CARGADO");
 @Tags("Equipo")
 export class EquipoController extends Controller {
 
-@Security("jwt")
-@Post()
-async crearEquipo(@Body() data: EquipoDTO, @Request() req: any) {
-  console.log("📥 Entró a EquipoController.crearEquipo");
+  @Security("jwt")
+  @Post()
+  async crearEquipo(@Body() data: EquipoDTO, @Request() req: any) {
+    console.log("📥 Entró a EquipoController.crearEquipo");
 
-  if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
-    this.setStatus(403);
-    return { mensaje: "Acceso denegado. Solo empresas o administradores pueden crear usuarios de equipo." };
-  }
-
-  let empresaId: number;
-
-  if (req.user.rol === "ADMIN") {
-    if (!data.empresaId) {
-      this.setStatus(400);
-      return { mensaje: "El campo empresaId es obligatorio cuando el usuario es ADMIN." };
+    if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
+      this.setStatus(403);
+      return { mensaje: "Acceso denegado. Solo empresas o administradores pueden crear usuarios de equipo." };
     }
-    empresaId = data.empresaId;
-  } else {
-    empresaId = req.user.id;
-  }
 
-  const creado = await equipoService.crearEquipo(data, empresaId);
-  console.log("✅ Usuario creado desde controller:", creado);
-  return creado; // ✅ solo se llama una vez
-}
+    let empresaId: number;
+
+    if (req.user.rol === "ADMIN") {
+      if (!data.empresaId) {
+        this.setStatus(400);
+        return { mensaje: "El campo empresaId es obligatorio cuando el usuario es ADMIN." };
+      }
+      empresaId = data.empresaId;
+    } else {
+      empresaId = req.user.id;
+    }
+
+    const creado = await equipoService.crearEquipo(data, empresaId);
+    console.log("✅ Usuario creado desde controller:", creado);
+    return creado; // ✅ solo se llama una vez
+  }
 
 
   @Security("jwt")
@@ -106,26 +106,44 @@ async crearEquipo(@Body() data: EquipoDTO, @Request() req: any) {
   }
 
   @Security("jwt")
-@Delete("{id}")
-async eliminarEquipo(@Path() id: number, @Request() req: any) {
-  if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
-    this.setStatus(403);
-    return { mensaje: "Acceso denegado. Solo empresas o administradores pueden eliminar miembros del equipo." };
+  @Delete("{id}")
+  async eliminarEquipo(@Path() id: number, @Request() req: any) {
+    if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
+      this.setStatus(403);
+      return { mensaje: "Acceso denegado. Solo empresas o administradores pueden eliminar miembros del equipo." };
+    }
+
+    const equipo = await equipoService.obtenerEquipoPorId(id);
+    if (!equipo) {
+      this.setStatus(404);
+      return { mensaje: "Miembro no encontrado." };
+    }
+
+    if (req.user.rol !== "ADMIN" && equipo.empresaId !== req.user.id) {
+      this.setStatus(403);
+      return { mensaje: "Este miembro no pertenece a tu empresa." };
+    }
+
+    return await equipoService.marcarComoEliminado(id);
   }
 
-  const equipo = await equipoService.obtenerEquipoPorId(id);
-  if (!equipo) {
-    this.setStatus(404);
-    return { mensaje: "Miembro no encontrado." };
+  @Security("jwt")
+  @Delete("forzar-eliminar/{id}")
+  async eliminarFisicamente(@Path() id: number, @Request() req: any) {
+    if (req.user.rol !== "ADMIN") {
+      this.setStatus(403);
+      return { mensaje: "Solo el administrador puede eliminar completamente un usuario del equipo." };
+    }
+
+    try {
+      const eliminado = await equipoService.eliminarFisicamente(id);
+      return { mensaje: "Usuario eliminado físicamente con éxito.", eliminado };
+    } catch (error: any) {
+      this.setStatus(404);
+      return { mensaje: error.message };
+    }
   }
 
-  if (req.user.rol !== "ADMIN" && equipo.empresaId !== req.user.id) {
-    this.setStatus(403);
-    return { mensaje: "Este miembro no pertenece a tu empresa." };
-  }
-
-  return await equipoService.marcarComoEliminado(id);
-}
 
 
   @Security("jwt")

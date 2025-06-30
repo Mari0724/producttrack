@@ -8,9 +8,9 @@ export class EquipoService {
   // Crear usuario tipo equipo
   async crearEquipo(data: EquipoDTO, empresaId: number) {
     const datosValidados = equipoSchema.parse(data);
-    
+
     const hashedPassword = await bcrypt.hash(datosValidados.password, 10);
-  
+
     const { empresaId: _omitEmpresaId, ...datosSinEmpresaId } = datosValidados;
     datosSinEmpresaId.perfilCompleto ??= false;
 
@@ -132,6 +132,22 @@ export class EquipoService {
       },
     });
   }
+
+  // Eliminación física (completa) de un miembro del equipo (solo ADMIN)
+  async eliminarFisicamente(id: number) {
+    const usuario = await prisma.users.findUnique({
+      where: { idUsuario: id },
+    });
+
+    if (!usuario || usuario.rol !== "EQUIPO") {
+      throw new Error("Usuario no encontrado o no es del tipo EQUIPO");
+    }
+
+    return await prisma.users.delete({
+      where: { idUsuario: id },
+    });
+  }
+
 
   // Eliminar a todo el equipo de una empresa
   async eliminarTodoElEquipo(empresaId: number) {
