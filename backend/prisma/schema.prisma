@@ -84,7 +84,6 @@ model preferenciasNotificaciones {
   user               users  @relation(fields: [idUsuario], references: [idUsuario])
 }
 
-
 model productos {
   id               Int              @id @default(autoincrement())
   codigoBarras     String           @unique

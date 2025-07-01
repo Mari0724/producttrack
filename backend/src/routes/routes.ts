@@ -14,6 +14,8 @@ import { NotificacionesController } from './../controllers/notificaciones.contro
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../controllers/log.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { HistorialController } from './../controllers/historial.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { EquipoController } from './../controllers/equipo.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ComentariosController } from './../controllers/comentarios.controller';
@@ -136,6 +138,22 @@ const models: TsoaRoute.Models = {
         "properties": {
             "correo": {"dataType":"string","required":true},
             "password": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "HistorialInventarioDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "productoId": {"dataType":"double","required":true},
+            "nombreProducto": {"dataType":"string","required":true},
+            "accion": {"dataType":"string","required":true},
+            "cantidad_anterior": {"dataType":"double","required":true},
+            "cantidad_nueva": {"dataType":"double","required":true},
+            "precio_anterior": {"dataType":"double","required":true},
+            "precio_nuevo": {"dataType":"double","required":true},
+            "fechaCambio": {"dataType":"datetime","required":true},
         },
         "additionalProperties": false,
     },
@@ -965,6 +983,36 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'login',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsHistorialController_obtenerHistorialPorUsuario: Record<string, TsoaRoute.ParameterSchema> = {
+                idUsuario: {"in":"path","name":"idUsuario","required":true,"dataType":"double"},
+        };
+        app.get('/historial/usuario/:idUsuario',
+            ...(fetchMiddlewares<RequestHandler>(HistorialController)),
+            ...(fetchMiddlewares<RequestHandler>(HistorialController.prototype.obtenerHistorialPorUsuario)),
+
+            async function HistorialController_obtenerHistorialPorUsuario(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsHistorialController_obtenerHistorialPorUsuario, request, response });
+
+                const controller = new HistorialController();
+
+              await templateService.apiHandler({
+                methodName: 'obtenerHistorialPorUsuario',
                 controller,
                 response,
                 next,

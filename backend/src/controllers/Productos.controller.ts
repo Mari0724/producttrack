@@ -26,6 +26,7 @@ import { autenticarToken } from "../middleware/token.middleware";
 import { notificarStockBajo } from "../services/notificaciones/stockBajo.service";
 import { notificarReposicionRecomendada } from "../services/notificaciones/reposicion.service";
 import { notificarProductoVencido } from "../services/notificaciones/productoVencido.service";
+import { AccionHistorial } from '@prisma/client';
 
 @Route("/Productos")
 @Tags("Productos")
@@ -207,6 +208,21 @@ export class ProductosController extends Controller {
         precio: Number(parsed.data.precio),
         usuarioId: idUsuario, // 🧩 este campo es clave
       });
+
+      // 🟢 Registro en historial
+      await prisma.histInv.create({
+        data: {
+          productoId: nuevoProducto.id,
+          usuarioId: idUsuario,
+          accion: 'agregado', // o AccionHistorial.agregado si lo importas
+          cantidad_anterior: 0,
+          cantidad_nueva: nuevoProducto.cantidad,
+          precio_anterior: 0,
+          precio_nuevo: nuevoProducto.precio,
+          fechaCambio: new Date(),
+        },
+      });
+
       this.setStatus(201);
       return {
         message: "Producto creado correctamente",
@@ -238,7 +254,6 @@ export class ProductosController extends Controller {
       return { message: "No tienes permiso para editar productos." };
     }
 
-    // Si no es ADMIN o EDITOR, validar que sea el creador del producto
     if (rol !== "EDITOR" && rol !== "ADMIN") {
       const producto = await obtenerProductoPorId(id);
       if (!producto || producto.usuarioId !== idUsuarioToken) {
@@ -247,34 +262,30 @@ export class ProductosController extends Controller {
       }
     }
 
-    // 🔐 Verifica que el producto le pertenece (si no es ADMIN o similar)
-    const productoExistente = await obtenerProductoPorId(id); // crea esta función si no la tienes
+    const productoExistente = await obtenerProductoPorId(id);
     if (!productoExistente) {
       this.setStatus(404);
       return { message: "Producto no encontrado." };
     }
 
-    // 🧩 Si no es dueño y no tiene un rol alto, rechaza
     const esPropietario = productoExistente.usuarioId === idUsuarioToken;
     const esEditorConPermiso = rol === "EDITOR" || rol === "ADMIN";
 
-    // Solo bloquear si NO es el dueño y NO tiene un rol con permisos especiales
     if (!esPropietario && !esEditorConPermiso) {
       this.setStatus(403);
       return { message: "No puedes editar productos de otro usuario." };
     }
 
-    const { id: _, ...bodySinId } = body; // quitar id antes de validar
+    const { id: _, ...bodySinId } = body;
 
     const parsed = zodValidate(productoSchema.partial(), body);
 
     if (!parsed.success) {
       console.error("❌ Errores de validación Zod:", parsed.error.flatten());
-
       this.setStatus(400);
       return {
         message: "Datos inválidos",
-        detalles: parsed.error.flatten(), // ✅ ahora esto funciona bien
+        detalles: parsed.error.flatten(),
       };
     }
 
@@ -287,16 +298,31 @@ export class ProductosController extends Controller {
         ...resto,
         ...(precio !== undefined && { precio: Number(precio) }),
       });
-      // ✅ Ahora sí obtenemos el producto actualizado y notificamos
+
       const productoActualizado = await obtenerProductoPorId(id);
 
       if (productoActualizado) {
         await notificarStockBajo([productoActualizado]);
         await notificarReposicionRecomendada([productoActualizado]);
         await notificarProductoVencido([productoActualizado]);
+
+        // 👇 Historial justo aquí, antes del return
+        await prisma.histInv.create({
+          data: {
+            productoId: productoActualizado.id,
+            usuarioId: idUsuarioToken,
+            accion: AccionHistorial.modificado,
+            cantidad_anterior: productoExistente.cantidad,
+            cantidad_nueva: productoActualizado.cantidad,
+            precio_anterior: productoExistente.precio,
+            precio_nuevo: productoActualizado.precio,
+            fechaCambio: new Date(),
+          },
+        });
       }
 
       return { message: "Producto actualizado correctamente" };
+
     } catch (error) {
       console.error("🚨 Error al actualizar producto:", JSON.stringify(error, null, 2));
       console.error("🔍 Detalle completo:", error);
@@ -326,6 +352,30 @@ export class ProductosController extends Controller {
     }
 
     try {
+      // 🔍 Buscar producto antes de eliminar
+      const producto = await obtenerProductoPorId(id);
+      const idUsuarioToken = (req.user as any)?.idUsuario;
+      
+      if (!producto) {
+        this.setStatus(404);
+        return { message: "Producto no encontrado" };
+      }
+
+      // 📝 Registrar en historial antes de borrar
+      await prisma.histInv.create({
+        data: {
+          productoId: producto.id,
+          usuarioId: idUsuarioToken,
+          accion: 'eliminado',
+          cantidad_anterior: producto.cantidad,
+          cantidad_nueva: 0,
+          precio_anterior: producto.precio,
+          precio_nuevo: 0,
+          fechaCambio: new Date(),
+        },
+      });
+
+      // 🗑️ Eliminar el producto
       await deleteProducto(id);
       return { message: "Producto eliminado correctamente" };
     } catch (error) {
