@@ -9,6 +9,8 @@ import Login from "./pages/Login";
 import HomeDesarrollador from './pages/desarrollador/Home';
 import ReportesDesarrollador from './pages/desarrollador/Reportes';
 import NotificacionesConfig from './pages/configuracion/NotificacionesConfig';
+import HistorialIndividual from "./pages/individual/Historial";
+import HistorialEmpresarial from "./pages/empresarial/Historial";
 import { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
           <Route index element={<Navigate to="home" />} />
           <Route path="home" element={<HomeIndividual />} />
           <Route path="inventario" element={<InventarioIndividual />} />
+          <Route path="historial" element={<HistorialIndividual />} />
           <Route path="configuracion" element={<NotificacionesConfig />} /> {/* 👈 aquí */}
         </Route>
 
@@ -35,6 +38,7 @@ function App() {
           <Route index element={<Navigate to="home" />} />
           <Route path="home" element={<HomeEmpresarial />} />
           <Route path="inventario" element={<InventarioEmpresarial />} />
+          <Route path="historial" element={<HistorialEmpresarial />} />
           <Route path="configuracion" element={<NotificacionesConfig />} /> {/* 👈 aquí también */}
         </Route>
 
