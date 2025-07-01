@@ -1,5 +1,6 @@
 import prisma from '../../utils/prismaClient';
 import { TipoNotificacion } from '@prisma/client';
+import { puedeNotificar } from '../../utils/notificaciones/preferenciasNotificaciones';
 
 export async function notificarComentarioProducto(idComentario: number) {
   const comentario = await prisma.comentarios.findUnique({
@@ -20,13 +21,11 @@ export async function notificarComentarioProducto(idComentario: number) {
 
   const usuarioProducto = comentario.producto.usuario;
 
-  // Verifica si el dueño del producto pertenece a una empresa
   if (!usuarioProducto.empresaId) {
     console.warn('⚠️ El usuario dueño del producto no pertenece a una empresa.');
     return;
   }
 
-  // ✅ Buscar solo los miembros con rol EDITOR
   const miembros = await prisma.users.findMany({
     where: {
       empresaId: usuarioProducto.empresaId,
@@ -38,21 +37,28 @@ export async function notificarComentarioProducto(idComentario: number) {
     return;
   }
 
-
   const titulo = `Nuevo comentario en producto: ${comentario.producto.nombre}`;
   const mensaje = `Se ha comentado el producto "${comentario.producto.nombre}": "${comentario.comentario}"`;
 
-  const notificaciones = miembros.map((miembro) => ({
-    idUsuario: miembro.idUsuario,
-    tipo: TipoNotificacion.COMENTARIO_EQUIPO,
-    titulo,
-    mensaje,
-    leida: false,
-  }));
+  const notificaciones = [];
 
-  await prisma.notificaciones.createMany({
-    data: notificaciones,
-  });
+  for (const miembro of miembros) {
+    if (await puedeNotificar(miembro.idUsuario, 'comentarios')) {
+      notificaciones.push({
+        idUsuario: miembro.idUsuario,
+        tipo: TipoNotificacion.COMENTARIO_EQUIPO,
+        titulo,
+        mensaje,
+        leida: false,
+      });
+    }
+  }
 
-  console.log('✅ Notificaciones enviadas a editores para el comentario', idComentario);
+  if (notificaciones.length > 0) {
+    await prisma.notificaciones.createMany({
+      data: notificaciones,
+    });
+  }
+
+  console.log('✅ Notificaciones enviadas a miembros con preferencias activas para el comentario', idComentario);
 }

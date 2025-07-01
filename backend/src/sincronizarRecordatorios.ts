@@ -1,38 +1,50 @@
 import prisma from './utils/prismaClient';
 
-const CANTIDAD_MINIMA_DEFECTO = 30;
+const UMBRAL_INDIVIDUAL = 2;
+const UMBRAL_EMPRESARIAL = 30;
 
-async function insertarRecordatoriosFaltantes() {
+async function sincronizarRecordatorios() {
     const productos = await prisma.productos.findMany({
         where: { eliminadoEn: null },
-        select: { id: true },
+        select: {
+            id: true,
+            usuario: {
+                select: {
+                    tipoUsuario: true,
+                },
+            },
+        },
     });
 
     for (const producto of productos) {
-        const yaTieneRecordatorio = await prisma.recorStock.findFirst({
+        const tipo = producto.usuario?.tipoUsuario?.toLowerCase() || "empresarial";
+        const cantidadMinimaDeseada = tipo === "individual" ? UMBRAL_INDIVIDUAL : UMBRAL_EMPRESARIAL;
+
+        const existente = await prisma.recorStock.findFirst({
             where: { productoId: producto.id },
+            select: { cantidadMinima: true, idRecordatorio: true }, // 👈 aseguramos traer la clave única correcta
         });
 
-        if (!yaTieneRecordatorio) {
-            await prisma.recorStock.create({
-                data: {
-                    productoId: producto.id,
-                    cantidadMinima: CANTIDAD_MINIMA_DEFECTO,
-                    estado: 'PENDIENTE',
-                    fechaRecordatorio: new Date(),
-                },
-            });
+        if (existente) {
+            const cantidadMinimaDeseada = tipo === "individual" ? UMBRAL_INDIVIDUAL : UMBRAL_EMPRESARIAL;
 
-            console.log(`📌 Se creó recordatorio para producto ID: ${producto.id}`);
+            if (existente.cantidadMinima !== cantidadMinimaDeseada) {
+                await prisma.recorStock.update({
+                    where: { idRecordatorio: existente.idRecordatorio }, // ✅ usamos la clave única correcta
+                    data: { cantidadMinima: cantidadMinimaDeseada },
+                });
+
+                console.log(`🔄 Actualizado recordatorio para producto ${producto.id}`);
+            }
         }
     }
 
-    console.log("✅ Todos los productos ahora tienen recordatorios de stock.");
+    console.log("🎯 Sincronización finalizada correctamente.");
 }
 
-insertarRecordatoriosFaltantes()
+sincronizarRecordatorios()
     .catch((e) => {
-        console.error("❌ Error creando recordatorios:", e);
+        console.error("❌ Error en la sincronización:", e);
     })
     .finally(async () => {
         await prisma.$disconnect();

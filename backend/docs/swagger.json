@@ -1190,6 +1190,127 @@
 				]
 			}
 		},
+		"/preferencias-notificaciones/{idUsuario}": {
+			"get": {
+				"operationId": "ObtenerPreferencias",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"actualizacion": {
+											"type": "boolean"
+										},
+										"reposicion": {
+											"type": "boolean"
+										},
+										"comentarios": {
+											"type": "boolean"
+										},
+										"productoVencido": {
+											"type": "boolean"
+										},
+										"stockBajo": {
+											"type": "boolean"
+										}
+									},
+									"required": [
+										"actualizacion",
+										"reposicion",
+										"comentarios",
+										"productoVencido",
+										"stockBajo"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Preferencias de Notificaciones"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idUsuario",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "ActualizarPreferencias",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"mensaje": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"mensaje"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Preferencias de Notificaciones"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "idUsuario",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"actualizacion": {
+										"type": "boolean"
+									},
+									"reposicion": {
+										"type": "boolean"
+									},
+									"comentarios": {
+										"type": "boolean"
+									},
+									"productoVencido": {
+										"type": "boolean"
+									},
+									"stockBajo": {
+										"type": "boolean"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/notificaciones/stock-bajo": {
 			"post": {
 				"operationId": "EnviarNotificacionStockBajo",

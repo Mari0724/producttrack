@@ -1,5 +1,6 @@
 import prisma from '../../utils/prismaClient';
 import { TipoNotificacion } from '@prisma/client';
+import { puedeNotificar } from '../../utils/notificaciones/preferenciasNotificaciones';
 
 /**
  * Envía una notificación de tipo ACTUALIZACION_APP a todos los usuarios registrados.
@@ -18,17 +19,26 @@ export async function notificarActualizacionApp(titulo: string, mensaje: string)
     return;
   }
 
-  const notificaciones = usuarios.map((usuario) => ({
-    idUsuario: usuario.idUsuario,
-    tipo: TipoNotificacion.ACTUALIZACION_APP,
-    titulo,
-    mensaje,
-    leida: false,
-  }));
+  const notificaciones = [];
 
-  await prisma.notificaciones.createMany({
-    data: notificaciones,
-  });
+  for (const usuario of usuarios) {
+    if (await puedeNotificar(usuario.idUsuario, 'actualizacion')) {
+      notificaciones.push({
+        idUsuario: usuario.idUsuario,
+        tipo: TipoNotificacion.ACTUALIZACION_APP,
+        titulo,
+        mensaje,
+        leida: false,
+      });
+    }
+  }
 
-  console.log(`✅ Se notificó a ${usuarios.length} usuarios sobre la actualización de la app`);
+  if (notificaciones.length > 0) {
+    await prisma.notificaciones.createMany({
+      data: notificaciones,
+    });
+    console.log(`✅ Se notificó a ${notificaciones.length} usuarios sobre la actualización de la app`);
+  } else {
+    console.log('ℹ️ Ningún usuario tiene activa la notificación de actualización.');
+  }
 }

@@ -5,6 +5,7 @@ import { notificarComentarioProducto } from '../services/notificaciones/comentar
 import { notificarReposicionRecomendada } from '../services/notificaciones/reposicion.service';
 import { notificarActualizacionApp } from '../services/notificaciones/actualizacion.service';
 import prisma from '../utils/prismaClient';
+import { TipoNotificacion } from '@prisma/client';
 
 @Route('notificaciones')
 @Tags('Notificaciones')
@@ -73,14 +74,51 @@ export class NotificacionesController extends Controller {
       fechaEnvio: Date;
     }[]
   > {
+    const preferencias = await prisma.preferenciasNotificaciones.findUnique({
+      where: { idUsuario },
+    });
+
+    if (!preferencias) {
+      // Si no hay preferencias guardadas, asumimos que todas están activas
+      const notificaciones = await prisma.notificaciones.findMany({
+        where: {
+          idUsuario,
+        },
+        orderBy: {
+          fechaEnvio: 'desc',
+        },
+        take: 20,
+      });
+
+      return notificaciones.map((n) => ({
+        idNotificacion: n.idNotificacion,
+        tipo: n.tipo,
+        titulo: n.titulo,
+        mensaje: n.mensaje,
+        leida: n.leida,
+        fechaEnvio: n.fechaEnvio,
+      }));
+    }
+
+    const tiposPermitidos: TipoNotificacion[] = [
+      ...(preferencias.stockBajo ? [TipoNotificacion.STOCK_BAJO] : []),
+      ...(preferencias.productoVencido ? [TipoNotificacion.PRODUCTO_VENCIDO] : []),
+      ...(preferencias.comentarios ? [TipoNotificacion.COMENTARIO_EQUIPO] : []),
+      ...(preferencias.reposicion ? [TipoNotificacion.REPOSICION_RECOMENDADA] : []),
+      ...(preferencias.actualizacion ? [TipoNotificacion.ACTUALIZACION_APP] : []),
+    ];
+
     const notificaciones = await prisma.notificaciones.findMany({
       where: {
         idUsuario,
+        tipo: {
+          in: tiposPermitidos,
+        },
       },
       orderBy: {
         fechaEnvio: 'desc',
       },
-      take: 20, // puedes ajustar el límite
+      take: 20,
     });
 
     return notificaciones.map((n) => ({

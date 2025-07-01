@@ -1,5 +1,6 @@
 import prisma from '../../utils/prismaClient';
 import { TipoNotificacion, productos as Producto } from '@prisma/client';
+import { puedeNotificar } from '../../utils/notificaciones/preferenciasNotificaciones';
 
 /**
  * Envía notificaciones de reposición recomendada, ya sea general o para productos específicos.
@@ -47,14 +48,16 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
     const mensaje = `El producto "${producto.nombre}" tiene ${cantidadActual} unidades, por debajo del mínimo recomendado (${cantidadMinima}).`;
 
     if (usuario.tipoUsuario === 'INDIVIDUAL') {
-      await prisma.notificaciones.create({
-        data: {
-          idUsuario: usuario.idUsuario,
-          tipo: TipoNotificacion.REPOSICION_RECOMENDADA,
-          titulo,
-          mensaje,
-        },
-      });
+      if (await puedeNotificar(usuario.idUsuario, 'reposicion')) {
+        await prisma.notificaciones.create({
+          data: {
+            idUsuario: usuario.idUsuario,
+            tipo: TipoNotificacion.REPOSICION_RECOMENDADA,
+            titulo,
+            mensaje,
+          },
+        });
+      }
       continue;
     }
 
@@ -66,14 +69,16 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
       });
 
       for (const miembro of miembros) {
-        await prisma.notificaciones.create({
-          data: {
-            idUsuario: miembro.idUsuario,
-            tipo: TipoNotificacion.REPOSICION_RECOMENDADA,
-            titulo,
-            mensaje,
-          },
-        });
+        if (await puedeNotificar(miembro.idUsuario, 'reposicion')) {
+          await prisma.notificaciones.create({
+            data: {
+              idUsuario: miembro.idUsuario,
+              tipo: TipoNotificacion.REPOSICION_RECOMENDADA,
+              titulo,
+              mensaje,
+            },
+          });
+        }
       }
     }
   }

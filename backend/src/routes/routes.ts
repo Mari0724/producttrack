@@ -8,6 +8,8 @@ import { UserController } from './../controllers/user.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProductosController } from './../controllers/productos.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { PreferenciasNotificacionesController } from './../controllers/preferencias.controller';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { NotificacionesController } from './../controllers/notificaciones.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AuthController } from './../controllers/log.controller';
@@ -662,6 +664,67 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'deleteProducto',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPreferenciasNotificacionesController_obtenerPreferencias: Record<string, TsoaRoute.ParameterSchema> = {
+                idUsuario: {"in":"path","name":"idUsuario","required":true,"dataType":"double"},
+        };
+        app.get('/preferencias-notificaciones/:idUsuario',
+            ...(fetchMiddlewares<RequestHandler>(PreferenciasNotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(PreferenciasNotificacionesController.prototype.obtenerPreferencias)),
+
+            async function PreferenciasNotificacionesController_obtenerPreferencias(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPreferenciasNotificacionesController_obtenerPreferencias, request, response });
+
+                const controller = new PreferenciasNotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'obtenerPreferencias',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsPreferenciasNotificacionesController_actualizarPreferencias: Record<string, TsoaRoute.ParameterSchema> = {
+                idUsuario: {"in":"path","name":"idUsuario","required":true,"dataType":"double"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"actualizacion":{"dataType":"boolean"},"reposicion":{"dataType":"boolean"},"comentarios":{"dataType":"boolean"},"productoVencido":{"dataType":"boolean"},"stockBajo":{"dataType":"boolean"}}},
+        };
+        app.put('/preferencias-notificaciones/:idUsuario',
+            ...(fetchMiddlewares<RequestHandler>(PreferenciasNotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(PreferenciasNotificacionesController.prototype.actualizarPreferencias)),
+
+            async function PreferenciasNotificacionesController_actualizarPreferencias(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsPreferenciasNotificacionesController_actualizarPreferencias, request, response });
+
+                const controller = new PreferenciasNotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'actualizarPreferencias',
                 controller,
                 response,
                 next,
