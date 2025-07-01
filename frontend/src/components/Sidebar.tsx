@@ -11,9 +11,15 @@ import clsx from "clsx";
 const Sidebar = () => {
   const location = useLocation();
   const tipoUsuario = localStorage.getItem("tipoUsuario")?.toLowerCase(); // 'individual' o 'empresarial'
+  const rol = localStorage.getItem("rol")?.toUpperCase();
 
   // Base para las rutas dinámicas
-  const basePath = tipoUsuario === "empresarial" ? "/app/empresarial" : "/app/individual";
+  const basePath =
+  tipoUsuario === "empresarial"
+    ? "/app/empresarial"
+    : tipoUsuario === "desarrollador"
+    ? "/app/desarrollador"
+    : "/app/individual";
 
   return (
     <div
@@ -62,14 +68,14 @@ const Sidebar = () => {
           </li>
 
           {/* Solo para empresarial podrías mostrar esto */}
-          {tipoUsuario === "empresarial" && (
+          {(tipoUsuario === "empresarial" || rol === "DESARROLLADOR") && (
             <li>
               <Link
-                to={`${basePath}/reportes`}
+                to={`/app/desarrollador/reportes`}
                 className={clsx(
                   "flex items-center gap-2 hover:text-[#FCDDEC] transition w-full",
                   "justify-center group-hover:justify-start pl-0 group-hover:pl-2",
-                  location.pathname.includes("/reportes") && "font-semibold"
+                  location.pathname === "/reportes" && "font-semibold"
                 )}
               >
                 <FaChartBar className="text-2xl" />

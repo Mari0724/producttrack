@@ -8,6 +8,7 @@ import type { Product } from '../../types/Product';
 import { getProductos, getProductoPorId, crearProducto, editarProducto, eliminarProducto, getCategorias, getProductosPorCategoria } from '../../api/productos';
 import toast from 'react-hot-toast';
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
+import { puedeNotificar } from '../../utils/enviarNotificacion';
 
 const InventarioEmpresarial: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -100,6 +101,23 @@ const InventarioEmpresarial: React.FC = () => {
       const res = await crearProducto(productoConUsuario);
       setProducts(prev => [...prev, res.data]);
       setShowProductModal(false);
+
+      // 🔎 Verificar tipo de usuario
+      const tipo = tipoUsuario?.toLowerCase() || 'empresarial';
+      const umbral = tipo === 'individual' ? 2 : 30;
+      const stockActual = res.data.cantidad;
+
+      // 🔔 Revisar si debe notificar por stock bajo
+      if (stockActual <= umbral && puedeNotificar('stockBajo')) {
+        toast.custom(() => (
+          <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded shadow max-w-sm">
+            ⚠️ El producto <strong>{res.data.nombre}</strong> tiene stock bajo ({stockActual} unidades)
+          </div>
+        ));
+        // 👉 Si tuvieras una API real para notificar:
+        // await enviarNotificacionStockBajo(res.data);
+      }
+
     } catch {
       alert("Error al guardar producto");
     }

@@ -6,6 +6,9 @@ import HomeEmpresarial from './pages/empresarial/Home';
 import InventarioEmpresarial from './pages/empresarial/Inventario';
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import HomeDesarrollador from './pages/desarrollador/Home';
+import ReportesDesarrollador from './pages/desarrollador/Reportes';
+import NotificacionesConfig from './pages/configuracion/NotificacionesConfig';
 import { Toaster } from 'react-hot-toast';
 
 function App() {
@@ -14,6 +17,7 @@ function App() {
       <Toaster position="top-right" reverseOrder={false} />
 
       <Routes>
+        {/* Rutas públicas */}
         <Route path="/" element={<Navigate to="/register" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -23,6 +27,7 @@ function App() {
           <Route index element={<Navigate to="home" />} />
           <Route path="home" element={<HomeIndividual />} />
           <Route path="inventario" element={<InventarioIndividual />} />
+          <Route path="configuracion" element={<NotificacionesConfig />} /> {/* 👈 aquí */}
         </Route>
 
         {/* EMPRESARIAL */}
@@ -30,6 +35,15 @@ function App() {
           <Route index element={<Navigate to="home" />} />
           <Route path="home" element={<HomeEmpresarial />} />
           <Route path="inventario" element={<InventarioEmpresarial />} />
+          <Route path="configuracion" element={<NotificacionesConfig />} /> {/* 👈 aquí también */}
+        </Route>
+
+        {/* DESARROLLADOR */}
+        <Route path="/app/desarrollador" element={<Layout />}>
+          <Route index element={<Navigate to="home" />} />
+          <Route path="home" element={<HomeDesarrollador />} />
+          <Route path="reportes" element={<ReportesDesarrollador />} />
+          <Route path="configuracion" element={<NotificacionesConfig />} /> {/* 👈 y aquí */}
         </Route>
       </Routes>
     </Router>

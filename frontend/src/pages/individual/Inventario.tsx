@@ -8,7 +8,8 @@ import { getProductos, crearProducto, editarProducto, eliminarProducto, getCateg
 import toast from 'react-hot-toast';
 import ProductCommentsModal from '../../components/individuales/CommentsModal';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
-
+import { enviarNotificacionReposicion } from "../../api/notificaciones";
+import { puedeNotificar } from "../../utils/enviarNotificacion";
 
 const Inventario: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -115,11 +116,22 @@ const Inventario: React.FC = () => {
       toast.success("Producto creado correctamente");
       setShowProductModal(false);
 
-      await fetchProductos(); // ✅ CAMBIO: recarga la lista actualizada
+      // ✅ Enviar notificación si aplica
+      if (puedeNotificar("reposicion")) {
+        await enviarNotificacionReposicion({
+          tipo: "reposicion",
+          titulo: "🛒 Producto añadido",
+          mensaje: `Has añadido el producto ${product.nombre} al inventario.`,
+          idUsuario: userId,
+        });
+      }
+
+      await fetchProductos(); // recarga lista
     } catch {
       toast.error("Error al guardar producto");
     }
   };
+
 
   const handleEditProduct = async (updatedProduct: Product) => {
     if (updatedProduct.id === undefined) {

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Edit, X, MessageSquare, Check } from 'lucide-react';
 import { getNotificacionesUsuario, marcarNotificacionLeida, getProductosDelUsuario } from "../api/notificaciones";
+import { puedeNotificar } from "../utils/enviarNotificacion";
 
 interface Notification {
     idNotificacion: number;
@@ -27,10 +28,11 @@ const NotificationBell = () => {
 
     // Aplica filtro según el tipo de usuario
     const notificacionesFiltradas = notifications.filter((n) => {
+        if (!puedeNotificar(n.tipo)) return false;
+
         if (tipoUsuario === 'INDIVIDUAL') {
             const tiposPermitidos = ['PRODUCTO_VENCIDO', 'REPOSICION_RECOMENDADA', 'STOCK_BAJO', 'ACTUALIZACION_APP'];
 
-            // Verifica si el mensaje contiene alguno de sus productos
             const contieneProducto = nombresProductosUsuario.some(nombre =>
                 n.mensaje.toLowerCase().includes(nombre.toLowerCase())
             );

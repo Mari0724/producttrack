@@ -32,6 +32,7 @@ const Login: React.FC = () => {
       localStorage.setItem("rolEquipo", data.rolEquipo);
 
       if (data.usuario && data.usuario.id) {
+        localStorage.setItem("usuarioActual", JSON.stringify(data.usuario));
         localStorage.setItem("idUsuario", data.usuario.id.toString());
         localStorage.setItem("userId", data.usuario.id.toString());
       } else {
@@ -45,12 +46,15 @@ const Login: React.FC = () => {
       alert("Inicio de sesión exitoso ✅");
 
       // Redirigir según tipo de usuario
-      if (data.tipoUsuario === "INDIVIDUAL") {
+      // Redirigir según ROL si es desarrollador
+      if (data.rol === "DESARROLLADOR") {
+        navigate("/app/desarrollador/home");
+      } else if (data.tipoUsuario === "INDIVIDUAL") {
         navigate("/app/individual/home");
       } else if (data.tipoUsuario === "EMPRESARIAL") {
         navigate("/app/empresarial/home");
       } else {
-        navigate("/app"); // por si acaso
+        navigate("/app");
       }
 
     } catch (error) {
