@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 // 🎭 Interfaz del usuario que extraemos del token
 export interface Usuario {
-  id: number;
+  idUsuario: number;
   username: string;
   correo: string;
   tipoUsuario: "INDIVIDUAL" | "EMPRESARIAL";

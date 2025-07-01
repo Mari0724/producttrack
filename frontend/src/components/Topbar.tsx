@@ -63,9 +63,7 @@ const Topbar = () => {
           {menuActive && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-md rounded-lg p-2 z-10">
               <a href="#" className="block px-4 py-2 hover:bg-gray-100">Mi perfil</a>
-              <a href="#" className="block px-4 py-2 hover:bg-gray-100">Empresa</a>
               <a href="#" className="block px-4 py-2 hover:bg-gray-100">Configuración</a>
-              <a href="#" className="block px-4 py-2 hover:bg-gray-100">Seguridad</a>
               <button
                 onClick={cerrarSesion}
                 className="w-full text-left block px-4 py-2 hover:bg-gray-100 text-red-600"

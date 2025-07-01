@@ -191,7 +191,6 @@ export async function changeUserPassword(id: number, currentPassword: string, ne
 }
 
 
-
 // ✖️ Eliminar usuario
 export async function deleteUser(id: number) {
   const user = await prisma.users.findUnique({
@@ -200,14 +199,28 @@ export async function deleteUser(id: number) {
 
   if (!user) throw new Error("Usuario no encontrado");
 
+  // Si el usuario es una empresa, inactivar a su equipo
+  if (user.rol === "USUARIO" && user.tipoUsuario === "EMPRESARIAL") {
+    await prisma.users.updateMany({
+      where: {
+        empresaId: user.idUsuario,
+        rol: "EQUIPO",
+        estado: "activo", // solo los activos
+      },
+      data: {
+        estado: "inactivo",
+        updatedAt: new Date(),
+      },
+    });
+  }
+
   return await prisma.users.update({
     where: { idUsuario: id },
     data: {
       deletedAt: new Date(),
-      estado: "inactivo",  // para reflejar que está eliminado/inactivo
+      estado: "inactivo", // para reflejar que está eliminado/inactivo
       updatedAt: new Date(),
     },
   });
 }
-
 

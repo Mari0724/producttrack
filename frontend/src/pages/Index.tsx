@@ -35,7 +35,7 @@ const Index = () => {
         empresa = response.data;
       } else if (usuario.tipoUsuario === 'EMPRESARIAL') {
         // Si es empresa (admin)
-        const response = await axiosInstance.get(`/usuarios/${usuario.id}`, { headers });
+        const response = await axiosInstance.get(`/usuarios/${usuario.idUsuario}`, { headers });
         empresa = response.data;
       }
 

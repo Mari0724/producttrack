@@ -6,6 +6,16 @@ const AuditoriaIndex = () => {
 
   const auditorias = [
     {
+      titulo: "Usuarios",
+      descripcion: "Auditoría de todos los usuarios registrados en el sistema",
+      ruta: "/auditoria/usuarios",
+    },
+    {
+      titulo: "Equipo",
+      descripcion: "Auditoría sobre la gestión de miembros del equipo",
+      ruta: "/auditoria/equipo",
+    },
+    {
       titulo: "NutriScan",
       descripcion: "Análisis nutricionales generados por los usuarios",
       ruta: "/auditoria/nutriscan",
@@ -24,11 +34,6 @@ const AuditoriaIndex = () => {
       titulo: "Gráficas",
       descripcion: "Visualizaciones generadas por los usuarios o el sistema",
       ruta: "/auditoria/graficas",
-    },
-    {
-      titulo: "Equipo",
-      descripcion: "Auditoría sobre la gestión de miembros del equipo",
-      ruta: "/auditoria/equipo",
     },
   ];
 

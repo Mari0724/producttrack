@@ -1,4 +1,4 @@
-import { Body, Delete, Controller, Get, Post, Route, Response, Tags, Query, SuccessResponse, Put, Path, Security } from "tsoa";
+import { Body, Delete, Controller, Get, Post, Route, Response, Tags, Query, SuccessResponse, Put, Path, Security, Request } from "tsoa";
 import { userSchema } from "../models/UserModel";
 import { zodValidate } from "../utils/zodValidate";
 import { getAllUsers, changeUserPassword, getUserById, createUser, updateUser, deleteUser, getEmpresaById } from "../services/user.service";
@@ -234,7 +234,4 @@ export class UserController extends Controller {
       return { message: "Error al eliminar usuario" };
     }
   }
-
-
 }
-

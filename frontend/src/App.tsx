@@ -19,6 +19,7 @@ import TeamManagement from "./pages/TeamManagement";
 import AuditoriaIndex from "./pages/AuditoriaIndex";
 import NutriScanAuditoria from "./pages/NutriScanAuditoria";
 import EquipoAuditoria from './pages/EquipoAuditoria';
+import UsuarioAuditoria from "./pages/UsuarioAuditoria"; 
 import CompleteProfile from "./pages/CompletaProfile";
 import Profile from "./pages/Profile";
 
@@ -71,6 +72,7 @@ function App() {
             <Route path="/auditoria" element={<AuditoriaIndex />} />
             <Route path="/auditoria/nutriscan" element={<NutriScanAuditoria />} />
             <Route path="/auditoria/equipo" element={<EquipoAuditoria />} />
+            <Route path="/auditoria/usuarios" element={<UsuarioAuditoria />} />
           </Route>
 
           {/* Ruta temporal para completar perfil */}
