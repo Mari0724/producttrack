@@ -1,7 +1,7 @@
 import { Body, Delete, Controller, Get, Post, Route, Response, Tags, Query, SuccessResponse, Put, Path, Security, Request } from "tsoa";
 import { userSchema } from "../models/UserModel";
 import { zodValidate } from "../utils/zodValidate";
-import { getAllUsers, changeUserPassword, getUserById, createUser, updateUser, deleteUser, getEmpresaById } from "../services/user.service";
+import { getAllUsers, changeUserPassword, getUserById, createUser, updateUser, deleteUser, getEmpresaById, reactivarUsuario } from "../services/user.service";
 import { UserDTO, ChangePasswordDTO } from "../models/UserDTO";
 import { ResponseMessage, ResponseMessageWithToken } from "../interfaces/ResponseMenssage";
 
@@ -149,6 +149,42 @@ export class UserController extends Controller {
     }
   }
 
+  //🐉 Modificar usuaro con su ID
+  @Put("{id}")
+  @SuccessResponse("200", "Usuario actualizado")
+  @Response("404", "Usuario no encontrado")
+  @Response("500", "Error del servidor")
+  public async updateUsuario(
+    @Path() id: number,
+    @Body() body: Partial<UserDTO>
+  ): Promise<ResponseMessage> {
+
+    // 🚫 Validación especial para evitar mal uso del campo empresaId
+    try {
+      if (body.rol && body.rol !== "EQUIPO" && body.empresaId) {
+        this.setStatus(400);
+        return {
+          message: "No se puede asignar empresaId a usuarios que no son del rol EQUIPO",
+        };
+      }
+
+      // ✅ Actualizar usuario (incluye hash de contraseña si se envía)
+      await updateUser(id, body);
+
+      return { message: "Usuario actualizado correctamente" };
+    } catch (error) {
+      console.error(error);
+      if (error instanceof Error && error.message.includes("no encontrado")) {
+        this.setStatus(404);
+        return { message: "Usuario no encontrado" };
+      }
+
+      this.setStatus(500);
+      return { message: "Error al actualizar usuario" };
+    }
+  }
+
+
   /**
   * Cambia la contraseña de un usuario.
   */
@@ -172,41 +208,27 @@ export class UserController extends Controller {
   }
 
 
-
-  //🐉 Modificar usuaro con su ID
-  @Put("{id}")
-  @SuccessResponse("200", "Usuario actualizado")
+ //Reactivar usuario
+  @Put("/{id}/reactivar")
+  @SuccessResponse("200", "Usuario reactivado")
   @Response("404", "Usuario no encontrado")
-  @Response("500", "Error del servidor")
-  public async updateUsuario(
-    @Path() id: number,
-    @Body() body: Partial<UserDTO>
-  ): Promise<ResponseMessage> {
-
-    // 🚫 Validación especial para evitar mal uso del campo empresaId
+  @Response("400", "No se pudo reactivar el usuario")
+  public async reactivarUsuario(@Path() id: number): Promise<ResponseMessage> {
     try {
-      if (body.rol && body.rol !== "EQUIPO" && body.empresaId) {
-        this.setStatus(400);
-        return {
-          message: "No se puede asignar empresaId a usuarios que no son del rol EQUIPO",
-        };
-      }
-
-
-
-      // ✅ Actualizar usuario (incluye hash de contraseña si se envía)
-      await updateUser(id, body);
-
-      return { message: "Usuario actualizado correctamente" };
+      await reactivarUsuario(id);
+      return { message: "Usuario reactivado correctamente" };
     } catch (error) {
       console.error(error);
       if (error instanceof Error && error.message.includes("no encontrado")) {
         this.setStatus(404);
         return { message: "Usuario no encontrado" };
+      } else if (error instanceof Error && error.message.includes("ya está activo")) {
+        this.setStatus(400);
+        return { message: "El usuario ya está activo" };
       }
 
-      this.setStatus(500);
-      return { message: "Error al actualizar usuario" };
+      this.setStatus(400);
+      return { message: "No se pudo reactivar el usuario" };
     }
   }
 

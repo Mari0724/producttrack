@@ -103,27 +103,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ChangePasswordDTO": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"currentPassword": {
-						"type": "string"
-					},
-					"newPassword": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"currentPassword",
-					"newPassword"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"ResponseMessage": {
 				"properties": {
 					"message": {
@@ -207,6 +186,27 @@
 				},
 				"type": "object",
 				"description": "Make all properties in T optional"
+			},
+			"ChangePasswordDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"currentPassword": {
+						"type": "string"
+					},
+					"newPassword": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"currentPassword",
+					"newPassword"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"JsonValue": {
 				"anyOf": [
@@ -810,6 +810,44 @@
 						}
 					}
 				}
+			}
+		},
+		"/usuarios/{id}/reactivar": {
+			"put": {
+				"operationId": "ReactivarUsuario",
+				"responses": {
+					"200": {
+						"description": "Usuario reactivado",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/ResponseMessage"
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "No se pudo reactivar el usuario"
+					},
+					"404": {
+						"description": "Usuario no encontrado"
+					}
+				},
+				"tags": [
+					"Usuarios"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "id",
+						"required": true,
+						"schema": {
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
 			}
 		},
 		"/nutriscan": {

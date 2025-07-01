@@ -190,6 +190,31 @@ export async function changeUserPassword(id: number, currentPassword: string, ne
   return { message: "Contraseña actualizada correctamente" };
 }
 
+// 🟢 Reactivar usuario
+export async function reactivarUsuario(id: number) {
+  const user = await prisma.users.findUnique({
+    where: { idUsuario: id },
+  });
+
+  if (!user) {
+    throw new Error("Usuario no encontrado");
+  }
+
+  // Solo reactiva si está inactivo o eliminado
+  if (user.estado === "activo") {
+    throw new Error("El usuario ya está activo");
+  }
+
+  return await prisma.users.update({
+    where: { idUsuario: id },
+    data: {
+      estado: "activo",
+      deletedAt: null,
+      updatedAt: new Date(),
+    },
+  });
+}
+
 
 // ✖️ Eliminar usuario
 export async function deleteUser(id: number) {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
-import { Trash } from "lucide-react";
+import { Trash, Pencil } from "lucide-react";
 import { useToast } from "../hooks/useToast";
 
 interface Usuario {
@@ -26,6 +26,7 @@ const UsuarioAuditoria = () => {
     const [filtroTipo, setFiltroTipo] = useState("");
     const [filtroRol, setFiltroRol] = useState("");
     const [filtroEstado, setFiltroEstado] = useState("");
+    const [confirmReactivarId, setConfirmReactivarId] = useState<number | null>(null);
 
     const { toast } = useToast();
 
@@ -84,6 +85,27 @@ const UsuarioAuditoria = () => {
             toast("❌ No se pudo inactivar el usuario.");
         }
     };
+
+
+
+    const reactivarUsuario = async (id: number) => {
+        const token = localStorage.getItem("token");
+        if (!token) return;
+
+        try {
+            await axios.put(
+                `http://localhost:3000/usuarios/${id}/reactivar`,
+                {},
+                { headers: { Authorization: `Bearer ${token}` } }
+            );
+            toast("✅ Usuario reactivado.");
+            cargarUsuarios();
+        } catch {
+            toast("❌ No se pudo reactivar el usuario.");
+        }
+    };
+
+
 
     useEffect(() => {
         cargarUsuarios();
@@ -158,6 +180,14 @@ const UsuarioAuditoria = () => {
                                             <Trash size={16} />
                                         </button>
                                     )}
+                                    <button
+                                        onClick={() => setConfirmReactivarId(u.idUsuario)}
+                                        title="Reactivar usuario"
+                                    >
+                                        <Pencil size={16} className="text-green-600" />
+                                    </button>
+
+
                                 </td>
                             </tr>
                         ))}
@@ -177,6 +207,28 @@ const UsuarioAuditoria = () => {
                     </div>
                 </div>
             )}
+
+            {confirmReactivarId !== null && (
+                <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+                    <div className="bg-white p-6 rounded shadow max-w-sm w-full">
+                        <h2 className="text-lg font-semibold text-green-600 mb-4">✔️ Reactivar usuario</h2>
+                        <p className="mb-4 text-sm">¿Seguro que deseas reactivar este usuario? Recuperará acceso al sistema.</p>
+                        <div className="flex justify-end gap-2">
+                            <button onClick={() => setConfirmReactivarId(null)} className="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
+                            <button
+                                onClick={() => {
+                                    reactivarUsuario(confirmReactivarId);
+                                    setConfirmReactivarId(null);
+                                }}
+                                className="px-4 py-2 bg-green-600 text-white rounded"
+                            >
+                                Reactivar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 };

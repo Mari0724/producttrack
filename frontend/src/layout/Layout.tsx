@@ -2,8 +2,9 @@ import Sidebar from "../components/Sidebar";
 import Topbar from "../components/Topbar";
 import type { ReactNode, FC } from "react";
 import { useEffect, useState } from "react";
-import AdModal from "../components/AdModal"; // ajusta la ruta si no coincide
+import AdModal from "../components/AdModal";
 import { useLocation } from "react-router-dom";
+import { adImages } from "../utils/adImages";
 
 
 interface LayoutProps {
@@ -14,29 +15,53 @@ interface LayoutProps {
 
 const Layout: FC<LayoutProps> = ({ children, userType, companyName }) => {
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login'; // o cambia según tu ruta real
+  const isLoginPage = location.pathname === '/login';
 
-  const adImages = ['/ads/anuncio1.jpg', '/ads/anuncio2.jpg'];
   const [showAd, setShowAd] = useState(false);
   const [currentAd, setCurrentAd] = useState(0);
-  const [adCount, setAdCount] = useState(1); // Ya mostramos 1 al login
+  const [adCount, setAdCount] = useState<number>(() => {
+    const saved = localStorage.getItem("adCount");
+    const timestamp = localStorage.getItem("adTimestamp");
+
+    // Si no hay timestamp, guardar uno nuevo
+    if (!timestamp) {
+      localStorage.setItem("adTimestamp", Date.now().toString());
+      return 1;
+    }
+
+    // Validar si pasaron más de 24 horas
+    const now = Date.now();
+    const elapsed = now - parseInt(timestamp);
+    const hours24 = 24 * 60 * 60 * 1000;
+
+    if (elapsed > hours24) {
+      // Reiniciar contador
+      localStorage.setItem("adCount", "1");
+      localStorage.setItem("adTimestamp", now.toString());
+      return 1;
+    }
+
+    return saved ? parseInt(saved) : 1;
+  });
 
   useEffect(() => {
-    setShowAd(true); // Mostrar el primero al iniciar
+    setShowAd(true); // Mostrar primer anuncio
 
     const interval = setInterval(() => {
-      if (adCount < 4) {
+      const count = parseInt(localStorage.getItem("adCount") || "0");
+      if (count < 4) {
         setCurrentAd((prev) => (prev + 1) % adImages.length);
         setShowAd(true);
-        setAdCount((prev) => prev + 1);
+        const newCount = count + 1;
+        setAdCount(newCount);
+        localStorage.setItem("adCount", newCount.toString());
       }
-    }, 900000); // cada 15 minutos (900000 ms)
+    }, 900000); // cada 15 minutos
 
     return () => clearInterval(interval);
-  }, [adCount, adImages.length]);
+  }, []);
 
   const closeAd = () => setShowAd(false);
-
 
   return (
     <div className="flex h-screen">
@@ -58,10 +83,7 @@ const Layout: FC<LayoutProps> = ({ children, userType, companyName }) => {
           onClose={closeAd}
         />
       )}
-
     </div>
-
-
   );
 };
 

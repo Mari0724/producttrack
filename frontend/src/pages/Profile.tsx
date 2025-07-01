@@ -338,7 +338,6 @@ const Profile = () => {
           <div className="flex items-center justify-between mb-4">
             <div>
               <p className="text-sm font-medium">Contraseña</p>
-              <p className="text-sm text-gray-500">Última actualización hace 30 días</p>
             </div>
             <button
               onClick={() => setIsPasswordDialogOpen(true)}
