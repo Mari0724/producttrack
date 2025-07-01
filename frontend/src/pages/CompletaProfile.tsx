@@ -32,8 +32,8 @@ const CompleteProfile = () => {
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        if (usuario?.id) {
-          const userData = await getUserById(usuario.id);
+        if (usuario?.idUsuario) {
+          const userData = await getUserById(usuario.idUsuario);
           setCorreoUsuario(userData.correo);
 
           if (userData.empresaId) {
@@ -81,13 +81,13 @@ const CompleteProfile = () => {
     if (formData.phone) dataToSend.telefono = formData.phone;
     if (formData.address) dataToSend.direccion = formData.address;
     if (formData.profilePhoto) {
-      const subida = await subirFotoPerfil(usuario?.id || 0, formData.profilePhoto);
+      const subida = await subirFotoPerfil(usuario?.idUsuario || 0, formData.profilePhoto);
       console.log("✅ Imagen subida:", subida.url);
       dataToSend.fotoPerfil = subida.url;
     }
 
     try {
-      const response = await updateUsuario(usuario?.id || 0, dataToSend);
+      const response = await updateUsuario(usuario?.idUsuario || 0, dataToSend);
       alert(response.message);
       navigate("/");
     } catch (error) {

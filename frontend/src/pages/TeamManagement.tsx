@@ -42,7 +42,7 @@ const TeamManagement = () => {
         const parsed: TeamMemberWithStatus[] = members
           .filter((m: MemberFromAPI) =>
             m.rol === "EQUIPO" &&
-            m.empresaId === usuario.id &&
+            m.empresaId === usuario.idUsuario &&
             m.estado === "activo" &&
             m.idUsuario != null
           )
@@ -75,7 +75,7 @@ const TeamManagement = () => {
         rolEquipo: data.role as "LECTOR" | "COMENTARISTA" | "EDITOR",
         telefono: "0000000000",
         direccion: "pendiente",
-        empresaId: usuario?.id, // ✅ SIEMPRE incluirlo
+        empresaId: usuario?.idUsuario, 
         perfilCompleto: data.perfilCompleto ?? true, 
       };
 

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { Camera, Upload, ImagePlus, Image, Ruler } from 'lucide-react';
-import { resizeImage } from '../utils/resizeImage';
+import { resizeImage } from '../../utils/resizeImage';
 
 
 interface ImageUploadProps {

@@ -1,5 +1,5 @@
-import type { RespuestaNutriScan } from "../components/FoodAnalyzer";
-import FoodAnalyzer from "../components/FoodAnalyzer";
+import type { RespuestaNutriScan } from "../../src/components/nutriscan/FoodAnalyzer";
+import FoodAnalyzer from "../../src/components/nutriscan/FoodAnalyzer";
 import axios from "axios";
 
 const NutriScan = () => {
