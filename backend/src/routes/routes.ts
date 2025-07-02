@@ -86,7 +86,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "_36_Enums.EstadoProducto": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["DISPONIBLE"]},{"dataType":"enum","enums":["AGOTADO"]},{"dataType":"enum","enums":["RESERVADO"]},{"dataType":"enum","enums":["VENCIDO"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["DISPONIBLE"]},{"dataType":"enum","enums":["AGOTADO"]},{"dataType":"enum","enums":["RESERVADO"]},{"dataType":"enum","enums":["VENCIDO"]},{"dataType":"enum","enums":["ELIMINADO"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "EstadoProducto": {

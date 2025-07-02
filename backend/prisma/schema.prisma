@@ -272,6 +272,7 @@ enum EstadoProducto {
   AGOTADO
   RESERVADO
   VENCIDO
+  ELIMINADO
 }
 
 enum TipoNotificacion {

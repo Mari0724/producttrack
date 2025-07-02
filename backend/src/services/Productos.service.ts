@@ -34,6 +34,11 @@ export const getAllProductos = async (filters: any): Promise<any[]> => {
     where.estado = filters.estado as EstadoProducto;
   }
 
+  // 👉 Si no se está filtrando por estado, excluye los eliminados
+  if (!filters.estado) {
+    where.estado = { not: "ELIMINADO" };
+  }
+
   // Filtrar por usuarioId
   if (filters.usuarioId) {
     where.usuarioId = Number(filters.usuarioId);
@@ -343,5 +348,12 @@ export async function deleteProducto(id: number) {
     }
   }
 
-  await prisma.productos.delete({ where: { id } });
+  await prisma.productos.update({
+    where: { id },
+    data: {
+      estado: "ELIMINADO",
+      eliminadoEn: new Date()
+    }
+  });
+
 }
