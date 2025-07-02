@@ -32,7 +32,11 @@ const Inventario: React.FC = () => {
   const fetchProductos = async () => {
     try {
       const res = await getProductos();
-      setProducts(res.data);
+      const tipoUsuarioStorage = localStorage.getItem("tipoUsuario")?.toUpperCase();
+      const soloDelUsuario = res.data.filter(
+        (p) => p.usuario?.tipoUsuario === tipoUsuarioStorage
+      );
+      setProducts(soloDelUsuario);
     } catch (error) {
       console.error("Error al cargar productos:", error);
     }
@@ -44,19 +48,6 @@ const Inventario: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchProductos = async () => {
-      try {
-        const res = await getProductos();
-        const tipoUsuarioStorage = localStorage.getItem("tipoUsuario")?.toUpperCase();
-        const soloDelUsuario = res.data.filter(
-          (p) => p.usuario?.tipoUsuario === tipoUsuarioStorage
-        );
-        setProducts(soloDelUsuario);
-      } catch (error) {
-        console.error("Error al cargar productos:", error);
-      }
-    };
-
     fetchProductos();
   }, []);
 
@@ -118,20 +109,24 @@ const Inventario: React.FC = () => {
 
       // ✅ Enviar notificación si aplica
       if (puedeNotificar("reposicion")) {
-        await enviarNotificacionReposicion({
-          tipo: "reposicion",
-          titulo: "🛒 Producto añadido",
-          mensaje: `Has añadido el producto ${product.nombre} al inventario.`,
-          idUsuario: userId,
-        });
+        try {
+          await enviarNotificacionReposicion({
+            tipo: "reposicion",
+            titulo: "🛒 Producto añadido",
+            mensaje: `Has añadido el producto ${product.nombre} al inventario.`,
+            idUsuario: userId,
+          });
+        } catch (error) {
+          console.warn("❌ Error enviando notificación, pero seguimos:", error);
+        }
       }
 
       await fetchProductos(); // recarga lista
-    } catch {
+    } catch (error) {
       toast.error("Error al guardar producto");
+      console.error(error);
     }
   };
-
 
   const handleEditProduct = async (updatedProduct: Product) => {
     if (updatedProduct.id === undefined) {
