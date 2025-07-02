@@ -216,10 +216,12 @@
 						"format": "double"
 					},
 					"codigoBarras": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"codigoQR": {
-						"type": "string"
+						"type": "string",
+						"nullable": true
 					},
 					"nombre": {
 						"type": "string"
@@ -256,8 +258,6 @@
 					}
 				},
 				"required": [
-					"codigoBarras",
-					"codigoQR",
 					"nombre",
 					"descripcion",
 					"cantidad",

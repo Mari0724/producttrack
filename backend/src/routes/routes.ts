@@ -98,8 +98,8 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "id": {"dataType":"double"},
-            "codigoBarras": {"dataType":"string","required":true},
-            "codigoQR": {"dataType":"string","required":true},
+            "codigoBarras": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
+            "codigoQR": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"enum","enums":[null]}]},
             "nombre": {"dataType":"string","required":true},
             "descripcion": {"dataType":"string","required":true},
             "cantidad": {"dataType":"double","required":true},

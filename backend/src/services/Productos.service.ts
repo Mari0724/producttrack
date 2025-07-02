@@ -226,8 +226,8 @@ export async function createProducto(data: ProductosDTO) {
   try {
     const nuevoProducto = await prisma.productos.create({
       data: {
-        codigoBarras: data.codigoBarras,
-        codigoQR: data.codigoQR,
+        codigoBarras: data.codigoBarras ?? null,
+        codigoQR: data.codigoQR ?? null,
         nombre: data.nombre,
         descripcion: data.descripcion,
         cantidad: data.cantidad,
@@ -307,8 +307,8 @@ export async function updateProducto(id: number, data: Partial<ProductosDTO>) {
       ...(data.cantidad && { cantidad: data.cantidad }),
       ...(data.usuarioId && { usuarioId: data.usuarioId }),
       ...(data.estado && { estado: data.estado }),
-      ...(data.codigoBarras && { codigoBarras: data.codigoBarras }),
-      ...(data.codigoQR && { codigoQR: data.codigoQR }),
+      ...(data.codigoBarras !== undefined && { codigoBarras: data.codigoBarras }),
+      ...(data.codigoQR !== undefined && { codigoQR: data.codigoQR }),
       ...(data.imagen && { imagen: imagenUrl }),
       ...(data.categoria && { categoria: data.categoria }),
       updatedAt: new Date(),

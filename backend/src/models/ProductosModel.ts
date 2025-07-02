@@ -4,8 +4,8 @@ export const estadoEnum = z.enum(["DISPONIBLE", "AGOTADO", "RESERVADO", "VENCIDO
 
 // Esquema de validación con Zod
 export const productoSchema = z.object({
-  codigoBarras: z.string().min(3).trim(),
-  codigoQR: z.string().min(3).trim(),
+  codigoBarras: z.string().optional().nullable(),
+  codigoQR: z.string().optional().nullable(),
   nombre: z.string().min(1).trim(),
   descripcion: z.string().min(1).trim(),
   categoria: z.string().optional(),

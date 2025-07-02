@@ -86,8 +86,8 @@ model preferenciasNotificaciones {
 
 model productos {
   id               Int              @id @default(autoincrement())
-  codigoBarras     String           @unique
-  codigoQR         String           @unique
+  codigoBarras     String?           @unique
+  codigoQR         String?           @unique
   nombre           String
   descripcion      String
   precio           Decimal
