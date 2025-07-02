@@ -31,37 +31,40 @@ const InventarioEmpresarial: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
+  // ✅ Primero: función fetchProductos afuera del useEffect
+  const fetchProductos = async () => {
+    try {
+      const res = await getProductos();
+      const tipoUsuarioActual = localStorage.getItem("tipoUsuario")?.toUpperCase();
+
+      const productosFiltrados = res.data.filter(
+        (p: Product) => p.usuario?.tipoUsuario?.toUpperCase() === tipoUsuarioActual
+      );
+
+      setProducts(productosFiltrados);
+    } catch (error) {
+      console.error("Error al cargar productos:", error);
+    }
+  };
+
+  // ✅ Luego el useEffect simplemente llama las dos funciones
   useEffect(() => {
-    const fetchProductos = async () => {
-      try {
-        const res = await getProductos();
-        const tipoUsuarioActual = localStorage.getItem("tipoUsuario")?.toUpperCase();
-
-        const productosFiltrados = res.data.filter(
-          (p: Product) => p.usuario?.tipoUsuario === tipoUsuarioActual
-        );
-
-        setProducts(productosFiltrados);
-      } catch (error) {
-        console.error("Error al cargar productos:", error);
-      }
-    };
-
-    const fetchCategorias = async () => {
-      try {
-        const tipoUsuario = localStorage.getItem("tipoUsuario")?.toUpperCase() || "";
-        const res = await getCategorias(tipoUsuario); // ✅ enviamos el tipoUsuario
-        setCategorias(res.data);
-      } catch (error) {
-        console.error("Error al cargar categorías:", error);
-      }
-    };
-
     fetchProductos();
     fetchCategorias();
   }, []);
 
+  // ✅ La función fetchCategorias puede ir arriba o aquí mismo
+  const fetchCategorias = async () => {
+    try {
+      const tipoUsuario = localStorage.getItem("tipoUsuario")?.toUpperCase() || "";
+      const res = await getCategorias(tipoUsuario); // ✅ enviamos el tipoUsuario
+      setCategorias(res.data);
+    } catch (error) {
+      console.error("Error al cargar categorías:", error);
+    }
+  };
 
+  // ✅ Cambio en handleCategoriaChange
   const handleCategoriaChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const nuevaCategoria = e.target.value;
     setCategoriaSeleccionada(nuevaCategoria);
@@ -80,7 +83,7 @@ const InventarioEmpresarial: React.FC = () => {
       const tipoUsuarioActual = localStorage.getItem("tipoUsuario")?.toUpperCase();
 
       const soloDelUsuario = productosFiltrados.filter(
-        (p) => p.usuario?.tipoUsuario === tipoUsuarioActual
+        (p) => p.usuario?.tipoUsuario?.toUpperCase() === tipoUsuarioActual
       );
 
       setProducts(soloDelUsuario);
@@ -91,6 +94,7 @@ const InventarioEmpresarial: React.FC = () => {
     }
   };
 
+  // ✅ Corregido: ahora handleSaveProduct sí puede usar fetchProductos
   const handleSaveProduct = async (product: Product) => {
     try {
       const productoConUsuario = {
@@ -99,7 +103,7 @@ const InventarioEmpresarial: React.FC = () => {
       };
 
       const res = await crearProducto(productoConUsuario);
-      setProducts(prev => [...prev, res.data]);
+      await fetchProductos(); // 🔁 vuelve a traer productos completos y filtrados
       setShowProductModal(false);
 
       // 🔎 Verificar tipo de usuario

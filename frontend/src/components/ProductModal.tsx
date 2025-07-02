@@ -114,11 +114,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
     // 🧼 Limpiar categoría si es string vacío
     const categoriaLimpia = form.categoria?.trim();
-    
+
     const productoAEnviar = {
       ...(form.id !== undefined && { id: form.id }), // ✅ incluir id si viene
-      codigoBarras: form.codigoBarras,
-      codigoQR: form.codigoQR,
+      codigoBarras: form.codigoBarras?.trim() === "" ? null : form.codigoBarras,
+      codigoQR: form.codigoQR?.trim() === "" ? null : form.codigoQR,
       nombre: form.nombre.trim(),
       descripcion: form.descripcion.trim(),
       cantidad: form.cantidad,
@@ -153,8 +153,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
         </h2>
 
         <div className="space-y-4">
-          <InputField label="Código de Barras" name="codigoBarras" value={form.codigoBarras} onChange={handleChange} />
-          <InputField label="Código QR" name="codigoQR" value={form.codigoQR} onChange={handleChange} />
+          <InputField label="Código de Barras" name="codigoBarras" value={form.codigoBarras ?? ''} onChange={handleChange} />
+          <InputField label="Código QR" name="codigoQR" value={form.codigoQR ?? ''} onChange={handleChange} />
           <InputField label="Nombre" name="nombre" value={form.nombre} onChange={handleChange} />
           <InputField label="Descripción" name="descripcion" value={form.descripcion} onChange={handleChange} isTextarea />
           <InputField label="Cantidad" name="cantidad" value={form.cantidad.toString()} onChange={handleChange} type="number" />

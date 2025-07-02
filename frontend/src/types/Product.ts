@@ -3,8 +3,8 @@ export type EstadoProducto = 'DISPONIBLE' | 'AGOTADO' | 'RESERVADO' | 'VENCIDO';
 
 export interface Product {
   id?: number;
-  codigoBarras: string;
-  codigoQR: string;
+  codigoBarras: string | null;
+  codigoQR: string | null;
   nombre: string;
   descripcion: string;
   cantidad: number;
