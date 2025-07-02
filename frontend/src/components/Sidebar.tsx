@@ -12,12 +12,9 @@ import {
 import { Link, useLocation } from "react-router-dom";
 import clsx from "clsx";
 
-interface SidebarProps {
-  userType: 'INDIVIDUAL' | 'EMPRESARIAL' | 'EQUIPO';
-  companyName?: string;
-}
 
-const Sidebar = ({ userType, companyName }: SidebarProps) => {
+const Sidebar = () => {
+
   const location = useLocation();
   const [tipoUsuario, setTipoUsuario] = useState<string | null>(null);
   const [rol, setRol] = useState<string | null>(null);
@@ -36,10 +33,7 @@ const Sidebar = ({ userType, companyName }: SidebarProps) => {
       )}
     >
 
-      {/* Mostrar props que vienen del Layout */}
-      <div className="text-sm mb-2 hidden group-hover:block">
-        <strong>{companyName || userType}</strong>
-      </div>
+     
 
       <div className="flex flex-col gap-6 w-full mt-4"></div>
       <div className="flex flex-col gap-6 w-full mt-12">

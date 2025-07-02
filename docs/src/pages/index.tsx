@@ -23,15 +23,37 @@ const secciones: Seccion[] = [
       {
         nombre: "IDI - Investigación, desarrollo e innovación",
         descripcion: "Documento base con la justificación inicial del proyecto y enfoque innovador.",
-        link: "#"
+        link: "https://docs.google.com/document/d/14g0Y1fbVgrVP8Un-6XVv6Tds8AnXLqzh/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       },
       {
         nombre: "DOFA",
         descripcion: "Análisis estratégico de fortalezas, oportunidades, debilidades y amenazas del proyecto.",
+        link: "https://www.figma.com/board/tdpwIG42uSFENURMdXulou/DOFA_producttrack?t=xdYQ9Za5T6n8MohZ-1"
+      }
+    ]
+  },
+  {
+    icono: "📋",
+    titulo: "Requerimientos",
+    items: [
+      {
+        nombre: "Jira - Gestión de Requerimientos",
+        descripcion: "Gestión de requerimientos con manejo de sprints y tareas.",
+        link: "https://tu-url-jira.com"
+      },
+      {
+        nombre: "Excel - Respaldo de Requerimientos",
+        descripcion: "Archivo con requerimientos, costos y presupuestos. Alternativa si no se puede acceder a Jira, con unos extra.",
+        link: "https://tu-url-excel.com"
+      },
+      {
+        nombre: "Especificación de Requerimientos (229 páginas)",
+        descripcion: "Contiene historias de usuario, encuestas, cuadros, casos de uso y más.",
         link: "#"
       }
     ]
   },
+
   {
     icono: "📐",
     titulo: "Análisis y Diseño",
@@ -59,22 +81,6 @@ const secciones: Seccion[] = [
       {
         nombre: "Diagramas UML y Técnicos",
         descripcion: "Casos de uso, clases, paquetes, actividades, ER, arquitectura, priorización, Moscow, secuencias.",
-        link: "#"
-      }
-    ]
-  },
-  {
-    icono: "📋",
-    titulo: "Requerimientos",
-    items: [
-      {
-        nombre: "Jira + Excel",
-        descripcion: "Gestión de requerimientos: Jira con manejo de sprints, y Excel con costos, cronograma y prioridades.",
-        link: "#"
-      },
-      {
-        nombre: "Especificación de Requerimientos (229 páginas)",
-        descripcion: "Contiene historias de usuario, encuestas, cuadros, casos de uso y más.",
         link: "#"
       }
     ]
@@ -134,6 +140,37 @@ const secciones: Seccion[] = [
     ]
   },
   {
+    icono: "✅",
+    titulo: "Calidad y Validación",
+    items: [
+      {
+        nombre: "Video 01 - Login funcional",
+        descripcion: "Se muestra el requerimiento del login y su funcionamiento completo incluyendo validaciones.",
+        link: "#"
+      },
+      {
+        nombre: "Video 02 - Registro de productos",
+        descripcion: "Se explica el requerimiento y se presenta el proceso de agregar un producto con éxito.",
+        link: "#"
+      },
+      {
+        nombre: "Video 03 - Alerta de vencimiento",
+        descripcion: "Se valida el cumplimiento del requerimiento de alertas para productos próximos a vencer.",
+        link: "#"
+      },
+      {
+        nombre: "Video 04 - Visualización de inventario",
+        descripcion: "Demostración de cómo los usuarios consultan el inventario según el requerimiento.",
+        link: "#"
+      },
+      {
+        nombre: "Control de Calidad - Evidencia cruzada",
+        descripcion: "Archivo con evidencias cruzadas entre requerimientos y funcionalidades entregadas.",
+        link: "#"
+      }
+    ]
+  },
+  {
     icono: "🗃️",
     titulo: "Documentación Antigua",
     items: [
@@ -178,7 +215,7 @@ export default function Home() {
               <button
                 className={styles.closeButton}
                 onClick={(e) => {
-                  e.stopPropagation(); // evita que se dispare el expand al cerrar
+                  e.stopPropagation();
                   close(index);
                 }}
                 aria-label="Cerrar sección"
