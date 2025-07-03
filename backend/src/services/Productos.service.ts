@@ -8,12 +8,12 @@ import { TipoUsuario } from '@prisma/client'; // 👈 Asegúrate de importar est
 export const getAllProductos = async (filters: any): Promise<any[]> => {
   const where: any = {};
 
-  // Filtrar por ID
+  // ✅ Filtrar por ID del producto
   if (filters.productoId) {
     where.id = Number(filters.productoId);
   }
 
-  // Filtrar por nombre (búsqueda parcial)
+  // ✅ Filtrar por nombre (búsqueda parcial)
   if (filters.nombre) {
     where.nombre = {
       contains: filters.nombre,
@@ -21,7 +21,7 @@ export const getAllProductos = async (filters: any): Promise<any[]> => {
     };
   }
 
-  // Filtrar por categoría exacta
+  // ✅ Filtrar por categoría (búsqueda parcial)
   if (filters.categoria) {
     where.categoria = {
       contains: filters.categoria,
@@ -29,43 +29,44 @@ export const getAllProductos = async (filters: any): Promise<any[]> => {
     };
   }
 
-  // Filtrar por estado (enum)
+  // ✅ Filtrar por estado
   if (filters.estado) {
     where.estado = filters.estado as EstadoProducto;
-  }
-
-  // 👉 Si no se está filtrando por estado, excluye los eliminados
-  if (!filters.estado) {
+  } else {
+    // Excluir productos eliminados si no se está filtrando por estado
     where.estado = { not: "ELIMINADO" };
   }
 
-  // Filtrar por usuarioId
+  // ✅ Filtrar por usuarioId
   if (filters.usuarioId) {
     where.usuarioId = Number(filters.usuarioId);
   }
 
-  // Rango de fecha de adquisición
+  // ✅ Rango de fecha de adquisición
   if (filters.fechaAdquisicionDesde || filters.fechaAdquisicionHasta) {
-    where.fechaAdquisicion = {};
-    if (filters.fechaAdquisicionDesde) {
-      where.fechaAdquisicion.gte = new Date(filters.fechaAdquisicionDesde);
-    }
-    if (filters.fechaAdquisicionHasta) {
-      where.fechaAdquisicion.lte = new Date(filters.fechaAdquisicionHasta);
-    }
+    where.fechaAdquisicion = {
+      ...(filters.fechaAdquisicionDesde && {
+        gte: new Date(filters.fechaAdquisicionDesde),
+      }),
+      ...(filters.fechaAdquisicionHasta && {
+        lte: new Date(filters.fechaAdquisicionHasta),
+      }),
+    };
   }
 
-  // Rango de fecha de vencimiento
+  // ✅ Rango de fecha de vencimiento
   if (filters.fechaVencimientoDesde || filters.fechaVencimientoHasta) {
-    where.fechaVencimiento = {};
-    if (filters.fechaVencimientoDesde) {
-      where.fechaVencimiento.gte = new Date(filters.fechaVencimientoDesde);
-    }
-    if (filters.fechaVencimientoHasta) {
-      where.fechaVencimiento.lte = new Date(filters.fechaVencimientoHasta);
-    }
+    where.fechaVencimiento = {
+      ...(filters.fechaVencimientoDesde && {
+        gte: new Date(filters.fechaVencimientoDesde),
+      }),
+      ...(filters.fechaVencimientoHasta && {
+        lte: new Date(filters.fechaVencimientoHasta),
+      }),
+    };
   }
 
+  // ✅ Consulta con filtros aplicados
   return await prisma.productos.findMany({
     where,
     orderBy: {
@@ -74,12 +75,15 @@ export const getAllProductos = async (filters: any): Promise<any[]> => {
     include: {
       usuario: {
         select: {
+          idUsuario: true,
           tipoUsuario: true,
+          empresaId: true,
         },
       },
     },
   });
 };
+
 
 // 🔍 Obtener producto por ID
 export async function getProductoById(id: number) {
