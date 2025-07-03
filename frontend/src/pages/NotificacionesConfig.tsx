@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Bell, Settings, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { updatePreferenciasNotificaciones } from "../../api/preferencias"; // 👈 importa esto
+import { updatePreferenciasNotificaciones } from "../api/preferencias"; // 👈 importa esto
 
 const opcionesNotificacion = [
   { id: "stockBajo", nombre: "Stock bajo" },

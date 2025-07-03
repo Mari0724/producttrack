@@ -269,14 +269,6 @@ const NotificationBell = () => {
                         )}
                     </div>
 
-                    {/* Footer */}
-                    {notifications.length > 0 && (
-                        <div className="p-3 border-t border-gray-light/30">
-                            <button className="w-full text-center text-sm text-wine-dark hover:text-wine-dark/80 font-medium py-2 hover:bg-wine-dark/5 rounded-lg transition-colors">
-                                Ver todas las notificaciones
-                            </button>
-                        </div>
-                    )}
                 </div>
             )}
         </div>

@@ -11,11 +11,12 @@ export interface Product {
   precio: number;
   fechaAdquisicion: string;
   fechaVencimiento: string;
-  usuarioId: number;
   estado: EstadoProducto;
   imagen: string;
   categoria?: string;
   usuario?: {
-    tipoUsuario: 'INDIVIDUAL' | 'EMPRESARIAL';
+    idUsuario: number;
+    tipoUsuario: "INDIVIDUAL" | "EMPRESARIAL";
+    empresaId?: number;
   };
 }
