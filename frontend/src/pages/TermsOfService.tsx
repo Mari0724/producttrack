@@ -82,7 +82,7 @@ const TermsOfService = () => {
       content: [
         "Si tiene preguntas sobre estos Términos y Condiciones, puede contactarnos a través de:",
         <div key="contact" className="bg-light-gray/30 p-4 rounded-lg mt-4">
-          <p><strong>Email:</strong> legal@producttrack.com</p>
+          <p><strong>Email:</strong> producttrack5@gmail.com</p>
           <p><strong>Teléfono:</strong> +1 (555) 123-4567</p>
           <p><strong>Dirección:</strong> 123 Tech Street, Innovation City, IC 12345</p>
         </div>

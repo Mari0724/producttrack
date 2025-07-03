@@ -13,22 +13,14 @@ const Footer = () => (
           <p className="text-gray-600 mb-6 max-w-md">
             La plataforma líder en gestión y seguimiento de productos, diseñada para impulsar el crecimiento de tu negocio.
           </p>
+          <p className="text-gray-600 mb-6">✉️ producttrack5@gmail.com</p>
           <div className="flex space-x-4">
             <div className="w-10 h-10 bg-olive rounded-full flex items-center justify-center text-white font-bold">P</div>
             <div className="w-10 h-10 bg-golden rounded-full flex items-center justify-center text-burgundy font-bold">T</div>
           </div>
         </div>
 
-        {/* Sección Producto */}
-        <div>
-          <h4 className="font-semibold text-burgundy mb-4">Producto</h4>
-          <ul className="space-y-2 text-gray-600">
-            <li><a href="#" className="hover:text-olive transition-colors">Características</a></li>
-            <li><a href="#" className="hover:text-olive transition-colors">Precios</a></li>
-            <li><a href="#" className="hover:text-olive transition-colors">Demo</a></li>
-            <li><a href="#" className="hover:text-olive transition-colors">API</a></li>
-          </ul>
-        </div>
+
 
         {/* Sección Legal */}
         <div>
@@ -46,8 +38,6 @@ const Footer = () => (
                 Política de Privacidad
               </Link>
             </li>
-            <li><a href="#" className="hover:text-olive transition-colors">Soporte</a></li>
-            <li><a href="#" className="hover:text-olive transition-colors">Contacto</a></li>
           </ul>
         </div>
       </div>

@@ -40,13 +40,13 @@ model users {
   updatedAt      DateTime  @updatedAt
   deletedAt      DateTime?
 
-  passwordResets passwordReset[] 
+  passwordResets   passwordReset[] 
   notificaciones   notificaciones[]
   productos        productos[]
   comentarios      comentarios[]
   soporte          soporte[]
   ajustInven       ajustInven[]
-  nutriScans NutriScan[]
+  nutriScans       NutriScan[]
   histInv          histInv[]
   api_logs         api_logs[]
   MonAudRend       MonAudRend[]

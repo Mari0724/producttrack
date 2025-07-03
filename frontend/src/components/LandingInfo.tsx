@@ -1,4 +1,4 @@
-import { Shield, Package, BarChart3, Bell, Smartphone, ScanSearch } from 'lucide-react';
+import { Shield, Package, History, Bell, Smartphone, ScanSearch } from 'lucide-react';
 
 const LandingInfo = () => {
   return (
@@ -18,7 +18,7 @@ const LandingInfo = () => {
           {[
             { icon: <ScanSearch className="w-10 h-10" />, title: 'NutriScan', description: 'Escanea productos con tu cámara y consulta su información nutricional (ideal para personas).' },
             { icon: <Package className="w-10 h-10" />, title: 'Gestión de Inventario', description: 'Control en tiempo real de tus productos personales o empresariales.' },
-            { icon: <BarChart3 className="w-10 h-10" />, title: 'Análisis Avanzado', description: 'Revisa Tendencias y reportes' },
+            { icon: <History className="w-10 h-10" />, title: 'Historial de Productos', description: ' Consulta fácilmente los cambios y movimientos recientes en tus productos.' },
             { icon: <Bell className="w-10 h-10" />, title: 'Alertas Inteligentes', description: 'Notificaciones personalizadas para no perder de vista nada.' },
             { icon: <Smartphone className="w-10 h-10" />, title: 'Multiplataforma', description: 'Accede desde cualquier lugar con cualquier dispositivo.' },
             { icon: <Shield className="w-10 h-10" />, title: 'Seguridad Total', description: 'Tus datos están siempre protegidos.' }

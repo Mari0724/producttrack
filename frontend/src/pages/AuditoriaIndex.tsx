@@ -20,21 +20,6 @@ const AuditoriaIndex = () => {
       descripcion: "Análisis nutricionales generados por los usuarios",
       ruta: "/auditoria/nutriscan",
     },
-    {
-      titulo: "Productos",
-      descripcion: "Auditoría de productos registrados y actualizados",
-      ruta: "/auditoria/productos",
-    },
-    {
-      titulo: "Inventario",
-      descripcion: "Cambios y movimientos en los inventarios",
-      ruta: "/auditoria/inventario",
-    },
-    {
-      titulo: "Gráficas",
-      descripcion: "Visualizaciones generadas por los usuarios o el sistema",
-      ruta: "/auditoria/graficas",
-    },
   ];
 
   return (

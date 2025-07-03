@@ -173,7 +173,7 @@ const PrivacyPolicy = () => {
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <h4 className="font-semibold text-burgundy mb-2">Oficial de Protección de Datos</h4>
-              <p className="text-sm text-gray-700 mb-1"><strong>Email:</strong> privacy@producttrack.com</p>
+              <p className="text-sm text-gray-700 mb-1"><strong>Email:</strong> producttrack5@gmail.com</p>
               <p className="text-sm text-gray-700 mb-1"><strong>Teléfono:</strong> +1 (555) 123-4568</p>
             </div>
             <div>
