@@ -38,15 +38,8 @@ export const uploadUserProfilePhoto = async (
   return response.data;
 };
 
-// 🔒 Cambiar contraseña
-export const changeUserPassword = async (
-  id: number,
-  currentPassword: string,
-  newPassword: string
-): Promise<{ message: string }> => {
-  const response = await axios.put<{ message: string }>(
-    `/usuarios/cambiarContrasena`,  
-    { id, currentPassword, newPassword }
-  );
+// 🏢 Obtener info de la empresa desde su ID
+export const getEmpresaInfo = async (empresaId: number) => {
+  const response = await axios.get(`/usuarios/${empresaId}?tipoUsuario=EMPRESARIAL`);
   return response.data;
 };
