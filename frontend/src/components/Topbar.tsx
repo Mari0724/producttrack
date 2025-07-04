@@ -5,7 +5,10 @@ import { useUser } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 const Topbar = () => {
-  const [menuActive, setMenuActive] = useState(false);
+  const [menuActive, setMenuActive] = useState<{ help: boolean; profile: boolean }>({
+    help: false,
+    profile: false,
+  });
   const { usuario, setUsuario } = useUser();
   const navigate = useNavigate();
 
@@ -36,7 +39,7 @@ const Topbar = () => {
       <div className="flex items-center gap-3">
 
         {/* Botón para EMPRESARIAL */}
-        {usuario?.tipoUsuario === "EMPRESARIAL" && (
+        {usuario?.tipoUsuario === "EMPRESARIAL" && usuario?.rol !== "EQUIPO" && (
           <button
             onClick={irAGestionEquipo}
             className="flex items-center bg-[#808000] text-white px-2 md:px-4 py-1.5 rounded-lg hover:bg-[#6b6b00] transition-colors text-sm"
@@ -50,19 +53,48 @@ const Topbar = () => {
 
         {/* Íconos de acciones */}
         <MdNotifications className="text-xl md:text-2xl" />
-        <MdHelp className="text-xl md:text-2xl" />
         <div className="relative">
           <div
             className="cursor-pointer"
-            onClick={() => setMenuActive(!menuActive)}
+            onClick={() => setMenuActive(menu => ({ ...menu, help: !menu.help, profile: false }))}
+          >
+            <MdHelp className="text-xl md:text-2xl" />
+          </div>
+
+          {menuActive.help && (
+            <div className="absolute right-0 mt-2 w-72 bg-white border border-gray-200 shadow-md rounded-lg p-4 z-10 text-sm">
+              <p className="mb-2 font-semibold text-gray-800">¿Necesitas ayuda?</p>
+              <p className="mb-1 text-gray-700">
+                Para dudas, quejas y/o sugerencias por favor comuníquese a:
+              </p>
+              <p className="mb-1 font-medium text-[#800020]">producttrack5@gmail.com</p>
+              <p className="mb-2 text-gray-700">
+                En el asunto, indique claramente el motivo de su mensaje para facilitar la atención.
+              </p>
+              <p className="text-gray-600 text-xs italic">
+                ⏳ Tiempo de Respuesta: dentro de 30 días calendario. Para solicitudes complejas, hasta 60 días con notificación previa.
+              </p>
+            </div>
+          )}
+        </div>
+
+        <div className="relative">
+          <div
+            className="cursor-pointer"
+            onClick={() => setMenuActive(menu => ({ ...menu, profile: !menu.profile, help: false }))}
           >
             <MdAccountCircle className="text-2xl md:text-3xl" />
           </div>
 
           {/* Menú desplegable */}
-          {menuActive && (
+          {menuActive.profile && (
             <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 shadow-md rounded-lg p-2 z-10">
-              <a href="#" className="block px-4 py-2 hover:bg-gray-100">Mi perfil</a>
+              <button
+                onClick={() => navigate("/perfil")}
+                className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+              >
+                Mi perfil
+              </button>
               <a href="#" className="block px-4 py-2 hover:bg-gray-100">Configuración</a>
               <button
                 onClick={cerrarSesion}

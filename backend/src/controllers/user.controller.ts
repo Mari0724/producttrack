@@ -178,8 +178,6 @@ export class UserController extends Controller {
     }
   }
 
-
-
   //🐉 Modificar usuaro con su ID
   @Put("{id}")
   @SuccessResponse("200", "Usuario actualizado")
