@@ -149,6 +149,37 @@ export class UserController extends Controller {
     }
   }
 
+  
+  /**
+  * Cambia la contraseña de un usuario.
+  */
+
+  @Put("/cambiarContrasena")
+  @Tags("Usuarios")
+  public async cambiarContrasena(
+    
+    @Body() body: ChangePasswordDTO
+  
+  ): Promise<{ message: string }> {
+    const { id, currentPassword, newPassword } = body;
+    try {
+      const result = await changeUserPassword(id, currentPassword, newPassword);
+      return result;
+    } catch (error: unknown) {
+      console.error("Error en cambiarContrasena:", error);
+
+      if (error instanceof Error) {
+        this.setStatus(400); // Bad Request
+        return { message: error.message };
+      }
+
+      this.setStatus(500); // Internal Server Error
+      return { message: "Error inesperado al cambiar la contraseña" };
+    }
+  }
+
+
+
   //🐉 Modificar usuaro con su ID
   @Put("{id}")
   @SuccessResponse("200", "Usuario actualizado")
@@ -184,31 +215,7 @@ export class UserController extends Controller {
     }
   }
 
-
-  /**
-  * Cambia la contraseña de un usuario.
-  */
-
-  @Put("/cambiarContrasena")
-  @Tags("Usuarios")
-  public async cambiarContrasena(
-    @Body() body: ChangePasswordDTO
-  ): Promise<{ message: string }> {
-    const { id, currentPassword, newPassword } = body;
-
-    console.log("Cambiando contraseña para:", body);
-
-    try {
-      const result = await changeUserPassword(id, currentPassword, newPassword);
-      return result;
-    } catch (error: any) {
-      this.setStatus(400);
-      throw new Error(error.message || "Error al cambiar la contraseña");
-    }
-  }
-
-
- //Reactivar usuario
+  //Reactivar usuario
   @Put("/{id}/reactivar")
   @SuccessResponse("200", "Usuario reactivado")
   @Response("404", "Usuario no encontrado")

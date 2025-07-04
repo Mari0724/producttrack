@@ -53,6 +53,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ChangePasswordDTO": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"double","required":true},
+            "currentPassword": {"dataType":"string","required":true},
+            "newPassword": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ResponseMessage": {
         "dataType": "refObject",
         "properties": {
@@ -65,16 +75,6 @@ const models: TsoaRoute.Models = {
     "Partial_UserDTO_": {
         "dataType": "refAlias",
         "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"username":{"dataType":"string"},"correo":{"dataType":"string"},"password":{"dataType":"string"},"nombreCompleto":{"dataType":"string"},"telefono":{"dataType":"string"},"direccion":{"dataType":"string"},"fotoPerfil":{"dataType":"string"},"tipoUsuario":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["INDIVIDUAL"]},{"dataType":"enum","enums":["EMPRESARIAL"]}]},"nombreEmpresa":{"dataType":"string"},"nit":{"dataType":"string"},"rol":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["USUARIO"]},{"dataType":"enum","enums":["EQUIPO"]},{"dataType":"enum","enums":["ADMIN"]},{"dataType":"enum","enums":["DESARROLLADOR"]}]},"rolEquipo":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["LECTOR"]},{"dataType":"enum","enums":["COMENTARISTA"]},{"dataType":"enum","enums":["EDITOR"]}]},"estado":{"dataType":"union","subSchemas":[{"dataType":"enum","enums":["activo"]},{"dataType":"enum","enums":["inactivo"]}]},"empresaId":{"dataType":"double"},"perfilCompleto":{"dataType":"boolean"}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ChangePasswordDTO": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"double","required":true},
-            "currentPassword": {"dataType":"string","required":true},
-            "newPassword": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "JsonValue": {
@@ -309,6 +309,36 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsUserController_cambiarContrasena: Record<string, TsoaRoute.ParameterSchema> = {
+                body: {"in":"body","name":"body","required":true,"ref":"ChangePasswordDTO"},
+        };
+        app.put('/usuarios/cambiarContrasena',
+            ...(fetchMiddlewares<RequestHandler>(UserController)),
+            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.cambiarContrasena)),
+
+            async function UserController_cambiarContrasena(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsUserController_cambiarContrasena, request, response });
+
+                const controller = new UserController();
+
+              await templateService.apiHandler({
+                methodName: 'cambiarContrasena',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsUserController_updateUsuario: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"double"},
                 body: {"in":"body","name":"body","required":true,"ref":"Partial_UserDTO_"},
@@ -334,36 +364,6 @@ export function RegisterRoutes(app: Router) {
                 next,
                 validatedArgs,
                 successStatus: 200,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsUserController_cambiarContrasena: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"ref":"ChangePasswordDTO"},
-        };
-        app.put('/usuarios/cambiarContrasena',
-            ...(fetchMiddlewares<RequestHandler>(UserController)),
-            ...(fetchMiddlewares<RequestHandler>(UserController.prototype.cambiarContrasena)),
-
-            async function UserController_cambiarContrasena(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsUserController_cambiarContrasena, request, response });
-
-                const controller = new UserController();
-
-              await templateService.apiHandler({
-                methodName: 'cambiarContrasena',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
               });
             } catch (err) {
                 return next(err);

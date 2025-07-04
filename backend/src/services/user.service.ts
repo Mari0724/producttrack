@@ -171,7 +171,6 @@ export async function changeUserPassword(id: number, currentPassword: string, ne
   if (!user) {
     throw new Error("Usuario no encontrado");
   }
-
   const isPasswordValid = await bcrypt.compare(currentPassword, user.password);
   if (!isPasswordValid) {
     throw new Error("La contraseña actual es incorrecta");

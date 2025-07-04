@@ -7,7 +7,7 @@ import { getUserProfile, updateUserProfile, uploadUserProfilePhoto } from '../se
 import { getEmpresaInfo } from '../services/profileService';
 import { changeUserPassword } from '../services/securityService';
 import type { AxiosErrorResponse } from "../types/AxiosError";
-import type { UserDTO } from "../types/UserDTO"; 
+import type { UserDTO } from "../types/UserDTO";
 
 interface UserProfile {
   type: 'INDIVIDUAL' | 'EMPRESARIAL' | 'EQUIPO';
@@ -46,8 +46,16 @@ const Profile = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const idUsuario = parseInt(localStorage.getItem("idUsuario") || "0");
-        const data = await getUserProfile(idUsuario);
+        const idUsuarioString = localStorage.getItem("idUsuario");
+
+        if (!idUsuarioString || isNaN(Number(idUsuarioString))) {
+          toast.error("ID de usuario inválido o no encontrado");
+          return;
+        }
+
+        const idUsuario = Number(idUsuarioString);
+
+        const data = await getUserProfile(idUsuario); // ✅ ahora sí se puede usar
 
         const userProfileData: UserProfile = {
           type: data.rol === 'EQUIPO' ? 'EQUIPO' : (data.tipoUsuario ?? 'INDIVIDUAL'),
@@ -80,6 +88,7 @@ const Profile = () => {
 
     fetchData();
   }, [toast]);
+
 
   if (!userProfile) return <div className="text-center text-gray-500">Cargando perfil...</div>;
 
@@ -130,8 +139,14 @@ const Profile = () => {
   };
 
   const handlePasswordSubmit = async () => {
-    const idUsuario = parseInt(localStorage.getItem("idUsuario") || "0");
+    const idUsuarioString = localStorage.getItem("idUsuario");
 
+    if (!idUsuarioString || isNaN(Number(idUsuarioString))) {
+      toast.error("ID de usuario inválido o no encontrado");
+      return;
+    }
+
+    const idUsuario = Number(idUsuarioString);
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       toast.error("Las contraseñas no coinciden ❌");
       return;

@@ -103,6 +103,27 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ChangePasswordDTO": {
+				"properties": {
+					"id": {
+						"type": "number",
+						"format": "double"
+					},
+					"currentPassword": {
+						"type": "string"
+					},
+					"newPassword": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"currentPassword",
+					"newPassword"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ResponseMessage": {
 				"properties": {
 					"message": {
@@ -186,27 +207,6 @@
 				},
 				"type": "object",
 				"description": "Make all properties in T optional"
-			},
-			"ChangePasswordDTO": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"currentPassword": {
-						"type": "string"
-					},
-					"newPassword": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"id",
-					"currentPassword",
-					"newPassword"
-				],
-				"type": "object",
-				"additionalProperties": false
 			},
 			"JsonValue": {
 				"anyOf": [
