@@ -105,32 +105,90 @@ const PersonalInfo: React.FC<Props> = ({
                     </div>
                 ))}
 
+                {/* Información que viene de tu empresa */}
                 {!isIndividual && (isEmpresa || isEquipo) && (
                     <>
-                        {(["companyName", "nit"] as (keyof UserProfile)[]).map((field) => (
-                            <div className="relative" key={field}>
+                        <div className="md:col-span-2 mt-6">
+                            <h3 className="text-[#667233] text-md font-semibold mb-2">
+                                Información que viene de tu organización
+                            </h3>
+                        </div>
+
+                        {/* Nombre de la empresa */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Nombre de la empresa
+                            </label>
+                            <div className="relative">
                                 <FileText className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                                 <input
-                                    name={field}
+                                    name="companyName"
                                     type="text"
-                                    value={userProfile[field]}
+                                    value={userProfile.companyName}
                                     onChange={(e) =>
-                                        setUserProfile({ ...userProfile, [field]: e.target.value })
+                                        setUserProfile({ ...userProfile, companyName: e.target.value })
                                     }
                                     disabled={isEquipo || !isEditing}
-                                    placeholder={field === "companyName" ? "Nombre de la empresa" : "NIT"}
-                                    className={`pl-10 border w-full rounded py-2 ${isEquipo ? "bg-gray-100 text-gray-500" : ""
-                                        }`}
+                                    placeholder="Nombre de la empresa"
+                                    className={`pl-10 border w-full rounded py-2 ${isEquipo ? "bg-gray-100 text-gray-500" : ""}`}
                                 />
-                                {isEquipo && (
+                            </div>
+                            {isEquipo && isEditing && (
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Este campo no se puede modificar
+                                </p>
+                            )}
+                        </div>
+
+                        {/* NIT */}
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                NIT
+                            </label>
+                            <div className="relative">
+                                <FileText className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                                <input
+                                    name="nit"
+                                    type="text"
+                                    value={userProfile.nit}
+                                    onChange={(e) =>
+                                        setUserProfile({ ...userProfile, nit: e.target.value })
+                                    }
+                                    disabled={isEquipo || !isEditing}
+                                    placeholder="NIT"
+                                    className={`pl-10 border w-full rounded py-2 ${isEquipo ? "bg-gray-100 text-gray-500" : ""}`}
+                                />
+                            </div>
+                            {isEquipo && isEditing && (
+                                <p className="text-xs text-gray-500 mt-1">
+                                    Este campo no se puede modificar
+                                </p>
+                            )}
+                        </div>
+
+                        {/* Rol en el equipo */}
+                        {isEquipo && userProfile.role && (
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700 mb-1">
+                                    Tu rol dentro del equipo
+                                </label>
+                                <input
+                                    type="text"
+                                    value={userProfile.role}
+                                    disabled
+                                    className="w-full border rounded py-2 px-3 bg-gray-100 text-gray-500"
+                                />
+                                {isEditing && (
                                     <p className="text-xs text-gray-500 mt-1">
                                         Este campo no se puede modificar
                                     </p>
                                 )}
                             </div>
-                        ))}
+                        )}
                     </>
                 )}
+
+
             </div>
         </div>
     );
