@@ -39,12 +39,12 @@ const secciones: Seccion[] = [
       {
         nombre: "Jira - Gestión de Requerimientos",
         descripcion: "Gestión de requerimientos con manejo de sprints y tareas.",
-        link: "https://tu-url-jira.com"
+        link: "https://ximenadelgadom07.atlassian.net/jira/software/projects/PRD/boards/7/timeline?atlOrigin=eyJpIjoiY2U1MTYwNTYwOGRmNDM0YzlmN2IxMzUzNWU2OTViNzciLCJwIjoiaiJ9"
       },
       {
         nombre: "Excel - Respaldo de Requerimientos",
         descripcion: "Archivo con requerimientos, costos y presupuestos. Alternativa si no se puede acceder a Jira, con unos extra.",
-        link: "https://tu-url-excel.com"
+        link: "https://docs.google.com/spreadsheets/d/1QM0alTYjRtwsQlgaMctDk3PrSfbfVafa/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       },
       {
         nombre: "Especificación de Requerimientos (229 páginas)",
@@ -92,7 +92,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Bitácora de Sprints",
         descripcion: "Registro del trabajo realizado semana a semana.",
-        link: "#"
+        link: "https://docs.google.com/document/d/1uEsQTgQBK7goIDXB5RHAfZX-gpKrRt8-/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       }
     ]
   },
@@ -108,7 +108,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Diagrama Eraser (BD actual)",
         descripcion: "Modelo actualizado de base de datos con tablas, campos y relaciones.",
-        link: "#"
+        link: "https://app.eraser.io/workspace/heVvmrP0sZO7tPQFRRCg?origin=share&elements=WDoyVMDFs1bzUStXPmCUIQ"
       }
     ]
   },
@@ -135,7 +135,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Contrato de Producto",
         descripcion: "Términos y condiciones del sistema acordados por el equipo.",
-        link: "#"
+        link: "https://docs.google.com/document/d/1yzy8UVinsAP2LPAt2wSW_c5qo97vESAz/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       }
     ]
   },
