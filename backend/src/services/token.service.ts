@@ -8,7 +8,7 @@ const SECRET_KEY = process.env.JWT_SECRET;
 
 // Tipo para el payload completo
 interface TokenPayload {
-  idUsuario: number;
+  id: number;
   username: string;
   rol: string;
   tipoUsuario?: string;
@@ -17,7 +17,7 @@ interface TokenPayload {
 
 export function generarToken(payload: TokenPayload): string {
   const tokenPayload: Partial<TokenPayload> = {
-    idUsuario: payload.idUsuario,
+    id: payload.id,
     username: payload.username,
     rol: payload.rol,
     tipoUsuario: payload.tipoUsuario,

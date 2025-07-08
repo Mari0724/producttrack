@@ -281,11 +281,13 @@ export class ProductosController extends Controller {
     const parsed = zodValidate(productoSchema.partial(), body);
 
     if (!parsed.success) {
-      console.error("❌ Errores de validación Zod:", parsed.error.flatten());
       this.setStatus(400);
+
+      console.error("❌ Errores de validación Zod:", parsed.error);
+
       return {
         message: "Datos inválidos",
-        detalles: parsed.error.flatten(),
+        detalles: parsed.error, // 👈 string
       };
     }
 

@@ -8,9 +8,9 @@ datasource db {
 }
 
 model users {
-  idUsuario      Int     @id @default(autoincrement())
-  username       String  @unique
-  correo         String  @unique
+  idUsuario      Int       @id @default(autoincrement())
+  username       String    @unique
+  correo         String    @unique
   password       String
   nombreCompleto String
   telefono       String
@@ -18,47 +18,41 @@ model users {
   fotoPerfil     String?
 
   // Campos opcionales porque solo aplican a EMPRESARIAL
-  nombreEmpresa String?
-  nit           String?     @unique
-  estado        String
-  rol           String
-  tipoUsuario   TipoUsuario
-  rolEquipo     rolEquipo?
+  nombreEmpresa   String?
+  nit             String?   @unique
+  estado          String
+  rol             String
+  tipoUsuario     TipoUsuario? @default(INDIVIDUAL) // Se conserva el default
+  rolEquipo       rolEquipo?
+  perfilCompleto  Boolean   @default(false)
 
-  empresaId Int?
-  jefe      users?  @relation("EmpresaMiembros", fields: [empresaId], references: [idUsuario])
-  miembros  users[] @relation("EmpresaMiembros")
+  empresaId       Int?
+  jefe            users?     @relation("EmpresaMiembros", fields: [empresaId], references: [idUsuario])
+  miembros        users[]    @relation("EmpresaMiembros")
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  deletedAt       DateTime?
 
-  auteRest         auteRest?
+  // Relaciones
+  passwordResets   passwordReset[]
   notificaciones   notificaciones[]
   productos        productos[]
   comentarios      comentarios[]
-  soporte          soporte[]
-  ajustInven       ajustInven[]
-  analisisImagenes analisisImagenes[]
+  nutriScans       NutriScan[]
   histInv          histInv[]
-  api_logs         api_logs[]
-  MonAudRend       MonAudRend[]
-  auditoria        auditoria[]
-  preferencias   preferenciasNotificaciones?
+  preferencias     preferenciasNotificaciones?
 }
 
-model auteRest {
-  idSeguridad     Int      @id @default(autoincrement())
-  idUsuario       Int      @unique
-  googleId        String   @unique
-  token           String
-  fechaSolicitud  DateTime
-  fechaExpiracion DateTime
-  usado           Boolean
-  confirmado      Boolean
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
-  user            users    @relation(fields: [idUsuario], references: [idUsuario])
+model passwordReset {
+  idSeguridad      Int      @id @default(autoincrement())
+  idUsuario        Int
+  token            String
+  fechaSolicitud   DateTime
+  fechaExpiracion  DateTime
+  usado            Boolean   @default(false)
+
+  user             users     @relation(fields: [idUsuario], references: [idUsuario])
 }
 
 model notificaciones {
@@ -80,7 +74,6 @@ model preferenciasNotificaciones {
   comentarios        Boolean @default(true)
   reposicion         Boolean @default(true)
   actualizacion      Boolean @default(true)
-
   user               users  @relation(fields: [idUsuario], references: [idUsuario])
 }
 
@@ -101,24 +94,10 @@ model productos {
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
   eliminadoEn      DateTime?
-  ajustInven       ajustInven[]
-  alertVen         alertVen[]
-  colaboraciones   colaboraciones[]
   histInv          histInv[]
-  histoVenta       histoVenta[]
   usuario          users            @relation(fields: [usuarioId], references: [idUsuario])
   recorStock       recorStock[]
   comentarios      comentarios[]
-}
-
-model histoVenta {
-  idVenta         Int       @id @default(autoincrement())
-  idProducto      Int
-  cantidadVendida Int
-  fechaVenta      DateTime
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-  producto        productos @relation(fields: [idProducto], references: [id])
 }
 
 model recorStock {
@@ -145,59 +124,18 @@ model comentarios {
   producto        productos        @relation(fields: [idProducto], references: [id])
 }
 
-model soporte {
-  idSoporte   Int           @id @default(autoincrement())
-  idUsuario   Int
-  asunto      String
-  descripcion String
-  estado      EstadoSoporte
-  respuesta   String
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  user        users         @relation(fields: [idUsuario], references: [idUsuario])
-}
-
-model ajustInven {
-  idAjuste         Int       @id @default(autoincrement())
-  idProducto       Int
-  idUsuario        Int
-  cantidadAnterior Int
-  cantidadNueva    Int
-  motivo           String
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
-  producto         productos @relation(fields: [idProducto], references: [id])
-  usuario          users     @relation(fields: [idUsuario], references: [idUsuario])
-}
-
-model alertVen {
-  idAlerta    Int                @id @default(autoincrement())
-  idProducto  Int
-  fechaAlerta DateTime
-  estado      EstadoRecordatorio
-  createdAt   DateTime           @default(now())
-  updatedAt   DateTime           @updatedAt
-  producto    productos          @relation(fields: [idProducto], references: [id])
-}
-
-model analisisImagenes {
+model NutriScan {
   id            Int      @id @default(autoincrement())
   usuarioId     Int
-  esAlimento    Boolean
-  consulta      String
-  respuesta     Json
-  fechaAnalisis DateTime
-  usuario       users    @relation(fields: [usuarioId], references: [idUsuario])
-}
+  esAlimento    Boolean              // Se identificó como alimento o no
+  consulta      String               // Texto extraído por OCR
+  respuesta     Json                 // Resumen generado por GPT
+  tipoAnalisis  String               // "ocr-openfoodfacts-gpt" o "ocr-gpt-only"
+  fechaAnalisis DateTime @default(now())
+  actualizadoEn DateTime @updatedAt
+  isTest         Boolean   @default(false)
 
-model colaboraciones {
-  id          Int       @id @default(autoincrement())
-  productoId  Int
-  marca       String
-  tarifa      Decimal
-  fechaInicio DateTime
-  fechaFin    DateTime
-  producto    productos @relation(fields: [productoId], references: [id])
+  usuario users @relation(fields: [usuarioId], references: [idUsuario])
 }
 
 model histInv {
@@ -212,41 +150,6 @@ model histInv {
   fechaCambio       DateTime
   producto          productos       @relation(fields: [productoId], references: [id])
   usuario           users           @relation(fields: [usuarioId], references: [idUsuario])
-}
-
-model api_logs {
-  id              Int       @id @default(autoincrement())
-  endpoint        String
-  metodo          MetodoAPI
-  statusCode      Int
-  tiempoRespuesta Decimal
-  fecha           DateTime
-  errorMensaje    String
-  usuarioId       Int
-  usuario         users     @relation(fields: [usuarioId], references: [idUsuario])
-}
-
-model MonAudRend {
-  id           Int        @id @default(autoincrement())
-  tipoEvento   TipoEvento
-  nombreEvento String
-  descripcion  String
-  usuarioId    Int
-  fecha        DateTime
-  ip_address   String
-  nivel        String
-  valor        Decimal
-  stackTrace   String
-  usuario      users      @relation(fields: [usuarioId], references: [idUsuario])
-}
-
-model auditoria {
-  id          Int      @id @default(autoincrement())
-  evento      String
-  usuarioId   Int
-  descripcion String
-  fecha       DateTime
-  usuario     users    @relation(fields: [usuarioId], references: [idUsuario])
 }
 
 enum TipoUsuario {
@@ -296,27 +199,8 @@ enum EstadoComentario {
   revisado
 }
 
-enum EstadoSoporte {
-  pendiente
-  en_proceso
-  resuelto
-}
-
 enum AccionHistorial {
   agregado
   modificado
   eliminado
-}
-
-enum MetodoAPI {
-  GET
-  POST
-  PUT
-  DELETE
-}
-
-enum TipoEvento {
-  evento
-  error
-  metrica
 }

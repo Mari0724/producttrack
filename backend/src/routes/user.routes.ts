@@ -1,12 +1,12 @@
 import express, { Request, Response } from 'express';
-import { uploadCloudinary } from "../middleware/uploadCloudinary";
+import { uploadPerfiles } from "../middleware/allCloudinaryUploads";
 import { createUser, updateUser } from "../services/user.service";
 import { zodValidate } from "../utils/zodValidate";
 import { userSchema } from "../models/UserModel";
 
 const router = express.Router();
 
-router.post("/usuarios", uploadCloudinary.single("fotoPerfil"), async (req: Request, res: Response) => {
+router.post("/usuarios", uploadPerfiles.single("fotoPerfil"), async (req: Request, res: Response) => {
   try {
     const customReq = req as Request & { file?: Express.Multer.File };
     const body = customReq.body;
@@ -42,15 +42,15 @@ router.post("/usuarios", uploadCloudinary.single("fotoPerfil"), async (req: Requ
 
 
 
-router.put("/usuarios/:id/foto", uploadCloudinary.single("fotoPerfil"), async (req: Request, res: Response) => {
+router.put("/usuarios/:id/foto", uploadPerfiles.single("fotoPerfil"), async (req: Request, res: Response) => {
   try {
     const id = parseInt(req.params.id);
-
+    console.log("aqui");
     if (isNaN(id)) {
       res.status(400).json({ message: "ID inválido" });
     } else {
       const customReq = req as Request & { file?: Express.Multer.File };
-
+      console.log(customReq.file);
       if (!customReq.file || !customReq.file.path) {
         res.status(400).json({ message: "No se recibió la imagen" });
       } else {

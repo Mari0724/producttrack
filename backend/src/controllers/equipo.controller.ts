@@ -6,6 +6,7 @@ import { EquipoService } from "../services/equipo.service";
 import { EquipoDTO } from "../models/EquipoDTO";
 
 const equipoService = new EquipoService();
+console.log("📍 CONTROLADOR DE EQUIPO CARGADO");
 
 @Route("equipo")
 @Tags("Equipo")
@@ -14,6 +15,8 @@ export class EquipoController extends Controller {
   @Security("jwt")
   @Post()
   async crearEquipo(@Body() data: EquipoDTO, @Request() req: any) {
+    console.log("📥 Entró a EquipoController.crearEquipo");
+
     if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
       this.setStatus(403);
       return { mensaje: "Acceso denegado. Solo empresas o administradores pueden crear usuarios de equipo." };
@@ -28,11 +31,14 @@ export class EquipoController extends Controller {
       }
       empresaId = data.empresaId;
     } else {
-      empresaId = req.user.idUsuario;
+      empresaId = req.user.id;
     }
 
-    return await equipoService.crearEquipo(data, empresaId);
+    const creado = await equipoService.crearEquipo(data, empresaId);
+    console.log("✅ Usuario creado desde controller:", creado);
+    return creado; // ✅ solo se llama una vez
   }
+
 
   @Security("jwt")
   @Get()
@@ -58,7 +64,7 @@ export class EquipoController extends Controller {
       return { mensaje: "Acceso denegado. Solo empresas o administradores pueden filtrar el equipo." };
     }
 
-    const empresaId = req.user.rol === "ADMIN" ? undefined : req.user.idUsuario;
+    const empresaId = req.user.rol === "ADMIN" ? undefined : req.user.id;
 
     return await equipoService.filtrarEquipos({
       nombreCompleto,
@@ -78,7 +84,7 @@ export class EquipoController extends Controller {
 
     const equipo = await equipoService.obtenerEquipoPorId(id);
 
-    if (req.user.rol !== "ADMIN" && equipo.empresaId !== req.user.idUsuario) {
+    if (req.user.rol !== "ADMIN" && equipo.empresaId !== req.user.id) {
       this.setStatus(403);
       return { mensaje: "Este equipo no pertenece a tu empresa." };
     }
@@ -94,7 +100,7 @@ export class EquipoController extends Controller {
       return { mensaje: "Acceso denegado. Solo empresas o administradores pueden actualizar el equipo." };
     }
 
-    const empresaId = req.user.rol === "ADMIN" ? undefined : req.user.idUsuario;
+    const empresaId = req.user.rol === "ADMIN" ? undefined : req.user.id;
 
     return await equipoService.actualizarEquipo(id, data, empresaId);
   }
@@ -108,21 +114,42 @@ export class EquipoController extends Controller {
     }
 
     const equipo = await equipoService.obtenerEquipoPorId(id);
-
-    if (req.user.rol !== "ADMIN" && equipo.empresaId !== req.user.idUsuario) {
-      this.setStatus(403);
-      return { mensaje: "Este equipo no pertenece a tu empresa." };
+    if (!equipo) {
+      this.setStatus(404);
+      return { mensaje: "Miembro no encontrado." };
     }
 
-    const empresaId = req.user.rol === "ADMIN" ? undefined : req.user.idUsuario;
+    if (req.user.rol !== "ADMIN" && equipo.empresaId !== req.user.id) {
+      this.setStatus(403);
+      return { mensaje: "Este miembro no pertenece a tu empresa." };
+    }
 
-    return await equipoService.eliminarEquipo(id, empresaId);
+    return await equipoService.marcarComoEliminado(id);
   }
+
+  @Security("jwt")
+  @Delete("forzar-eliminar/{id}")
+  async eliminarFisicamente(@Path() id: number, @Request() req: any) {
+    if (req.user.rol !== "ADMIN") {
+      this.setStatus(403);
+      return { mensaje: "Solo el administrador puede eliminar completamente un usuario del equipo." };
+    }
+
+    try {
+      const eliminado = await equipoService.eliminarFisicamente(id);
+      return { mensaje: "Usuario eliminado físicamente con éxito.", eliminado };
+    } catch (error: any) {
+      this.setStatus(404);
+      return { mensaje: error.message };
+    }
+  }
+
+
 
   @Security("jwt")
   @Delete("todos/{empresaId}")
   async eliminarTodoElEquipo(@Path() empresaId: number, @Request() req: any) {
-    if (req.user.rol !== "ADMIN" && req.user.idUsuario !== empresaId) {
+    if (req.user.rol !== "ADMIN" && req.user.id !== empresaId) {
       this.setStatus(403);
       return { mensaje: "Acceso denegado. No puedes eliminar todos los usuarios de otra empresa." };
     }

@@ -11,7 +11,7 @@ export async function notificarProductoVencido(productosOpcionales?: Producto[])
   let productosConUsuario: (Producto & {
     usuario: {
       idUsuario: number;
-      tipoUsuario: string;
+      tipoUsuario: string | null;
       empresaId: number | null;
     };
   })[] = [];

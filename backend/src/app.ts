@@ -1,9 +1,7 @@
-// 🌱 Variables de entorno
-import './config/env'; // <-- usa el de tu compañera si ya centralizaron config
-// Si no tienes un archivo env.ts, puedes usar: import dotenv from "dotenv"; dotenv.config();
-
+import './config/env';
 import fs from "fs";
 import path from "path";
+
 import express, { Request, Response } from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
@@ -13,57 +11,58 @@ import swaggerUi from "swagger-ui-express";
 import { RegisterRoutes } from "../src/routes/routes";
 import nutriscanOCRRoutes from './routes/ocr.routes';
 import userRoutes from "./routes/user.routes";
-import { upload } from './middleware/upload'; // para /upload
-import './utils/cronJobs'; // tus tareas programadas
+
+import { uploadProductos } from './middleware/allCloudinaryUploads';
+import './utils/cronJobs'; // ✅ Cron jobs
 
 const app = express();
 
-// Middleware general
-app.use(cors({
-  origin: ['http://localhost:5173'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));
-
-app.use(express.json({ limit: "10mb" }));
-app.use(express.urlencoded({ extended: true, limit: "10mb" }));
-app.use(bodyParser.json()); // por compatibilidad
-app.use((req, res, next) => {
-  console.log("📦 Body recibido:", req.body);
-  next();
-});
-
-// 🧠 Rutas manuales
-app.use('/api/ocr', nutriscanOCRRoutes);
-app.use("/api", userRoutes);
-
-// 🧩 Rutas generadas por tsoa
-RegisterRoutes(app);
-
-// 📸 Ruta de subida de imágenes
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
 }
 
-app.post('/upload', upload.single('image'), function (req: Request, res: Response): void {
-  const file = req.file as Express.Multer.File;
+// CORS config
+app.use(cors({
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 
-  if (!file) {
+// 🧠 Middleware Body Parser
+app.use(bodyParser.json({ limit: "3mb" }));
+app.use(bodyParser.urlencoded({ extended: true, limit: "3mb" }));
+
+// 🔍 Rutas manuales primero
+app.use('/api/ocr', nutriscanOCRRoutes);
+app.use("/api", userRoutes);
+
+// 📄 Rutas generadas por tsoa
+RegisterRoutes(app);
+
+// 📁 Swagger docs (instancia limpia)
+const swaggerFilePath = path.join(__dirname, "../docs/swagger.json");
+const swaggerRaw = fs.readFileSync(swaggerFilePath, "utf8");
+const swaggerData = JSON.parse(JSON.stringify(JSON.parse(swaggerRaw)));
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerData));
+
+// 🖼 Ruta para subida de imágenes
+app.post('/upload', uploadProductos.single('image'), (req: MulterRequest, res: Response) => {
+  if (!req.file) {
     res.status(400).json({ error: 'No se subió ningún archivo' });
     return;
   }
 
-  res.status(200).json({
+  res.json({
     message: 'Imagen subida con éxito',
-    url: file.path,
-    public_id: file.filename,
+    url: req.file.path,
+    public_id: req.file.filename,
   });
 });
 
-// 📚 Documentación Swagger
-const swaggerFilePath = path.join(__dirname, "../docs/swagger.json");
-const swaggerRaw = fs.readFileSync(swaggerFilePath, "utf8");
-const swaggerData = JSON.parse(JSON.stringify(JSON.parse(swaggerRaw))); // forzamos instancia nueva
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerData));
+
+app.get('/', (req: Request, res: Response) => {
+  res.json({"ms": "BIenvenido a mi aplicación usted actualmente no tiene permisos"});
+});
 
 export default app;

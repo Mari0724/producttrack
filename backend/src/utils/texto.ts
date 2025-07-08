@@ -15,7 +15,6 @@ export const corregirErroresOCR = (texto: string): string => {
     .replace(/\b1entejas\b/gi, 'lentejas')
     .replace(/\bgarbansos\b/gi, 'garbanzos')
     .replace(/\baros\b/gi, 'arroz');
-    // Agrega más según tu caso
 };
 
 // Detecta palabra más larga en un string (plan B si no hay candidatos)
