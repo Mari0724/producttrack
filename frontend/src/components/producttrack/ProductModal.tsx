@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { createPortal } from 'react-dom';
-import type { Product } from '../types/Product';
+import type { Product } from '../../types/Product';
 
 interface ProductModalProps {
   isOpen: boolean;

@@ -1,25 +1,34 @@
+import { useEffect, useState } from "react";
 import {
   FaHome,
   FaChartBar,
   FaBox,
   FaHistory,
+  FaQrcode,
   FaCog,
+  FaClipboardList,
 } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import clsx from "clsx";
 
 const Sidebar = () => {
   const location = useLocation();
-  const tipoUsuario = localStorage.getItem("tipoUsuario")?.toLowerCase(); // 'individual' o 'empresarial'
-  const rol = localStorage.getItem("rol")?.toUpperCase();
+  const [tipoUsuario, setTipoUsuario] = useState<string | null>(null);
+  const [rol, setRol] = useState<string | null>(null);
 
-  // Base para las rutas dinámicas
+  useEffect(() => {
+    const tipo = localStorage.getItem("tipoUsuario");
+    const storedRol = localStorage.getItem("rol");
+    setTipoUsuario(tipo?.toLowerCase() ?? null);
+    setRol(storedRol?.toUpperCase() ?? null);
+  }, []);
+
   const basePath =
-  tipoUsuario === "empresarial"
-    ? "/app/empresarial"
-    : tipoUsuario === "desarrollador"
-    ? "/app/desarrollador"
-    : "/app/individual";
+    tipoUsuario === "empresarial"
+      ? "/app/empresarial"
+      : tipoUsuario === "desarrollador"
+      ? "/app/desarrollador"
+      : "/app/individual";
 
   return (
     <div
@@ -67,7 +76,6 @@ const Sidebar = () => {
             </Link>
           </li>
 
-          {/* Solo para empresarial podrías mostrar esto */}
           {(tipoUsuario === "empresarial" || rol === "DESARROLLADOR") && (
             <li>
               <Link
@@ -75,7 +83,7 @@ const Sidebar = () => {
                 className={clsx(
                   "flex items-center gap-2 hover:text-[#FCDDEC] transition w-full",
                   "justify-center group-hover:justify-start pl-0 group-hover:pl-2",
-                  location.pathname === "/reportes" && "font-semibold"
+                  location.pathname.includes("/reportes") && "font-semibold"
                 )}
               >
                 <FaChartBar className="text-2xl" />
@@ -101,6 +109,42 @@ const Sidebar = () => {
               </span>
             </Link>
           </li>
+
+          {tipoUsuario === "individual" && (
+            <li>
+              <Link
+                to={`/nutriscan`}
+                className={clsx(
+                  "flex items-center gap-2 hover:text-[#FCDDEC] transition w-full",
+                  "justify-center group-hover:justify-start pl-0 group-hover:pl-2",
+                  location.pathname.includes("/nutriscan") && "font-semibold"
+                )}
+              >
+                <FaQrcode className="text-2xl" />
+                <span className="hidden group-hover:inline transition-all duration-300">
+                  NutriScan
+                </span>
+              </Link>
+            </li>
+          )}
+
+          {(rol === "ADMIN" || rol === "DESARROLLADOR") && (
+            <li>
+              <Link
+                to={`/auditoria`}
+                className={clsx(
+                  "flex items-center gap-2 hover:text-[#FCDDEC] transition w-full",
+                  "justify-center group-hover:justify-start pl-0 group-hover:pl-2",
+                  location.pathname.includes("/auditoria") && "font-semibold"
+                )}
+              >
+                <FaClipboardList className="text-2xl" />
+                <span className="hidden group-hover:inline transition-all duration-300">
+                  Auditoría
+                </span>
+              </Link>
+            </li>
+          )}
 
           <li>
             <Link

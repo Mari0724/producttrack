@@ -1,4 +1,4 @@
-import NotificationBell from '../components/NotificationBell';
+import NotificationBell from '../producttrack/NotificationBell';
 
 const Header = () => {
   return (

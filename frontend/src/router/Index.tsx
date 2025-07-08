@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react';
 import { ArrowRight, Users, User, Building2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
-import type { Product } from '../types/Product';
 import axiosInstance from '../utils/axiosInstance';
+import type { Product } from '../types/Product';
+
 interface EmpresaInfo {
     nombreEmpresa: string;
     nit: string;
@@ -12,7 +13,6 @@ interface EmpresaInfo {
 
 const Index = () => {
     const { usuario } = useUser();
-
     const [empresaData, setEmpresaData] = useState<EmpresaInfo | null>(null);
 
     const [totalEquipo, setTotalEquipo] = useState(0);
@@ -22,7 +22,6 @@ const Index = () => {
     const [totalProductos, setTotalProductos] = useState(0);
     const [productosStockBajo, setProductosStockBajo] = useState(0);
     const [totalCategorias, setTotalCategorias] = useState(0);
-
     useEffect(() => {
         const fetchEmpresaInfo = async () => {
             const token = localStorage.getItem("token");
@@ -58,44 +57,6 @@ const Index = () => {
         fetchEmpresaInfo();
     }, [usuario]);
 
-    useEffect(() => {
-        const fetchResumenInventario = async () => {
-            if (!usuario) return; // 👈 ya no filtramos por tipoUsuario
-            try {
-                const productosRes = await axiosInstance.get("/productos");
-
-                // Filtra los productos por usuario creador si es necesario
-                const productosDelUsuario = (productosRes.data as Product[]).filter((p) => {
-                    if (usuario.tipoUsuario === "INDIVIDUAL") {
-                        return p.usuario?.idUsuario === usuario.idUsuario;
-                    }
-                    if (usuario.tipoUsuario === "EMPRESARIAL") {
-                        return p.usuario?.tipoUsuario === "EMPRESARIAL";
-                    }
-                    if (usuario.rol === "EQUIPO" && usuario.empresaId) {
-                        return p.usuario?.empresaId === usuario.empresaId;
-                    }
-                    return false;
-                });
-
-                const stockBajo = productosDelUsuario.filter((p) => p.cantidad <= 5).length;
-                setProductosStockBajo(stockBajo);
-
-                const categoriasUnicas = [...new Set(productosDelUsuario.map((p) => p.categoria))];
-                setTotalCategorias(categoriasUnicas.length);
-
-                setTotalProductos(productosDelUsuario.length);
-            } catch (error) {
-                console.error("❌ Error al obtener resumen de inventario:", error);
-            }
-        };
-
-        fetchResumenInventario();
-    }, [usuario]);
-
-
-
-
 
     // 👉 Efecto para obtener el resumen
     useEffect(() => {
@@ -124,6 +85,43 @@ const Index = () => {
         };
 
         fetchResumen();
+    }, [usuario]);
+
+    console.log("📦 Componente Index montado");
+
+    useEffect(() => {
+        const fetchResumenInventario = async () => {
+            if (!usuario) return;
+
+            try {
+                const res = await axiosInstance.get("/productos");
+                const productos = res.data as Product[];
+
+                const filtrados = productos.filter((p) => {
+                    if (usuario.tipoUsuario === "INDIVIDUAL") {
+                        return p.usuario?.idUsuario === usuario.idUsuario;
+                    }
+                    if (usuario.tipoUsuario === "EMPRESARIAL") {
+                        return p.usuario?.tipoUsuario === "EMPRESARIAL";
+                    }
+                    if (usuario.rol === "EQUIPO" && usuario.empresaId) {
+                        return p.usuario?.empresaId === usuario.empresaId;
+                    }
+                    return false;
+                });
+
+                const stockBajo = filtrados.filter((p) => p.cantidad <= 5).length;
+                const categoriasUnicas = [...new Set(filtrados.map((p) => p.categoria))];
+
+                setTotalProductos(filtrados.length);
+                setProductosStockBajo(stockBajo);
+                setTotalCategorias(categoriasUnicas.length);
+            } catch (error) {
+                console.error("❌ Error al obtener resumen de inventario:", error);
+            }
+        };
+
+        fetchResumenInventario();
     }, [usuario]);
 
     console.log("📦 Componente Index montado");

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import InventoryHistory from "../../components/InventoryHistory";
+import InventoryHistory from "../../components/producttrack/InventoryHistory";
 import type { InventoryChange } from "../../types/Inventory";
 import { getHistorialInventario } from "../../api/historial";
 

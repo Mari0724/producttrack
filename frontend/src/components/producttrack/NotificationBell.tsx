@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Edit, X, MessageSquare, Check } from 'lucide-react';
-import { getNotificacionesUsuario, marcarNotificacionLeida, getProductosDelUsuario } from "../api/notificaciones";
-import { puedeNotificar } from "../utils/enviarNotificacion";
+import { getNotificacionesUsuario, marcarNotificacionLeida, getProductosDelUsuario } from "../../api/notificaciones";
+import { puedeNotificar } from "../../utils/enviarNotificacion";
 
 interface Notification {
     idNotificacion: number;

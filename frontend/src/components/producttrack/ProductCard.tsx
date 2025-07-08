@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import ProductActions from './ProductActions';
 import { BadgeCheck, CalendarDays } from 'lucide-react';
-import CommentsModal from './individuales/CommentsModal';
-import CompanyCommentsModal from './empresarial/CompanyCommentsModal';
-import type { Product } from '../types/Product';
+import CommentsModal from '../individuales/CommentsModal';
+import CompanyCommentsModal from '../empresarial/CompanyCommentsModal';
+import type { Product } from '../../types/Product';
 
 interface ProductCardProps {
   product: Product;

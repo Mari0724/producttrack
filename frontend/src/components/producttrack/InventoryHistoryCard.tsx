@@ -1,6 +1,6 @@
 import React from 'react';
 import { Plus, Minus, X } from 'lucide-react';
-import type { InventoryChange } from "../types/Inventory";
+import type { InventoryChange } from "../../types/Inventory";
 
 interface InventoryHistoryCardProps {
   change: InventoryChange;

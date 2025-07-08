@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import ProductCard from '../../components/ProductCard';
-import FloatingButton from '../../components/FloatingButton';
-import ProductModal from '../../components/ProductModal';
-import ConfirmDeleteModal from '../../components/ConfirmDeleteModal';
+import ProductCard from '../../components/producttrack/ProductCard';
+import FloatingButton from '../../components/producttrack/FloatingButton';
+import ProductModal from '../../components/producttrack/ProductModal';
+import ConfirmDeleteModal from '../../components/producttrack/ConfirmDeleteModal';
 import type { Product } from '../../types/Product';
 import { getProductos, crearProducto, editarProducto, eliminarProducto, getCategorias, getProductosPorCategoria } from '../../api/productos';
 import toast from 'react-hot-toast';

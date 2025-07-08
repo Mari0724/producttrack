@@ -1,6 +1,6 @@
 import React from 'react';
-import InventoryHistoryCard from '../components/InventoryHistoryCard';
-import type { InventoryChange } from "../types/Inventory";
+import InventoryHistoryCard from '../producttrack/InventoryHistoryCard';
+import type { InventoryChange } from "../../types/Inventory";
 
 interface InventoryHistoryProps {
   changes: InventoryChange[];

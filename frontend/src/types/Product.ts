@@ -14,6 +14,7 @@ export interface Product {
   estado: EstadoProducto;
   imagen: string;
   categoria?: string;
+  usuarioId: number;
   usuario?: {
     idUsuario: number;
     tipoUsuario: "INDIVIDUAL" | "EMPRESARIAL";
