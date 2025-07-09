@@ -61,7 +61,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Propuesta Técnica",
         descripcion: "Documento técnico con objetivos, herramientas, etapas y estrategias del proyecto.",
-        link: "#"
+        link: "https://drive.google.com/file/d/1PBluhV_sOTRtlPAg1XUweIfqmOrYhv5D/view?usp=sharing"
       },
       {
         nombre: "Manual Técnico",
@@ -79,7 +79,17 @@ const secciones: Seccion[] = [
         link: "#"
       },
       {
+        nombre: "Diagrama de Arquitectura del Sistema",
+        descripcion: "Representación de alto nivel de la estructura del sistema, incluyendo tecnologías, componentes y relaciones entre frontend, backend, base de datos e IA.",
+        link: "https://www.figma.com/design/hUdRfboJfdSL8p0yFIrR2Q/Untitled?t=nlnMBJ7vGIzZbKRO-1"
+      },
+      {
         nombre: "Diagramas UML y Técnicos",
+        descripcion: "Casos de uso, clases, paquetes, actividades, ER, arquitectura, priorización, Moscow, secuencias.",
+        link: "#"
+      },
+      {
+        nombre: "Otros Diagramas Utiles",
         descripcion: "Casos de uso, clases, paquetes, actividades, ER, arquitectura, priorización, Moscow, secuencias.",
         link: "#"
       }
@@ -108,7 +118,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Diagrama Eraser (BD actual)",
         descripcion: "Modelo actualizado de base de datos con tablas, campos y relaciones.",
-        link: "https://app.eraser.io/workspace/heVvmrP0sZO7tPQFRRCg?origin=share&elements=WDoyVMDFs1bzUStXPmCUIQ"
+        link: "https://app.eraser.io/workspace/zWHXs7QF3mRmevVx39uu?origin=share"
       }
     ]
   },
@@ -130,7 +140,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Contrato de Persona",
         descripcion: "Responsabilidades individuales dentro del equipo.",
-        link: "#"
+        link: "https://docs.google.com/document/d/1jgOq5LeqeBr060I2i2Q-vqLqo3nWCTPm/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       },
       {
         nombre: "Contrato de Producto",
@@ -177,7 +187,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Versiones anteriores de documentos",
         descripcion: "Archivos antiguos usados como referencia, ya no vigentes.",
-        link: "#"
+        link: "https://drive.google.com/drive/folders/1vMBS-Qa2V8z1tgMNSiExXfY9lXokDNlY?usp=drive_link"
       }
     ]
   }
@@ -205,6 +215,15 @@ export default function Home() {
         <div className="container">
           <h1 className={styles.title}>{siteConfig.title}</h1>
           <p className={styles.subtitle}>Gestión integral de inventarios</p>
+          <p className={styles.driveBackup}>
+            También puedes consultar el <strong>respaldo completo</strong> en Google Drive, con la misma estructura de carpetas y documentos que aquí.
+            <br />
+            Enlace al Drive:{" "}
+            <a href="https://drive.google.com/drive/folders/1Hz5cbS6UlFHtiUy2a8K7DgCmhx6jBbh8?usp=sharing" target="_blank" rel="noopener noreferrer">
+              Abrir respaldo en Google Drive
+            </a>
+          </p>
+
         </div>
       </header>
 

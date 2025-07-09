@@ -108,6 +108,23 @@
   color: #808000;
 }
 
+.driveBackup {
+  font-size: 0.95rem;
+  color: #fcefe3; /* Texto claro */
+  margin-top: 12px;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.driveBackup a {
+  color: #fdd835; /* Amarillo brillante */
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.driveBackup a:hover {
+  color: #fff176; /* Amarillo más claro */
+}
 
 /* Responsive: 1 columna en celular */
 @media screen and (max-width: 768px) {
