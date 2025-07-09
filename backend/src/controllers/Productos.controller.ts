@@ -28,8 +28,8 @@ import { notificarReposicionRecomendada } from "../services/notificaciones/repos
 import { notificarProductoVencido } from "../services/notificaciones/productoVencido.service";
 import { AccionHistorial } from '@prisma/client';
 
-@Route("/Productos")
-@Tags("Productos")
+@Route("/productos")
+@Tags("productos")
 export class ProductosController extends Controller {
   // 🔍 Obtener productos con filtros
   @Get("/")
@@ -182,7 +182,9 @@ export class ProductosController extends Controller {
     @Request() req: AuthenticatedRequest,
     @Body() requestBody: ProductosDTO
   ): Promise<ResponseMessageWithData<any> | ResponseMessage> {
-    const { rol, idUsuario } = req.user || {};
+    const rol = req.user?.rol;
+    const idUsuario = req.user?.id;
+
     if (!rol || typeof idUsuario !== "number") {
       this.setStatus(401);
       return { message: "No se pudo identificar al usuario." };
@@ -357,7 +359,7 @@ export class ProductosController extends Controller {
       // 🔍 Buscar producto antes de eliminar
       const producto = await obtenerProductoPorId(id);
       const idUsuarioToken = (req.user as any)?.idUsuario;
-      
+
       if (!producto) {
         this.setStatus(404);
         return { message: "Producto no encontrado" };

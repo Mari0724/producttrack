@@ -526,7 +526,7 @@ export function RegisterRoutes(app: Router) {
                 fechaVencimientoHasta: {"in":"query","name":"fechaVencimientoHasta","dataType":"string"},
                 usuarioId: {"in":"query","name":"usuarioId","dataType":"double"},
         };
-        app.get('/Productos',
+        app.get('/productos',
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getAll)),
 
@@ -556,7 +556,7 @@ export function RegisterRoutes(app: Router) {
         const argsProductosController_obtenerCategorias: Record<string, TsoaRoute.ParameterSchema> = {
                 tipoUsuario: {"in":"query","name":"tipoUsuario","dataType":"string"},
         };
-        app.get('/Productos/categorias',
+        app.get('/productos/categorias',
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.obtenerCategorias)),
 
@@ -586,7 +586,7 @@ export function RegisterRoutes(app: Router) {
         const argsProductosController_getByCategoria: Record<string, TsoaRoute.ParameterSchema> = {
                 categoria: {"in":"query","name":"categoria","required":true,"dataType":"string"},
         };
-        app.get('/Productos/por-categoria',
+        app.get('/productos/por-categoria',
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getByCategoria)),
 
@@ -616,7 +616,7 @@ export function RegisterRoutes(app: Router) {
         const argsProductosController_getNombresProductosDelUsuario: Record<string, TsoaRoute.ParameterSchema> = {
                 idUsuario: {"in":"path","name":"idUsuario","required":true,"dataType":"double"},
         };
-        app.get('/Productos/nombres/:idUsuario',
+        app.get('/productos/nombres/:idUsuario',
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getNombresProductosDelUsuario)),
 
@@ -645,7 +645,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsProductosController_getCantidadPorCategoria: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/Productos/cantidad-por-categoria',
+        app.get('/productos/cantidad-por-categoria',
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getCantidadPorCategoria)),
 
@@ -674,7 +674,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsProductosController_getCantidadPorRangoPrecio: Record<string, TsoaRoute.ParameterSchema> = {
         };
-        app.get('/Productos/cantidad-por-rango-precio',
+        app.get('/productos/cantidad-por-rango-precio',
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getCantidadPorRangoPrecio)),
 
@@ -704,7 +704,7 @@ export function RegisterRoutes(app: Router) {
         const argsProductosController_getById: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"string"},
         };
-        app.get('/Productos/:id',
+        app.get('/productos/:id',
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getById)),
 
@@ -735,7 +735,7 @@ export function RegisterRoutes(app: Router) {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 requestBody: {"in":"body","name":"requestBody","required":true,"ref":"ProductosDTO"},
         };
-        app.post('/Productos',
+        app.post('/productos',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.create)),
@@ -768,7 +768,7 @@ export function RegisterRoutes(app: Router) {
                 id: {"in":"path","name":"id","required":true,"dataType":"double"},
                 body: {"in":"body","name":"body","required":true,"ref":"Partial_ProductosDTO_"},
         };
-        app.put('/Productos/:id',
+        app.put('/productos/:id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.updateProducto)),
@@ -800,7 +800,7 @@ export function RegisterRoutes(app: Router) {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 id: {"in":"path","name":"id","required":true,"dataType":"double"},
         };
-        app.delete('/Productos/:id',
+        app.delete('/productos/:id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.deleteProducto)),

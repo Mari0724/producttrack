@@ -1091,7 +1091,7 @@
 				]
 			}
 		},
-		"/Productos": {
+		"/productos": {
 			"get": {
 				"operationId": "GetAll",
 				"responses": {
@@ -1108,7 +1108,7 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [],
 				"parameters": [
@@ -1204,7 +1204,7 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [
 					{
@@ -1224,7 +1224,7 @@
 				}
 			}
 		},
-		"/Productos/categorias": {
+		"/productos/categorias": {
 			"get": {
 				"operationId": "ObtenerCategorias",
 				"responses": {
@@ -1250,7 +1250,7 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [],
 				"parameters": [
@@ -1265,7 +1265,7 @@
 				]
 			}
 		},
-		"/Productos/por-categoria": {
+		"/productos/por-categoria": {
 			"get": {
 				"operationId": "GetByCategoria",
 				"responses": {
@@ -1279,7 +1279,7 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [],
 				"parameters": [
@@ -1294,7 +1294,7 @@
 				]
 			}
 		},
-		"/Productos/nombres/{idUsuario}": {
+		"/productos/nombres/{idUsuario}": {
 			"get": {
 				"operationId": "GetNombresProductosDelUsuario",
 				"responses": {
@@ -1313,7 +1313,7 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [],
 				"parameters": [
@@ -1329,7 +1329,7 @@
 				]
 			}
 		},
-		"/Productos/cantidad-por-categoria": {
+		"/productos/cantidad-por-categoria": {
 			"get": {
 				"operationId": "GetCantidadPorCategoria",
 				"responses": {
@@ -1343,13 +1343,13 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [],
 				"parameters": []
 			}
 		},
-		"/Productos/cantidad-por-rango-precio": {
+		"/productos/cantidad-por-rango-precio": {
 			"get": {
 				"operationId": "GetCantidadPorRangoPrecio",
 				"responses": {
@@ -1363,13 +1363,13 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [],
 				"parameters": []
 			}
 		},
-		"/Productos/{id}": {
+		"/productos/{id}": {
 			"get": {
 				"operationId": "GetById",
 				"responses": {
@@ -1383,7 +1383,7 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [],
 				"parameters": [
@@ -1412,7 +1412,7 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [
 					{
@@ -1456,7 +1456,7 @@
 					}
 				},
 				"tags": [
-					"Productos"
+					"productos"
 				],
 				"security": [
 					{
