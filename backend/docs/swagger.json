@@ -298,55 +298,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"Partial_ProductosDTO_": {
-				"properties": {
-					"id": {
-						"type": "number",
-						"format": "double"
-					},
-					"codigoBarras": {
-						"type": "string"
-					},
-					"codigoQR": {
-						"type": "string"
-					},
-					"nombre": {
-						"type": "string"
-					},
-					"descripcion": {
-						"type": "string"
-					},
-					"cantidad": {
-						"type": "number",
-						"format": "double"
-					},
-					"precio": {
-						"type": "number",
-						"format": "double"
-					},
-					"fechaAdquisicion": {
-						"type": "string"
-					},
-					"fechaVencimiento": {
-						"type": "string"
-					},
-					"usuarioId": {
-						"type": "number",
-						"format": "double"
-					},
-					"estado": {
-						"$ref": "#/components/schemas/_36_Enums.EstadoProducto"
-					},
-					"imagen": {
-						"type": "string"
-					},
-					"categoria": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"description": "Make all properties in T optional"
-			},
 			"JsonValue": {
 				"anyOf": [
 					{
@@ -1434,9 +1385,7 @@
 					"required": true,
 					"content": {
 						"application/json": {
-							"schema": {
-								"$ref": "#/components/schemas/Partial_ProductosDTO_"
-							}
+							"schema": {}
 						}
 					}
 				}

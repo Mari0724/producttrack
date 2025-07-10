@@ -13,6 +13,7 @@ import nutriscanOCRRoutes from './routes/ocr.routes';
 import userRoutes from "./routes/user.routes";
 
 import { uploadProductos } from './middleware/allCloudinaryUploads';
+import './utils/cronJobs';
 
 const app = express();
 

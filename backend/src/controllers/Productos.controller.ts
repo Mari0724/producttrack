@@ -182,9 +182,7 @@ export class ProductosController extends Controller {
     @Request() req: AuthenticatedRequest,
     @Body() requestBody: ProductosDTO
   ): Promise<ResponseMessageWithData<any> | ResponseMessage> {
-    const rol = req.user?.rol;
-    const idUsuario = req.user?.id;
-
+    const { rol, idUsuario } = req.user || {};
     if (!rol || typeof idUsuario !== "number") {
       this.setStatus(401);
       return { message: "No se pudo identificar al usuario." };
@@ -238,30 +236,21 @@ export class ProductosController extends Controller {
   }
 
 
-  // ✅ Actualizar producto
   @Put("/{id}")
   @Security("jwt")
   @Middlewares([autenticarToken])
   public async updateProducto(
     @Request() req: AuthenticatedRequest,
     @Path() id: number,
-    @Body() body: Partial<ProductosDTO>
+    @Body() body: any
   ): Promise<ResponseMessage> {
     console.log("👤 Usuario recibido:", req.user);
     const rol = req.user?.rol;
-    const idUsuarioToken = (req.user as any)?.idUsuario;
+    const idUsuarioToken = (req.user as any)?.id;
 
     if (!rol || !puede("editar", rol)) {
       this.setStatus(403);
       return { message: "No tienes permiso para editar productos." };
-    }
-
-    if (rol !== "EDITOR" && rol !== "ADMIN") {
-      const producto = await obtenerProductoPorId(id);
-      if (!producto || producto.usuarioId !== idUsuarioToken) {
-        this.setStatus(403);
-        return { message: "No tienes permiso para editar este producto." };
-      }
     }
 
     const productoExistente = await obtenerProductoPorId(id);
@@ -270,9 +259,20 @@ export class ProductosController extends Controller {
       return { message: "Producto no encontrado." };
     }
 
-    const esPropietario = productoExistente.usuarioId === idUsuarioToken;
+    const esPropietario = Number(productoExistente.usuarioId) === Number(idUsuarioToken);
     const esEditorConPermiso = rol === "EDITOR" || rol === "ADMIN";
 
+    console.log("📦 productoExistente.usuarioId:", productoExistente.usuarioId);
+    console.log("🪪 idUsuarioToken:", idUsuarioToken);
+    console.log("🔑 esPropietario:", esPropietario);
+    console.log("🔐 esEditorConPermiso:", esEditorConPermiso);
+
+    if (!esPropietario && !esEditorConPermiso) {
+      this.setStatus(403);
+      return { message: "No puedes editar productos de otro usuario." };
+    }
+
+    // ✅ Solo permitimos si es propietario o tiene rol alto
     if (!esPropietario && !esEditorConPermiso) {
       this.setStatus(403);
       return { message: "No puedes editar productos de otro usuario." };
@@ -284,12 +284,10 @@ export class ProductosController extends Controller {
 
     if (!parsed.success) {
       this.setStatus(400);
-
       console.error("❌ Errores de validación Zod:", parsed.error);
-
       return {
         message: "Datos inválidos",
-        detalles: parsed.error, // 👈 string
+        detalles: parsed.error,
       };
     }
 
@@ -310,7 +308,6 @@ export class ProductosController extends Controller {
         await notificarReposicionRecomendada([productoActualizado]);
         await notificarProductoVencido([productoActualizado]);
 
-        // 👇 Historial justo aquí, antes del return
         await prisma.histInv.create({
           data: {
             productoId: productoActualizado.id,
@@ -358,7 +355,7 @@ export class ProductosController extends Controller {
     try {
       // 🔍 Buscar producto antes de eliminar
       const producto = await obtenerProductoPorId(id);
-      const idUsuarioToken = (req.user as any)?.idUsuario;
+      const idUsuarioToken = (req.user as any)?.id;
 
       if (!producto) {
         this.setStatus(404);

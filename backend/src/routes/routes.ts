@@ -127,11 +127,6 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Partial_ProductosDTO_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"id":{"dataType":"double"},"codigoBarras":{"dataType":"string"},"codigoQR":{"dataType":"string"},"nombre":{"dataType":"string"},"descripcion":{"dataType":"string"},"cantidad":{"dataType":"double"},"precio":{"dataType":"double"},"fechaAdquisicion":{"dataType":"string"},"fechaVencimiento":{"dataType":"string"},"usuarioId":{"dataType":"double"},"estado":{"ref":"_36_Enums.EstadoProducto"},"imagen":{"dataType":"string"},"categoria":{"dataType":"string"}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "JsonValue": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"string"},{"dataType":"double"},{"dataType":"boolean"},{"ref":"JsonObject"},{"ref":"JsonArray"},{"dataType":"enum","enums":[null]}],"validators":{}},
@@ -766,7 +761,7 @@ export function RegisterRoutes(app: Router) {
         const argsProductosController_updateProducto: Record<string, TsoaRoute.ParameterSchema> = {
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                body: {"in":"body","name":"body","required":true,"ref":"Partial_ProductosDTO_"},
+                body: {"in":"body","name":"body","required":true,"dataType":"any"},
         };
         app.put('/productos/:id',
             authenticateMiddleware([{"jwt":[]}]),
