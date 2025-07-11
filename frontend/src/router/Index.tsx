@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import axiosInstance from '../utils/axiosInstance';
 import type { Product } from '../types/Product';
+import type { TeamMember } from '../types/team';
 
 interface EmpresaInfo {
     nombreEmpresa: string;
@@ -75,10 +76,11 @@ const Index = () => {
                     axiosInstance.get(`/equipo/filtrar?rolEquipo=LECTOR`, { headers }),
                 ]);
 
-                setTotalEquipo(todos.data.length);
-                setTotalEditores(editores.data.length);
-                setTotalComentaristas(comentaristas.data.length);
-                setTotalLectores(lectores.data.length);
+                setTotalEquipo((todos.data as TeamMember[]).filter((u) => u.estado === "activo").length);
+                setTotalEditores((editores.data as TeamMember[]).filter((u) => u.estado === "activo").length);
+                setTotalComentaristas((comentaristas.data as TeamMember[]).filter((u) => u.estado === "activo").length);
+                setTotalLectores((lectores.data as TeamMember[]).filter((u) => u.estado === "activo").length);
+                
             } catch (error) {
                 console.error("❌ Error al cargar resumen del equipo:", error);
             }
@@ -153,7 +155,7 @@ const Index = () => {
                             <p className="text-gray-600 mb-4 text-sm">
                                 Crea, edita y gestiona los permisos de los miembros de tu equipo de trabajo.
                             </p>
-                            <Link to="/equipo">
+                            <Link to="/app/empresarial/equipo">
                                 <button className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-producttrack-olive hover:bg-producttrack-olive/90 text-white rounded-md font-medium transition">
                                     Ir a Gestión de Equipo
                                     <ArrowRight className="h-4 w-4" />

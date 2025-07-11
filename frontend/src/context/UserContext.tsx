@@ -19,6 +19,7 @@ interface UserContextType {
   usuario: Usuario | null;
   setUsuario: (user: Usuario | null) => void;
   cargando: boolean;
+  refreshUsuario: () => void;
 }
 
 // 🧠 Creamos el contexto
@@ -45,8 +46,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCargando(false); // ✅ Marcamos que ya terminó de cargar
   }, []);
 
+  // ✅ Función para refrescar manualmente el usuario desde el token
+  const refreshUsuario = () => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      try {
+        const decoded = jwtDecode<Usuario>(token);
+        console.log("🔁 Usuario refrescado desde token:", decoded);
+        setUsuario(decoded);
+      } catch (e) {
+        console.error("❌ Error al refrescar token:", e);
+      }
+    }
+  };
+
   return (
-    <UserContext.Provider value={{ usuario, setUsuario, cargando }}>
+    <UserContext.Provider value={{ usuario, setUsuario, cargando, refreshUsuario }}>
       {children}
     </UserContext.Provider>
   );

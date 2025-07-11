@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "sonner";
 import { UserProvider, useUser } from "./context/UserContext";
 
@@ -47,13 +47,13 @@ function RutaRaiz() {
 }
 
 // 🧱 Wrapper para pasar props al layout
-function LayoutWrapper() {
+function LayoutWrapper({ children }: { children: React.ReactNode }) {
   const { usuario } = useUser();
   if (!usuario) return null;
 
   return (
     <Layout userType={usuario.tipoUsuario} companyName={usuario.nombreEmpresa}>
-      <Outlet />
+      {children}
     </Layout>
   );
 }
@@ -63,7 +63,7 @@ function App() {
     <UserProvider>
       <Router>
         <Routes>
-          {/* Rutas públicas */}
+          {/* Públicas */}
           <Route path="/" element={<RutaRaiz />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -73,47 +73,34 @@ function App() {
           <Route path="/verificar-codigo" element={<VerificarCodigo />} />
           <Route path="/completar-perfil" element={<CompleteProfile />} />
 
-          {/* Rutas privadas */}
-          <Route element={<LayoutWrapper />}>
-            <Route path="/home" element={<Index />} />
+          {/* Privadas - Rutas individuales con LayoutWrapper */}
+          <Route path="/home" element={<LayoutWrapper><Index /></LayoutWrapper>} />
+          <Route path="/nutriscan" element={<LayoutWrapper><NutriScan /></LayoutWrapper>} />
+          <Route path="/perfil" element={<LayoutWrapper><Profile /></LayoutWrapper>} />
+          
+          {/* INDIVIDUAL */}
+          <Route path="/app/individual/home" element={<LayoutWrapper><Index /></LayoutWrapper>} />
+          <Route path="/app/individual/inventario" element={<LayoutWrapper><InventarioIndividual /></LayoutWrapper>} />
+          <Route path="/app/individual/historial" element={<LayoutWrapper><HistorialIndividual /></LayoutWrapper>} />
+          <Route path="/app/individual/configuracion" element={<LayoutWrapper><NotificacionesConfig /></LayoutWrapper>} />
+          
+          {/* EMPRESARIAL */}
+          <Route path="/app/empresarial/home" element={<LayoutWrapper><Index /></LayoutWrapper>} />
+          <Route path="/app/empresarial/inventario" element={<LayoutWrapper><InventarioEmpresarial /></LayoutWrapper>} />
+          <Route path="/app/empresarial/historial" element={<LayoutWrapper><HistorialEmpresarial /></LayoutWrapper>} />
+          <Route path="/app/empresarial/configuracion" element={<LayoutWrapper><NotificacionesConfig /></LayoutWrapper>} />
+          <Route path="/app/empresarial/equipo" element={<LayoutWrapper><TeamManagement /></LayoutWrapper>} />
 
-            {/* INDIVIDUAL */}
-            <Route path="/app/individual">
-              <Route index element={<Navigate to="home" />} />
-              <Route path="home" element={<Index />} />
-              <Route path="inventario" element={<InventarioIndividual />} />
-              <Route path="historial" element={<HistorialIndividual />} />
-              <Route path="configuracion" element={<NotificacionesConfig />} />
-            </Route>
+          {/* DESARROLLADOR */}
+          <Route path="/app/desarrollador/home" element={<LayoutWrapper><Index /></LayoutWrapper>} />
+          <Route path="/app/desarrollador/reportes" element={<LayoutWrapper><ReportesDesarrollador /></LayoutWrapper>} />
+          <Route path="/app/desarrollador/configuracion" element={<LayoutWrapper><NotificacionesConfig /></LayoutWrapper>} />
 
-            {/* EMPRESARIAL */}
-            <Route path="/app/empresarial">
-              <Route index element={<Navigate to="home" />} />
-              <Route path="home" element={<Index />} />
-              <Route path="inventario" element={<InventarioEmpresarial />} />
-              <Route path="historial" element={<HistorialEmpresarial />} />
-              <Route path="configuracion" element={<NotificacionesConfig />} />
-              <Route path="equipo" element={<TeamManagement />} />
-            </Route>
-
-            {/* DESARROLLADOR */}
-            <Route path="/app/desarrollador">
-              <Route index element={<Navigate to="home" />} />
-              <Route path="home" element={<Index />} />
-              <Route path="reportes" element={<ReportesDesarrollador />} />
-              <Route path="configuracion" element={<NotificacionesConfig />} />
-            </Route>
-
-            {/* Auditoría */}
-            <Route path="/auditoria" element={<AuditoriaIndex />} />
-            <Route path="/auditoria/nutriscan" element={<NutriScanAuditoria />} />
-            <Route path="/auditoria/equipo" element={<EquipoAuditoria />} />
-            <Route path="/auditoria/usuarios" element={<UsuarioAuditoria />} />
-
-            {/* Otros */}
-            <Route path="/nutriscan" element={<NutriScan />} />
-            <Route path="/perfil" element={<Profile />} />
-          </Route>
+          {/* AUDITORÍA */}
+          <Route path="/auditoria" element={<LayoutWrapper><AuditoriaIndex /></LayoutWrapper>} />
+          <Route path="/auditoria/nutriscan" element={<LayoutWrapper><NutriScanAuditoria /></LayoutWrapper>} />
+          <Route path="/auditoria/equipo" element={<LayoutWrapper><EquipoAuditoria /></LayoutWrapper>} />
+          <Route path="/auditoria/usuarios" element={<LayoutWrapper><UsuarioAuditoria /></LayoutWrapper>} />
 
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" />} />

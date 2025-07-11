@@ -9,7 +9,6 @@ import { createTeamMember, getAllTeamMembers, updateTeamMember, deleteTeamMember
 import { useToast } from "../../hooks/useToast";
 
 interface TeamMemberWithStatus extends TeamMember {
-  status: "activo" | "pendiente";
   phone?: string;
 }
 
@@ -25,7 +24,7 @@ interface MemberFromAPI {
 }
 
 const TeamManagement = () => {
-  const { usuario } = useUser();
+  const { usuario, refreshUsuario } = useUser();
   const [searchTerm, setSearchTerm] = useState("");
   const [teamMembers, setTeamMembers] = useState<TeamMemberWithStatus[]>([]);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
@@ -87,13 +86,14 @@ console.log("🔍 Payload que se enviará:", payload);
       name: created.nombreCompleto,
       email: created.correo,
       role: created.rolEquipo,
-      status: created.estado || "activo",
+      estado: created.estado || "activo",
       phone: created.telefono,
     };
 
     setTeamMembers((prev) => [...prev, newMember]);
     toast(`✅ ${data.name} agregado al equipo.`);
     setIsAddModalOpen(false);
+    refreshUsuario();
   } catch (error) {
     console.error(error);
     toast("❌ Error al agregar el miembro. Intenta de nuevo.");
@@ -124,6 +124,7 @@ const handleEditMember = async (updatedData: Omit<TeamMember, "id">) => {
     toast(`✅ ${updatedData.name} actualizado correctamente.`);
     setIsEditModalOpen(false);
     setSelectedMember(null);
+    refreshUsuario();
   } catch (err) {
     console.error("❌ Error actualizando miembro:", err);
     toast("❌ No se pudo actualizar el miembro.");
