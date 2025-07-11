@@ -36,7 +36,7 @@ export class EquipoController extends Controller {
 
     const creado = await equipoService.crearEquipo(data, empresaId);
     console.log("✅ Usuario creado desde controller:", creado);
-    return creado; // ✅ solo se llama una vez
+    return creado; 
   }
 
 
@@ -47,8 +47,8 @@ export class EquipoController extends Controller {
       this.setStatus(403);
       return { mensaje: "Acceso denegado. Solo empresas o administradores pueden ver el equipo." };
     }
-
-    return await equipoService.obtenerTodosLosEquipos();
+    const empresaId: number | undefined = req.user.rol === "ADMIN" ? undefined : req.user.id;
+    return await equipoService.obtenerTodosLosEquipos(empresaId); 
   }
 
   @Security("jwt")

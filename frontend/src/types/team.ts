@@ -7,6 +7,7 @@ export interface TeamMember {
   role: UserRole;
   avatar?: string;
   perfilCompleto?: boolean;
+  estado: "activo" | "inactivo";
 }
 
 export interface TeamStats {

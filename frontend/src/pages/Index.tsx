@@ -3,6 +3,8 @@ import { ArrowRight, Users, User, Building2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import axiosInstance from '../utils/axiosInstance';
+import type { TeamMember } from '../types/team';
+
 
 interface EmpresaInfo {
   nombreEmpresa: string;
@@ -13,46 +15,45 @@ interface EmpresaInfo {
 const Index = () => {
   const { usuario } = useUser();
   const [empresaData, setEmpresaData] = useState<EmpresaInfo | null>(null);
-
   const [totalEquipo, setTotalEquipo] = useState(0);
   const [totalEditores, setTotalEditores] = useState(0);
   const [totalComentaristas, setTotalComentaristas] = useState(0);
   const [totalLectores, setTotalLectores] = useState(0);
 
   useEffect(() => {
-  const fetchEmpresaInfo = async () => {
-    const token = localStorage.getItem("token");
-    if (!token || !usuario) return;
+    const fetchEmpresaInfo = async () => {
+      const token = localStorage.getItem("token");
+      if (!token || !usuario) return;
 
-    try {
-      const headers = { Authorization: `Bearer ${token}` };
+      try {
+        const headers = { Authorization: `Bearer ${token}` };
 
-      let empresa;
+        let empresa;
 
-      if (usuario.rol === 'EQUIPO' && usuario.empresaId) {
-        // Si es miembro de equipo
-        const response = await axiosInstance.get(`/usuarios/empresa/${usuario.empresaId}`, { headers });
-        empresa = response.data;
-      } else if (usuario.tipoUsuario === 'EMPRESARIAL') {
-        // Si es empresa (admin)
-        const response = await axiosInstance.get(`/usuarios/${usuario.idUsuario}`, { headers });
-        empresa = response.data;
+        if (usuario.rol === 'EQUIPO' && usuario.empresaId) {
+          // Si es miembro de equipo
+          const response = await axiosInstance.get(`/usuarios/empresa/${usuario.empresaId}`, { headers });
+          empresa = response.data;
+        } else if (usuario.tipoUsuario === 'EMPRESARIAL') {
+          // Si es empresa (admin)
+          const response = await axiosInstance.get(`/usuarios/${usuario.idUsuario}`, { headers });
+          empresa = response.data;
+        }
+
+        if (empresa) {
+          setEmpresaData({
+            nombreEmpresa: empresa.nombreEmpresa || 'Sin nombre',
+            nit: empresa.nit || 'Sin NIT',
+            telefono: empresa.telefono || 'Sin teléfono',
+          });
+        }
+      } catch (error) {
+        console.error("❌ Error al obtener datos de empresa:", error);
       }
+    };
 
-      if (empresa) {
-        setEmpresaData({
-          nombreEmpresa: empresa.nombreEmpresa || 'Sin nombre',
-          nit: empresa.nit || 'Sin NIT',
-          telefono: empresa.telefono || 'Sin teléfono',
-        });
-      }
-    } catch (error) {
-      console.error("❌ Error al obtener datos de empresa:", error);
-    }
-  };
-
-  fetchEmpresaInfo();
-}, [usuario]);
+    fetchEmpresaInfo();
+  }, [usuario]);
 
 
   // 👉 Efecto para obtener el resumen
@@ -72,10 +73,11 @@ const Index = () => {
           axiosInstance.get(`/equipo/filtrar?rolEquipo=LECTOR`, { headers }),
         ]);
 
-        setTotalEquipo(todos.data.length);
-        setTotalEditores(editores.data.length);
-        setTotalComentaristas(comentaristas.data.length);
-        setTotalLectores(lectores.data.length);
+        setTotalEquipo((todos.data as TeamMember[]).filter((u) => u.estado === "activo").length);
+        setTotalEditores((editores.data as TeamMember[]).filter((u) => u.estado === "activo").length);
+        setTotalComentaristas((comentaristas.data as TeamMember[]).filter((u) => u.estado === "activo").length);
+        setTotalLectores((lectores.data as TeamMember[]).filter((u) => u.estado === "activo").length);
+
       } catch (error) {
         console.error("❌ Error al cargar resumen del equipo:", error);
       }
@@ -83,8 +85,6 @@ const Index = () => {
 
     fetchResumen();
   }, [usuario]);
-
-  console.log("📦 Componente Index montado");
 
   return (
     <div className="p-6 bg-[#fffaf0]">
@@ -192,7 +192,7 @@ const Index = () => {
           </div>
         </div>
       )}
-  </div>
+    </div>
   );
 };
 

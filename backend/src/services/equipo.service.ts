@@ -41,15 +41,17 @@ export class EquipoService {
 
 
   // Obtener todos los usuarios equipo (sin filtros)
-  async obtenerTodosLosEquipos() {
+  async obtenerTodosLosEquipos(empresaId?: number) {
     return await prisma.users.findMany({
       where: {
         rol: "EQUIPO",
         estado: "activo",
         deletedAt: null,
+        ...(empresaId !== undefined ? { empresaId } : {}), // ✅ incluye solo si viene
       },
     });
   }
+
 
   // Filtro múltiple (por nombre, correo, rolEquipo, empresaId)
   async filtrarEquipos(filtros: {

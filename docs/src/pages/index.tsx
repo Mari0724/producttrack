@@ -76,7 +76,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Especificación de Requisitos del Sistema (link externo)",
         descripcion: "Documento formal de requisitos usado como base de desarrollo.",
-        link: "https://..."
+        link: "https://docs.google.com/document/d/1zYcclS05ISGS_wHof4GGGy8nXrH7ooVJ/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       }
       ,
       {
@@ -133,9 +133,9 @@ const secciones: Seccion[] = [
     titulo: "Documentación Técnica",
     items: [
       {
-        nombre: "INFORME_FINAL DE ESPECIFICACIONES Y DISEÑO DEL SISTEMA__004",
+        nombre: "INFORME FINAL DE ESPECIFICACIONES Y DISEÑO DEL SISTEMA",
         descripcion: "Informe final con las especificaciones completas del sistema.",
-        link: "#"
+        link: "https://docs.google.com/document/d/1L73wJfaZiF4e91UCTt3Z7WqbbhMicO7s/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       },
       {
         nombre: "Informe de Viabilidad del Proyecto",
