@@ -74,6 +74,12 @@ const secciones: Seccion[] = [
         link: "#"
       },
       {
+        nombre: "Especificación de Requisitos del Sistema (link externo)",
+        descripcion: "Documento formal de requisitos usado como base de desarrollo.",
+        link: "https://..."
+      }
+      ,
+      {
         nombre: "Mokaps",
         descripcion: "Vistas preliminares del sistema diseñadas durante la etapa de prototipo.",
         link: "#"
@@ -130,6 +136,11 @@ const secciones: Seccion[] = [
         nombre: "INFORME_FINAL DE ESPECIFICACIONES Y DISEÑO DEL SISTEMA__004",
         descripcion: "Informe final con las especificaciones completas del sistema.",
         link: "#"
+      },
+      {
+        nombre: "Informe de Viabilidad del Proyecto",
+        descripcion: "Análisis de factibilidad técnica, económica y operativa para ProductTrack.",
+        link: "https://docs.google.com/document/d/1Wu_28kMRqilr2UuNSJmX3FdHy0Zhq9Xv/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       }
     ]
   },
