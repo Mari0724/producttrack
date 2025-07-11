@@ -1,11 +1,27 @@
 import { Request, Response, NextFunction } from "express";
 import { verificarToken } from "../services/token.service";
 
-export interface AuthenticatedRequest extends Request {
-  user?: any;
+// Tipado limpio para el contenido del JWT
+export interface JwtPayload {
+  id: number;
+  rol: string;
+  tipoUsuario?: string;
+  rolEquipo?: string | null;
+  perfilCompleto?: boolean;
+  empresaId?: number | null;
 }
 
-export function autenticarToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+// Request extendido con el usuario autenticado
+export interface AuthenticatedRequest extends Request {
+  user?: JwtPayload;
+}
+
+// Middleware de autenticación
+export function autenticarToken(
+  req: AuthenticatedRequest,
+  res: Response,
+  next: NextFunction
+) {
   const authHeader = req.headers["authorization"];
   const token = authHeader?.split(" ")[1]; // Formato: Bearer <token>
 
@@ -14,8 +30,8 @@ export function autenticarToken(req: AuthenticatedRequest, res: Response, next: 
   }
 
   try {
-    const usuario = verificarToken(token);
-    req.user = usuario;
+    const payload = verificarToken(token) as JwtPayload;
+    req.user = payload;
     next();
   } catch (error) {
     return res.status(403).json({ mensaje: "Token inválido o expirado" });

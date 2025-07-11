@@ -182,8 +182,8 @@ export class ProductosController extends Controller {
     @Request() req: AuthenticatedRequest,
     @Body() requestBody: ProductosDTO
   ): Promise<ResponseMessageWithData<any> | ResponseMessage> {
-    const { rol, idUsuario } = req.user || {};
-    if (!rol || typeof idUsuario !== "number") {
+    const { rol, id } = req.user!;
+    if (!rol || typeof id !== "number") {
       this.setStatus(401);
       return { message: "No se pudo identificar al usuario." };
     }
@@ -206,14 +206,14 @@ export class ProductosController extends Controller {
       const nuevoProducto = await createProducto({
         ...parsed.data,
         precio: Number(parsed.data.precio),
-        usuarioId: idUsuario, // 🧩 este campo es clave
+        usuarioId: id, // 🧩 este campo es clave
       });
 
       // 🟢 Registro en historial
       await prisma.histInv.create({
         data: {
           productoId: nuevoProducto.id,
-          usuarioId: idUsuario,
+          usuarioId: id,
           accion: 'agregado', // o AccionHistorial.agregado si lo importas
           cantidad_anterior: 0,
           cantidad_nueva: nuevoProducto.cantidad,

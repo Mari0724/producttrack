@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const estadoEnum = z.enum(["DISPONIBLE", "AGOTADO", "RESERVADO", "VENCIDO"]);
+export const estadoEnum = z.enum(["DISPONIBLE", "AGOTADO", "RESERVADO", "VENCIDO", "ELIMINADO"]);
 
 // Esquema de validación con Zod
 export const productoSchema = z.object({
