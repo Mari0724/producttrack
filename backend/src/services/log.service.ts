@@ -24,7 +24,8 @@ export class LogService {
         tipoUsuario: user.tipoUsuario,
         rolEquipo: user.rolEquipo,
         perfilCompleto: user.perfilCompleto,
-        empresaId: user.empresaId, // 👈 este faltaba
+        empresaId:
+          user.tipoUsuario === "EMPRESARIAL" ? user.idUsuario : user.empresaId,
       },
       JWT_SECRET,
       { expiresIn: TOKEN_EXPIRES_IN }
@@ -38,6 +39,11 @@ export class LogService {
       }
     }
 
+    const resolvedEmpresaId =
+      user.tipoUsuario === "EMPRESARIAL" ? user.idUsuario : user.empresaId;
+
+
+
     // ✅ Solo retornar los datos relevantes del usuario
     return {
       user: {
@@ -48,7 +54,7 @@ export class LogService {
         tipoUsuario: user.tipoUsuario,
         rolEquipo: user.rolEquipo,
         perfilCompleto: user.perfilCompleto,
-        empresaId: user.empresaId,
+        empresaId: resolvedEmpresaId,
       },
       token,
       requiereCompletarPerfil,
@@ -79,8 +85,6 @@ export class LogService {
 
     await sendPasswordResetEmail(usuario.correo, token);
 
-
-    // Aquí iría el envío por correo si lo tuvieras
     return {
       mensaje: "Solicitud registrada. Revisa tu correo para continuar.",
 

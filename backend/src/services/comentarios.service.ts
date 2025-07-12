@@ -2,13 +2,8 @@ import prisma from '../utils/prismaClient';
 import { ComentarioDTO } from '../models/ComentarioDTO';
 import { notificarComentarioProducto } from '../services/notificaciones/comentarioProducto.service';
 
-export async function obtenerComentariosPorProducto(productoId: number): Promise<ComentarioDTO[]> {
-  const comentarios = await prisma.comentarios.findMany({
-    where: { idProducto: productoId },
-    orderBy: { fechaComentario: 'desc' },
-  });
-
-  return comentarios.map((comentario) => ({
+function mapComentarioToDTO(comentario: any): ComentarioDTO {
+  return {
     idComentario: comentario.idComentario,
     idUsuario: comentario.idUsuario,
     idProducto: comentario.idProducto,
@@ -17,7 +12,16 @@ export async function obtenerComentariosPorProducto(productoId: number): Promise
     estado: comentario.estado,
     createdAt: comentario.createdAt,
     updatedAt: comentario.updatedAt,
-  }));
+  };
+}
+
+export async function obtenerComentariosPorProducto(productoId: number): Promise<ComentarioDTO[]> {
+  const comentarios = await prisma.comentarios.findMany({
+    where: { idProducto: productoId },
+    orderBy: { fechaComentario: 'desc' },
+  });
+
+  return comentarios.map(mapComentarioToDTO);
 }
 
 export async function crearComentario(
@@ -37,16 +41,7 @@ export async function crearComentario(
 
   await notificarComentarioProducto(nuevo.idComentario);
 
-  return {
-    idComentario: nuevo.idComentario,
-    idUsuario: nuevo.idUsuario,
-    idProducto: nuevo.idProducto,
-    comentario: nuevo.comentario,
-    fechaComentario: nuevo.fechaComentario,
-    estado: nuevo.estado,
-    createdAt: nuevo.createdAt,
-    updatedAt: nuevo.updatedAt,
-  };
+  return mapComentarioToDTO(nuevo);
 }
 
 export async function actualizarComentario(
@@ -61,16 +56,7 @@ export async function actualizarComentario(
     },
   });
 
-  return {
-    idComentario: actualizado.idComentario,
-    idUsuario: actualizado.idUsuario,
-    idProducto: actualizado.idProducto,
-    comentario: actualizado.comentario,
-    fechaComentario: actualizado.fechaComentario,
-    estado: actualizado.estado,
-    createdAt: actualizado.createdAt,
-    updatedAt: actualizado.updatedAt,
-  };
+  return mapComentarioToDTO(actualizado);
 }
 
 export async function eliminarComentario(idComentario: number): Promise<{ mensaje: string }> {

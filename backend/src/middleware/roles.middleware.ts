@@ -20,11 +20,12 @@ export function permitirRolesYRolEquipo(
       return res.status(403).json({ mensaje: "Acceso denegado. Solo las empresas pueden crear usuarios de equipo." });
     }
 
-    if (user.rol === "EQUIPO" && rolesEquipoPermitidos) {
-      if (!rolesEquipoPermitidos.includes(user.rolEquipo)) {
-        return res.status(403).json({ mensaje: "Rol de equipo no permitido" });
-      }
+    if ( user.rol === "EQUIPO" && rolesEquipoPermitidos &&
+      (!user.rolEquipo || !rolesEquipoPermitidos.includes(user.rolEquipo))
+    ) {
+      return res.status(403).json({ mensaje: "Rol de equipo no permitido" });
     }
+
 
     next();
   };

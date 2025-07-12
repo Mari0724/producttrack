@@ -244,6 +244,24 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CrearComentarioBody": {
+        "dataType": "refObject",
+        "properties": {
+            "idUsuario": {"dataType":"double","required":true},
+            "idProducto": {"dataType":"double","required":true},
+            "comentario": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ActualizarComentarioBody": {
+        "dataType": "refObject",
+        "properties": {
+            "comentario": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
 const templateService = new ExpressTemplateService(models, {"noImplicitAdditionalProperties":"throw-on-extras","bodyCoercion":true});
 
@@ -1663,7 +1681,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsComentariosController_crearComentario: Record<string, TsoaRoute.ParameterSchema> = {
-                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"comentario":{"dataType":"string","required":true},"idProducto":{"dataType":"double","required":true},"idUsuario":{"dataType":"double","required":true}}},
+                body: {"in":"body","name":"body","required":true,"ref":"CrearComentarioBody"},
         };
         app.post('/comentarios',
             ...(fetchMiddlewares<RequestHandler>(ComentariosController)),
@@ -1694,7 +1712,7 @@ export function RegisterRoutes(app: Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsComentariosController_actualizarComentario: Record<string, TsoaRoute.ParameterSchema> = {
                 idComentario: {"in":"path","name":"idComentario","required":true,"dataType":"double"},
-                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"comentario":{"dataType":"string","required":true}}},
+                body: {"in":"body","name":"body","required":true,"ref":"ActualizarComentarioBody"},
         };
         app.put('/comentarios/:idComentario',
             ...(fetchMiddlewares<RequestHandler>(ComentariosController)),

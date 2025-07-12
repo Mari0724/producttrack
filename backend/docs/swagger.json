@@ -656,6 +656,40 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"CrearComentarioBody": {
+				"properties": {
+					"idUsuario": {
+						"type": "number",
+						"format": "double"
+					},
+					"idProducto": {
+						"type": "number",
+						"format": "double"
+					},
+					"comentario": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"idUsuario",
+					"idProducto",
+					"comentario"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ActualizarComentarioBody": {
+				"properties": {
+					"comentario": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"comentario"
+				],
+				"type": "object",
+				"additionalProperties": false
 			}
 		},
 		"securitySchemes": {
@@ -3615,25 +3649,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"comentario": {
-										"type": "string"
-									},
-									"idProducto": {
-										"type": "number",
-										"format": "double"
-									},
-									"idUsuario": {
-										"type": "number",
-										"format": "double"
-									}
-								},
-								"required": [
-									"comentario",
-									"idProducto",
-									"idUsuario"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/CrearComentarioBody"
 							}
 						}
 					}
@@ -3675,15 +3691,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"comentario": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"comentario"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/ActualizarComentarioBody"
 							}
 						}
 					}

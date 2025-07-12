@@ -188,7 +188,9 @@ export class ProductosController extends Controller {
       return { message: "No se pudo identificar al usuario." };
     }
 
-    if (!rol || !puede("crear", rol)) {
+    const rolParaPermiso = rol === "EQUIPO" ? req.user?.rolEquipo : rol;
+
+    if (!rolParaPermiso || !puede("crear", rolParaPermiso)) {
       this.setStatus(403);
       return { message: "No tienes permiso para crear productos." };
     }
@@ -248,7 +250,9 @@ export class ProductosController extends Controller {
     const rol = req.user?.rol;
     const idUsuarioToken = (req.user as any)?.id;
 
-    if (!rol || !puede("editar", rol)) {
+    const rolParaPermiso = rol === "EQUIPO" ? req.user?.rolEquipo : rol;
+
+    if (!rolParaPermiso || !puede("editar", rolParaPermiso)) {
       this.setStatus(403);
       return { message: "No tienes permiso para editar productos." };
     }
@@ -260,17 +264,12 @@ export class ProductosController extends Controller {
     }
 
     const esPropietario = Number(productoExistente.usuarioId) === Number(idUsuarioToken);
-    const esEditorConPermiso = rol === "EDITOR" || rol === "ADMIN";
+    const esEditorConPermiso = rolParaPermiso === "EDITOR" || rolParaPermiso === "ADMIN";
 
     console.log("📦 productoExistente.usuarioId:", productoExistente.usuarioId);
     console.log("🪪 idUsuarioToken:", idUsuarioToken);
     console.log("🔑 esPropietario:", esPropietario);
     console.log("🔐 esEditorConPermiso:", esEditorConPermiso);
-
-    if (!esPropietario && !esEditorConPermiso) {
-      this.setStatus(403);
-      return { message: "No puedes editar productos de otro usuario." };
-    }
 
     // ✅ Solo permitimos si es propietario o tiene rol alto
     if (!esPropietario && !esEditorConPermiso) {
@@ -346,8 +345,9 @@ export class ProductosController extends Controller {
     @Path() id: number
   ): Promise<ResponseMessage> {
     const rol = req.user?.rol;
+    const rolParaPermiso = rol === "EQUIPO" ? req.user?.rolEquipo : rol;
 
-    if (!rol || !puede("eliminar", rol)) {
+    if (!rolParaPermiso || !puede("eliminar", rolParaPermiso)) {
       this.setStatus(403);
       return { message: "No tienes permiso para eliminar productos." };
     }
