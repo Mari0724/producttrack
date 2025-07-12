@@ -13,6 +13,20 @@ export interface Usuario {
   perfilCompleto: boolean;
   nombreEmpresa?: string;
 }
+interface RawToken {
+  id: number;
+  username?: string;
+  correo?: string;
+  tipoUsuario: "INDIVIDUAL" | "EMPRESARIAL";
+  rol: string;
+  rolEquipo?: string | null;
+  empresaId?: number;
+  perfilCompleto?: boolean;
+  nombreEmpresa?: string;
+  iat?: number;
+  exp?: number;
+}
+
 
 // 📦 Tipo del contexto
 interface UserContextType {
@@ -25,6 +39,7 @@ interface UserContextType {
 // 🧠 Creamos el contexto
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
+
 // 🌍 Proveedor de usuario
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
@@ -34,17 +49,36 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded = jwtDecode<Usuario>(token);
+        const decoded = jwtDecode<RawToken>(token); // 👈 Usamos la interfaz correcta
+
         console.log("🔐 Usuario cargado desde token:", decoded);
-        setUsuario(decoded);
+        console.log("📦 Contenido exacto del token decodificado:", JSON.stringify(decoded, null, 2));
+
+        // Adaptar el token al formato que espera la app
+        const adapted: Usuario = {
+          idUsuario: decoded.id,
+          username: decoded.username ?? "",
+          correo: decoded.correo ?? "",
+          tipoUsuario: decoded.tipoUsuario,
+          rol: decoded.rol,
+          rolEquipo: decoded.rolEquipo ?? undefined,
+          empresaId: decoded.empresaId,
+          perfilCompleto: decoded.perfilCompleto ?? false,
+          nombreEmpresa: decoded.nombreEmpresa ?? undefined,
+        };
+
+        setUsuario(adapted);
       } catch (e) {
         console.error("❌ Error al decodificar token:", e);
       }
     } else {
-      console.log("⚠️ No hay token en localStorage");
+      console.log("⚠ No hay token en localStorage");
     }
-    setCargando(false); // ✅ Marcamos que ya terminó de cargar
+    setCargando(false);
   }, []);
+
+
+
 
   // ✅ Función para refrescar manualmente el usuario desde el token
   const refreshUsuario = () => {
@@ -59,6 +93,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
     }
   };
+
 
   return (
     <UserContext.Provider value={{ usuario, setUsuario, cargando, refreshUsuario }}>

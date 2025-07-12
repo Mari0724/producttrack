@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { createPortal } from 'react-dom';
 import type { Product } from '../../types/Product';
+import { useUser } from '../../context/UserContext';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -12,7 +13,6 @@ interface ProductModalProps {
 
 const CLOUD_NAME = 'delkfnnil';
 const UPLOAD_PRESET = 'productos_imagenes';
-const userIdFromStorage = parseInt(localStorage.getItem("userId") || "0", 10);
 
 const ProductModal: React.FC<ProductModalProps> = ({
   isOpen,
@@ -20,6 +20,8 @@ const ProductModal: React.FC<ProductModalProps> = ({
   onSave,
   initialData,
 }) => {
+  const { usuario } = useUser();
+
   const [form, setForm] = useState<Product>({
     codigoBarras: '',
     codigoQR: '',
@@ -29,7 +31,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
     precio: 0,
     fechaAdquisicion: '',
     fechaVencimiento: '',
-    usuarioId: userIdFromStorage,
+    usuarioId: 0, // se actualizará luego
     estado: 'DISPONIBLE',
     imagen: '',
     categoria: '',
@@ -37,11 +39,22 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   const [uploading, setUploading] = useState(false);
 
+  // 🧠 Cuando cambia el usuario, actualiza el usuarioId del formulario
+  useEffect(() => {
+    if (usuario && form.usuarioId !== usuario.idUsuario) {
+      setForm((prev) => ({
+        ...prev,
+        usuarioId: usuario.idUsuario,
+      }));
+    }
+  }, [usuario, form.usuarioId]);
+
+  // Si estamos editando un producto, rellenar los datos
   useEffect(() => {
     if (initialData) {
       setForm({
         ...initialData,
-        fechaAdquisicion: initialData.fechaAdquisicion.split('T')[0], // ✅ convierte a yyyy-MM-dd
+        fechaAdquisicion: initialData.fechaAdquisicion.split('T')[0],
         fechaVencimiento: initialData.fechaVencimiento.split('T')[0],
       });
     }
@@ -108,17 +121,16 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
     const parsedPrecio = parseFloat(form.precio.toString());
     if (isNaN(parsedPrecio)) {
-      alert("El precio debe ser un número válido");
+      alert('El precio debe ser un número válido');
       return;
     }
 
-    // 🧼 Limpiar categoría si es string vacío
     const categoriaLimpia = form.categoria?.trim();
 
     const productoAEnviar = {
-      ...(form.id !== undefined && { id: form.id }), // ✅ incluir id si viene
-      codigoBarras: form.codigoBarras?.trim() === "" ? null : form.codigoBarras,
-      codigoQR: form.codigoQR?.trim() === "" ? null : form.codigoQR,
+      ...(form.id !== undefined && { id: form.id }),
+      codigoBarras: form.codigoBarras?.trim() === '' ? null : form.codigoBarras,
+      codigoQR: form.codigoQR?.trim() === '' ? null : form.codigoQR,
       nombre: form.nombre.trim(),
       descripcion: form.descripcion.trim(),
       cantidad: form.cantidad,
@@ -128,10 +140,10 @@ const ProductModal: React.FC<ProductModalProps> = ({
       usuarioId: form.usuarioId,
       estado: form.estado,
       imagen: form.imagen,
-      ...(categoriaLimpia ? { categoria: categoriaLimpia } : {}), // solo si no está vacía
+      ...(categoriaLimpia ? { categoria: categoriaLimpia } : {}),
     };
 
-    console.log("✅ Producto que se enviará:", JSON.stringify(productoAEnviar, null, 2));
+    console.log('✅ Producto que se enviará:', JSON.stringify(productoAEnviar, null, 2));
     onSave(productoAEnviar);
     onClose();
   };
@@ -220,7 +232,6 @@ const ProductModal: React.FC<ProductModalProps> = ({
   );
 };
 
-// 👉 Subcomponente reutilizable para inputs
 const InputField = ({
   label,
   name,

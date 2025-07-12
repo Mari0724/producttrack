@@ -42,11 +42,17 @@ const Login: React.FC = () => {
       localStorage.setItem("rol", data.user.rol);
       localStorage.setItem("username", data.user.username);
       localStorage.setItem("perfilCompleto", data.user.perfilCompleto ? "true" : "false");
-      if (!data.user?.idUsuario) {
-        throw new Error("El usuario no tiene ID. Verifica la respuesta del backend.");
-      }
-      localStorage.setItem("idUsuario", data.user.idUsuario.toString());
+      localStorage.setItem("rolEquipo", data.user.rolEquipo);
 
+      // ID confiable del usuario
+      const userId = data.user?.id ?? data.user?.idUsuario ?? data.usuario?.id;
+
+      if (!userId) {
+        throw new Error("No se pudo obtener el ID del usuario.");
+      }
+
+      localStorage.setItem("userId", userId.toString());
+      localStorage.setItem("idUsuario", userId.toString());
 
       // Guarda el usuario en contexto
       setUsuario(data.user);
