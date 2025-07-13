@@ -3,11 +3,10 @@ import { TipoNotificacion, EstadoRecordatorio, productos as Producto } from '@pr
 import { puedeNotificar } from '../../utils/notificaciones/preferenciasNotificaciones';
 
 /**
- * Envía notificaciones de stock bajo de forma general o para productos específicos.
- * @param productosOpcionales Arreglo opcional de productos a verificar (usado desde el update).
+ * Envía notificaciones de stock bajo si el producto está en estado crítico.
  */
 export async function notificarStockBajo(productosOpcionales?: Producto[]) {
-  const productosVerificar = productosOpcionales && productosOpcionales.length > 0
+  const productosVerificar = productosOpcionales?.length
     ? productosOpcionales
     : null;
 
@@ -21,79 +20,72 @@ export async function notificarStockBajo(productosOpcionales?: Producto[]) {
             },
             include: {
               producto: {
-                include: {
-                  usuario: true,
-                },
+                include: { usuario: true },
               },
             },
           })
         )
       )
     : await prisma.recorStock.findMany({
-        where: {
-          estado: EstadoRecordatorio.PENDIENTE,
-        },
+        where: { estado: EstadoRecordatorio.PENDIENTE },
         include: {
           producto: {
-            include: {
-              usuario: true,
-            },
+            include: { usuario: true },
           },
         },
       });
 
   for (const recordatorio of recordatorios) {
-    if (
-      recordatorio &&
-      recordatorio.producto &&
-      recordatorio.producto.cantidad <= recordatorio.cantidadMinima
-    ) {
-      const { producto } = recordatorio;
-      const { usuario } = producto;
+    if (!recordatorio || !recordatorio.producto) continue;
 
-      const titulo = `Stock bajo: ${producto.nombre}`;
-      const mensaje = `El producto "${producto.nombre}" tiene solo ${producto.cantidad} unidades disponibles.`;
+    const { producto } = recordatorio;
+    const { usuario } = producto;
+    const cantidadActual = producto.cantidad;
+    const cantidadMinima = recordatorio.cantidadMinima;
 
-      if (usuario.tipoUsuario === 'INDIVIDUAL') {
-        const permitido = await puedeNotificar(usuario.idUsuario, 'STOCK_BAJO');
+    const umbralCritico = Math.min(8, Math.floor(cantidadMinima / 8));
+    if (cantidadActual > umbralCritico) continue;
+
+    const titulo = `Stock bajo: ${producto.nombre}`;
+    const mensaje = `El producto "${producto.nombre}" tiene solo ${cantidadActual} unidades disponibles.`;
+
+    if (usuario.tipoUsuario === 'INDIVIDUAL') {
+      const permitido = await puedeNotificar(usuario.idUsuario, 'STOCK_BAJO');
+      if (!permitido) continue;
+
+      await prisma.notificaciones.create({
+        data: {
+          idUsuario: usuario.idUsuario,
+          tipo: TipoNotificacion.STOCK_BAJO,
+          titulo,
+          mensaje,
+          fechaEnvio: new Date(),
+        },
+      });
+    } else {
+      const miembros = await prisma.users.findMany({
+        where: { empresaId: usuario.empresaId },
+      });
+
+      for (const miembro of miembros) {
+        const permitido = await puedeNotificar(miembro.idUsuario, 'STOCK_BAJO');
         if (!permitido) continue;
 
         await prisma.notificaciones.create({
           data: {
-            idUsuario: usuario.idUsuario,
+            idUsuario: miembro.idUsuario,
             tipo: TipoNotificacion.STOCK_BAJO,
             titulo,
             mensaje,
+            fechaEnvio: new Date(),
           },
         });
-      } else {
-        const miembros = await prisma.users.findMany({
-          where: { empresaId: usuario.empresaId },
-        });
-
-        for (const miembro of miembros) {
-          const permitido = await puedeNotificar(miembro.idUsuario, 'STOCK_BAJO');
-          if (!permitido) continue;
-
-          await prisma.notificaciones.create({
-            data: {
-              idUsuario: miembro.idUsuario,
-              tipo: TipoNotificacion.STOCK_BAJO,
-              titulo,
-              mensaje,
-            },
-          });
-        }
       }
-
-      await prisma.recorStock.update({
-        where: {
-          idRecordatorio: recordatorio.idRecordatorio,
-        },
-        data: {
-          estado: EstadoRecordatorio.ENVIADO,
-        },
-      });
     }
+
+    await prisma.recorStock.update({
+      where: { idRecordatorio: recordatorio.idRecordatorio },
+      data: { estado: EstadoRecordatorio.ENVIADO },
+    });
   }
 }

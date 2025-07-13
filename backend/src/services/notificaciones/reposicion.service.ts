@@ -2,36 +2,22 @@ import prisma from '../../utils/prismaClient';
 import { TipoNotificacion, productos as Producto } from '@prisma/client';
 import { puedeNotificar } from '../../utils/notificaciones/preferenciasNotificaciones';
 
-/**
- * Envía notificaciones de reposición recomendada, ya sea general o para productos específicos.
- * @param productosOpcionales Arreglo opcional de productos a verificar.
- */
 export async function notificarReposicionRecomendada(productosOpcionales?: Producto[]) {
   let recordatorios: any[] = [];
 
-  if (productosOpcionales && productosOpcionales.length > 0) {
+  if (productosOpcionales?.length) {
     recordatorios = await prisma.recorStock.findMany({
       where: {
-        productoId: {
-          in: productosOpcionales.map((p) => p.id),
-        },
+        productoId: { in: productosOpcionales.map((p) => p.id) },
       },
       include: {
-        producto: {
-          include: {
-            usuario: true,
-          },
-        },
+        producto: { include: { usuario: true } },
       },
     });
   } else {
     recordatorios = await prisma.recorStock.findMany({
       include: {
-        producto: {
-          include: {
-            usuario: true,
-          },
-        },
+        producto: { include: { usuario: true } },
       },
     });
   }
@@ -41,6 +27,9 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
     const { usuario } = producto;
     const cantidadActual = producto.cantidad;
     const cantidadMinima = recordatorio.cantidadMinima;
+
+    const umbralCritico = Math.min(8, Math.floor(cantidadMinima / 8));
+    if (cantidadActual <= umbralCritico) continue;
 
     if (cantidadActual >= cantidadMinima) continue;
 
@@ -55,6 +44,7 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
             tipo: TipoNotificacion.REPOSICION_RECOMENDADA,
             titulo,
             mensaje,
+            fechaEnvio: new Date(),
           },
         });
       }
@@ -63,9 +53,7 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
 
     if (usuario.tipoUsuario === 'EMPRESARIAL' && usuario.empresaId) {
       const miembros = await prisma.users.findMany({
-        where: {
-          empresaId: usuario.empresaId,
-        },
+        where: { empresaId: usuario.empresaId },
       });
 
       for (const miembro of miembros) {
@@ -76,6 +64,7 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
               tipo: TipoNotificacion.REPOSICION_RECOMENDADA,
               titulo,
               mensaje,
+              fechaEnvio: new Date(),
             },
           });
         }

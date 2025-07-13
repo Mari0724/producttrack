@@ -245,13 +245,22 @@ export async function createProducto(data: ProductosDTO) {
       },
     });
 
-    // 🟡 Crear recordatorio automático de stock bajo con mínimo por defecto
+    // 🔎 Obtener el tipo de usuario para determinar la cantidad mínima
+    const usuario = await prisma.users.findUnique({
+      where: { idUsuario: data.usuarioId },
+      select: { tipoUsuario: true },
+    });
+
+    const tipo = usuario?.tipoUsuario?.toLowerCase() || 'empresarial';
+    const cantidadMinima = tipo === 'individual' ? 2 : 30;
+
+    // 🟡 Crear recordatorio con cantidad mínima según tipo de usuario
     await prisma.recorStock.create({
       data: {
         productoId: nuevoProducto.id,
-        cantidadMinima: 10, // ✅ valor por defecto, puedes ajustarlo
-        estado: "PENDIENTE", // o "ENVIADO" si no lo manejas aún
-        fechaRecordatorio: new Date(), // puedes dejar null si no usas fecha exacta
+        cantidadMinima,
+        estado: "PENDIENTE",
+        fechaRecordatorio: new Date(),
       },
     });
 
