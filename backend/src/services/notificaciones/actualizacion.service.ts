@@ -22,7 +22,7 @@ export async function notificarActualizacionApp(titulo: string, mensaje: string)
   const notificaciones = [];
 
   for (const usuario of usuarios) {
-    if (await puedeNotificar(usuario.idUsuario, 'actualizacion')) {
+    if (await puedeNotificar(usuario.idUsuario, 'ACTUALIZACION_APP')) {
       notificaciones.push({
         idUsuario: usuario.idUsuario,
         tipo: TipoNotificacion.ACTUALIZACION_APP,

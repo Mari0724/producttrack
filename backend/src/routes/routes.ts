@@ -1272,6 +1272,37 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        const argsNotificacionesController_actualizarPreferencias: Record<string, TsoaRoute.ParameterSchema> = {
+                idUsuario: {"in":"path","name":"idUsuario","required":true,"dataType":"double"},
+                body: {"in":"body","name":"body","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"actualizacion":{"dataType":"boolean"},"reposicion":{"dataType":"boolean"},"comentarios":{"dataType":"boolean"},"productoVencido":{"dataType":"boolean"},"stockBajo":{"dataType":"boolean"}}},
+        };
+        app.patch('/notificaciones/preferencias/:idUsuario',
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController)),
+            ...(fetchMiddlewares<RequestHandler>(NotificacionesController.prototype.actualizarPreferencias)),
+
+            async function NotificacionesController_actualizarPreferencias(request: ExRequest, response: ExResponse, next: any) {
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args: argsNotificacionesController_actualizarPreferencias, request, response });
+
+                const controller = new NotificacionesController();
+
+              await templateService.apiHandler({
+                methodName: 'actualizarPreferencias',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsAuthController_login: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"LoginRequest"},
         };

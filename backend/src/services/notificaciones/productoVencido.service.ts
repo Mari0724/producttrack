@@ -45,7 +45,7 @@ export async function notificarProductoVencido(productosOpcionales?: Producto[])
     const mensaje = `El producto "${producto.nombre}" ha vencido el ${producto.fechaVencimiento?.toLocaleDateString()}.`;
 
     if (usuario.tipoUsuario === 'INDIVIDUAL') {
-      if (await puedeNotificar(usuario.idUsuario, 'productoVencido')) {
+      if (await puedeNotificar(usuario.idUsuario, 'PRODUCTO_VENCIDO')) {
         await prisma.notificaciones.create({
           data: {
             idUsuario: usuario.idUsuario,
@@ -64,7 +64,7 @@ export async function notificarProductoVencido(productosOpcionales?: Producto[])
       });
 
       for (const miembro of miembros) {
-        if (await puedeNotificar(miembro.idUsuario, 'productoVencido')) {
+        if (await puedeNotificar(miembro.idUsuario, 'PRODUCTO_VENCIDO')) {
           await prisma.notificaciones.create({
             data: {
               idUsuario: miembro.idUsuario,

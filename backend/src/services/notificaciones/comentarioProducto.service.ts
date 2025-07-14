@@ -43,7 +43,7 @@ export async function notificarComentarioProducto(idComentario: number) {
   const notificaciones = [];
 
   for (const miembro of miembros) {
-    if (await puedeNotificar(miembro.idUsuario, 'comentarios')) {
+    if (await puedeNotificar(miembro.idUsuario, 'COMENTARIO_EQUIPO')) {
       notificaciones.push({
         idUsuario: miembro.idUsuario,
         tipo: TipoNotificacion.COMENTARIO_EQUIPO,

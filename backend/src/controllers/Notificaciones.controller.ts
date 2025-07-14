@@ -74,50 +74,39 @@ export class NotificacionesController extends Controller {
       fechaEnvio: Date;
     }[]
   > {
-    const preferencias = await prisma.preferenciasNotificaciones.findUnique({
+    const preferencias = await prisma.preferenciasNotificaciones.findFirst({
       where: { idUsuario },
     });
 
-    if (!preferencias) {
-      // Si no hay preferencias guardadas, asumimos que todas están activas
-      const notificaciones = await prisma.notificaciones.findMany({
-        where: {
-          idUsuario,
-        },
-        orderBy: {
-          fechaEnvio: 'desc',
-        },
-        take: 20,
-      });
+    console.log("🎯 Preferencias obtenidas del backend:", preferencias);
 
-      return notificaciones.map((n) => ({
-        idNotificacion: n.idNotificacion,
-        tipo: n.tipo,
-        titulo: n.titulo,
-        mensaje: n.mensaje,
-        leida: n.leida,
-        fechaEnvio: n.fechaEnvio,
-      }));
+    if (!preferencias) {
+      await prisma.preferenciasNotificaciones.create({
+        data: {
+          idUsuario,
+          stockBajo: true,
+          productoVencido: true,
+          comentarios: true,
+          reposicion: true,
+          actualizacion: true,
+        },
+      });
     }
 
     const tiposPermitidos: TipoNotificacion[] = [
-      ...(preferencias.stockBajo ? [TipoNotificacion.STOCK_BAJO] : []),
-      ...(preferencias.productoVencido ? [TipoNotificacion.PRODUCTO_VENCIDO] : []),
-      ...(preferencias.comentarios ? [TipoNotificacion.COMENTARIO_EQUIPO] : []),
-      ...(preferencias.reposicion ? [TipoNotificacion.REPOSICION_RECOMENDADA] : []),
-      ...(preferencias.actualizacion ? [TipoNotificacion.ACTUALIZACION_APP] : []),
+      ...(preferencias?.stockBajo ? [TipoNotificacion.STOCK_BAJO] : []),
+      ...(preferencias?.productoVencido ? [TipoNotificacion.PRODUCTO_VENCIDO] : []),
+      ...(preferencias?.comentarios ? [TipoNotificacion.COMENTARIO_EQUIPO] : []),
+      ...(preferencias?.reposicion ? [TipoNotificacion.REPOSICION_RECOMENDADA] : []),
+      ...(preferencias?.actualizacion ? [TipoNotificacion.ACTUALIZACION_APP] : []),
     ];
 
     const notificaciones = await prisma.notificaciones.findMany({
       where: {
         idUsuario,
-        tipo: {
-          in: tiposPermitidos,
-        },
+        tipo: { in: tiposPermitidos },
       },
-      orderBy: {
-        fechaEnvio: 'desc',
-      },
+      orderBy: { fechaEnvio: 'desc' },
       take: 20,
     });
 
@@ -145,5 +134,27 @@ export class NotificacionesController extends Controller {
     });
 
     return { mensaje: 'Notificación marcada como leída' };
+  }
+
+  @Patch('/preferencias/{idUsuario}')
+  public async actualizarPreferencias(
+    @Path() idUsuario: number,
+    @Body()
+    body: {
+      stockBajo?: boolean;
+      productoVencido?: boolean;
+      comentarios?: boolean;
+      reposicion?: boolean;
+      actualizacion?: boolean;
+    }
+  ): Promise<{ mensaje: string }> {
+    await prisma.preferenciasNotificaciones.update({
+      where: { idUsuario },
+      data: {
+        ...body,
+      },
+    });
+
+    return { mensaje: 'Preferencias actualizadas correctamente' };
   }
 }

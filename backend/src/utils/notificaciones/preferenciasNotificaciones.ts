@@ -1,24 +1,37 @@
 import prisma from '../prismaClient';
 
+const TIPOS_VALIDOS = [
+  'STOCK_BAJO',
+  'PRODUCTO_VENCIDO',
+  'COMENTARIO_EQUIPO',
+  'REPOSICION_RECOMENDADA',
+  'ACTUALIZACION_APP',
+] as const;
+
+type TipoValido = typeof TIPOS_VALIDOS[number];
+
 export async function puedeNotificar(idUsuario: number, tipo: string): Promise<boolean> {
   const prefs = await prisma.preferenciasNotificaciones.findUnique({
     where: { idUsuario },
   });
 
-  if (!prefs) return true; // Si no hay preferencia, asumimos que sí quiere
+  console.log("🎯 Preferencias obtenidas del backend:", prefs);
 
-  switch (tipo) {
-    case 'STOCK_BAJO':
-      return prefs.stockBajo;
-    case 'PRODUCTO_VENCIDO':
-      return prefs.productoVencido;
-    case 'COMENTARIOS':
-      return prefs.comentarios;
-    case 'REPOSICION':
-      return prefs.reposicion;
-    case 'ACTUALIZACION':
-      return prefs.actualizacion;
-    default:
-      return true;
+  if (!prefs) return true;
+
+  const tipoNormalizado = tipo.toUpperCase() as string;
+
+  if (!TIPOS_VALIDOS.includes(tipoNormalizado as TipoValido)) {
+    return true;
   }
+
+  const mapa: Record<TipoValido, boolean> = {
+    STOCK_BAJO: prefs.stockBajo,
+    PRODUCTO_VENCIDO: prefs.productoVencido,
+    COMENTARIO_EQUIPO: prefs.comentarios,
+    REPOSICION_RECOMENDADA: prefs.reposicion,
+    ACTUALIZACION_APP: prefs.actualizacion,
+  };
+
+  return mapa[tipoNormalizado as TipoValido];
 }

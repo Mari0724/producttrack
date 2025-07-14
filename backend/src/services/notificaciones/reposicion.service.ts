@@ -37,7 +37,7 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
     const mensaje = `El producto "${producto.nombre}" tiene ${cantidadActual} unidades, por debajo del mínimo recomendado (${cantidadMinima}).`;
 
     if (usuario.tipoUsuario === 'INDIVIDUAL') {
-      if (await puedeNotificar(usuario.idUsuario, 'reposicion')) {
+      if (await puedeNotificar(usuario.idUsuario, 'REPOSICION_RECOMENDADA')) {
         await prisma.notificaciones.create({
           data: {
             idUsuario: usuario.idUsuario,
@@ -57,7 +57,7 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
       });
 
       for (const miembro of miembros) {
-        if (await puedeNotificar(miembro.idUsuario, 'reposicion')) {
+        if (await puedeNotificar(miembro.idUsuario, 'REPOSICION_RECOMENDADA')) {
           await prisma.notificaciones.create({
             data: {
               idUsuario: miembro.idUsuario,
