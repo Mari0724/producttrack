@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { Bell, Edit, X, MessageSquare, Check } from 'lucide-react';
-import { getNotificacionesUsuario, marcarNotificacionLeida, getProductosDelUsuario } from "../../api/notificaciones";
-import { puedeNotificar } from "../../utils/enviarNotificacion";
+import { getNotificacionesUsuario, marcarNotificacionLeida, getProductosDelUsuario, getPreferenciasUsuario } from "../../api/notificaciones";
 
 interface Notification {
     idNotificacion: number;
@@ -9,7 +8,7 @@ interface Notification {
     titulo: string;
     mensaje: string;
     leida: boolean;
-    createdAt: string;
+    fechaEnvio: string;
 }
 
 const NotificationBell = () => {
@@ -26,13 +25,29 @@ const NotificationBell = () => {
     const bellRef = useRef<HTMLButtonElement>(null);
     const [nombresProductosUsuario, setNombresProductosUsuario] = useState<string[]>([]);
 
+    const [preferencias, setPreferencias] = useState({
+        stockBajo: true,
+        productoVencido: true,
+        comentarios: true,
+        reposicion: true,
+        actualizacion: true,
+    });
+
+
     // Aplica filtro según el tipo de usuario
     const notificacionesFiltradas = notifications.filter((n) => {
-        if (!puedeNotificar(n.tipo)) return false;
+        const preferenciasActivas: Record<string, boolean> = {
+            STOCK_BAJO: preferencias.stockBajo,
+            PRODUCTO_VENCIDO: preferencias.productoVencido,
+            COMENTARIO_EQUIPO: preferencias.comentarios,
+            REPOSICION_RECOMENDADA: preferencias.reposicion,
+            ACTUALIZACION_APP: preferencias.actualizacion,
+        };
+
+        if (!preferenciasActivas[n.tipo]) return false;
 
         if (tipoUsuario === 'INDIVIDUAL') {
             const tiposPermitidos = ['PRODUCTO_VENCIDO', 'REPOSICION_RECOMENDADA', 'STOCK_BAJO', 'ACTUALIZACION_APP'];
-
             const contieneProducto = nombresProductosUsuario.some(nombre =>
                 n.mensaje.toLowerCase().includes(nombre.toLowerCase())
             );
@@ -40,7 +55,7 @@ const NotificationBell = () => {
             return n.tipo === 'ACTUALIZACION_APP' || (tiposPermitidos.includes(n.tipo) && contieneProducto);
         }
 
-        return true; // Empresarial ve todo
+        return true;
     });
 
     const unreadCount = notificacionesFiltradas.filter(n => !n.leida).length;
@@ -50,10 +65,12 @@ const NotificationBell = () => {
             try {
                 const idUsuario = Number(localStorage.getItem("idUsuario"));
                 const data = await getNotificacionesUsuario(idUsuario);
-
-                console.log("🔔 Notificaciones recibidas del backend:", data); // 👈 AGREGA ESTO
-
                 setNotifications(data);
+
+                // 🔐 Traer las preferencias del usuario
+                const prefs = await getPreferenciasUsuario(idUsuario);
+                console.log("🔐 Preferencias del usuario:", prefs);
+                setPreferencias(prefs);
 
                 if (tipoUsuario === 'INDIVIDUAL') {
                     const productos = await getProductosDelUsuario(idUsuario);
@@ -65,6 +82,7 @@ const NotificationBell = () => {
         };
         fetchData();
     }, [tipoUsuario]);
+
 
     const getIcon = (tipo: Notification['tipo']) => {
         switch (tipo) {
@@ -158,7 +176,7 @@ const NotificationBell = () => {
                         </p>
 
                         <p className="text-xs text-gray-dark/50">
-                            {formatTimestamp(selectedNotification.createdAt)}
+                            {formatTimestamp(selectedNotification.fechaEnvio)}
                         </p>
                     </div>
                 </div>
@@ -255,7 +273,7 @@ const NotificationBell = () => {
                                             </p>
 
                                             <p className="text-gray-dark/60 text-xs mt-1">
-                                                {formatTimestamp(notification.createdAt)}
+                                                {formatTimestamp(notification.fechaEnvio)}
                                             </p>
                                         </div>
 

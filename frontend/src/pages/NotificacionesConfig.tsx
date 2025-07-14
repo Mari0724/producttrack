@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { Bell, Settings, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import { updatePreferenciasNotificaciones } from "../api/preferencias"; // 👈 importa esto
+import { actualizarPreferenciasUsuario, getPreferenciasUsuario } from "../api/notificaciones";
 
 const opcionesNotificacion = [
   { id: "stockBajo", nombre: "Stock bajo" },
@@ -22,17 +22,20 @@ const NotificacionesConfig = () => {
   console.log("🟢 ID usuario detectado:", usuarioId);
 
   useEffect(() => {
-    const guardadas = localStorage.getItem("preferenciasNotificaciones");
-    if (guardadas) {
-      console.log("🟡 Preferencias locales cargadas:", JSON.parse(guardadas));
-      setPreferencias(JSON.parse(guardadas));
-    } else {
-      const iniciales: { [key: string]: boolean } = {};
-      opcionesNotificacion.forEach((op) => (iniciales[op.id] = true));
-      setPreferencias(iniciales);
-      console.log("🟠 No había preferencias, se cargan por defecto:", iniciales);
-    }
-  }, []);
+    const fetchPreferencias = async () => {
+      if (!usuarioId) return;
+
+      try {
+        const prefs = await getPreferenciasUsuario(usuarioId);
+        console.log("🎯 Preferencias del backend:", prefs);
+        setPreferencias(prefs);
+      } catch (error) {
+        console.error("Error obteniendo preferencias del backend:", error);
+      }
+    };
+
+    fetchPreferencias();
+  }, [usuarioId]);
 
   const handleToggle = async (id: string) => {
     console.log("🔁 Cambiando preferencia:", id);
@@ -46,7 +49,7 @@ const NotificacionesConfig = () => {
     localStorage.setItem("preferenciasNotificaciones", JSON.stringify(nuevas));
 
     try {
-      await updatePreferenciasNotificaciones(usuarioId, nuevas);
+      await actualizarPreferenciasUsuario(usuarioId, nuevas);
       toast.success("Preferencias actualizadas ✨", {
         style: {
           background: "#ffffff",
