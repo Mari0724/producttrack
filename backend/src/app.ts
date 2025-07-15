@@ -62,7 +62,7 @@ app.post('/upload', uploadProductos.single('image'), (req: MulterRequest, res: R
 
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({"ms": "BIenvenido a mi aplicación usted actualmente no tiene permisos"});
+  res.json({"ms": "BIenvenido a mi aplicación para ver el Swagger agregue en la barra de navegaciòn /docs"});
 });
 
 export default app;
