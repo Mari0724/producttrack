@@ -76,7 +76,7 @@ const Sidebar = () => {
             </Link>
           </li>
 
-          {(tipoUsuario === "empresarial" || rol === "DESARROLLADOR") && (
+          {(rol === "DESARROLLADOR") && (
             <li>
               <Link
                 to={`/app/desarrollador/reportes`}
