@@ -57,6 +57,8 @@ export class EquipoController extends Controller {
     @Query() nombreCompleto?: string,
     @Query() correo?: string,
     @Query() rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR",
+    @Query() estado?: "activo" | "inactivo",
+    @Query() perfilCompleto?: "true" | "false", // 👈 NUEVO
     @Request() req?: any
   ) {
     if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
@@ -70,6 +72,8 @@ export class EquipoController extends Controller {
       nombreCompleto,
       correo,
       rolEquipo,
+      estado,
+      perfilCompleto: perfilCompleto !== undefined ? perfilCompleto === "true" : undefined, // 👈 Conversión de string a boolean
       empresaId,
     });
   }

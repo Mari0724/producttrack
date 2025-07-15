@@ -747,6 +747,8 @@ export function RegisterRoutes(app: Router) {
                 nombreCompleto: {"in":"query","name":"nombreCompleto","dataType":"string"},
                 correo: {"in":"query","name":"correo","dataType":"string"},
                 rolEquipo: {"in":"query","name":"rolEquipo","dataType":"union","subSchemas":[{"dataType":"enum","enums":["LECTOR"]},{"dataType":"enum","enums":["COMENTARISTA"]},{"dataType":"enum","enums":["EDITOR"]}]},
+                estado: {"in":"query","name":"estado","dataType":"union","subSchemas":[{"dataType":"enum","enums":["activo"]},{"dataType":"enum","enums":["inactivo"]}]},
+                perfilCompleto: {"in":"query","name":"perfilCompleto","dataType":"union","subSchemas":[{"dataType":"enum","enums":["true"]},{"dataType":"enum","enums":["false"]}]},
                 req: {"in":"request","name":"req","dataType":"object"},
         };
         app.get('/equipo/filtrar',

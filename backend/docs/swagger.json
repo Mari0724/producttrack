@@ -1838,6 +1838,30 @@
 								"EDITOR"
 							]
 						}
+					},
+					{
+						"in": "query",
+						"name": "estado",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"activo",
+								"inactivo"
+							]
+						}
+					},
+					{
+						"in": "query",
+						"name": "perfilCompleto",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"true",
+								"false"
+							]
+						}
 					}
 				]
 			}

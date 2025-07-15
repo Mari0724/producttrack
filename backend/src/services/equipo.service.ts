@@ -58,9 +58,11 @@ export class EquipoService {
     nombreCompleto?: string;
     correo?: string;
     rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR";
+    estado?: "activo" | "inactivo";
+    perfilCompleto?: boolean;
     empresaId?: number;
   }) {
-    const { nombreCompleto, correo, rolEquipo, empresaId } = filtros;
+    const { nombreCompleto, correo, rolEquipo, estado, perfilCompleto, empresaId } = filtros;
 
     return await prisma.users.findMany({
       where: {
@@ -68,6 +70,8 @@ export class EquipoService {
         nombreCompleto: nombreCompleto ? { contains: nombreCompleto, mode: "insensitive" } : undefined,
         correo: correo ? { contains: correo, mode: "insensitive" } : undefined,
         rolEquipo,
+        estado,
+        perfilCompleto,
         empresaId,
       },
     });
