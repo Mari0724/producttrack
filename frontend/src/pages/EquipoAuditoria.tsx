@@ -13,6 +13,8 @@ interface MiembroEquipo {
     estado: "activo" | "inactivo";
     perfilCompleto: boolean;
     createdAt: string;
+    updatedAt: string;
+    deletedAt?: string | null;
     empresaId: number;
 }
 
@@ -28,6 +30,9 @@ const EquipoAuditoria = () => {
     const [editar, setEditar] = useState<MiembroEquipo | null>(null);
     const [nuevoRol, setNuevoRol] = useState("");
     const [nuevoPerfilCompleto, setNuevoPerfilCompleto] = useState(false);
+    const [filtroEstado, setFiltroEstado] = useState("");
+    const [filtroPerfilCompleto, setFiltroPerfilCompleto] = useState("");
+    const [activarUsuario, setActivarUsuario] = useState(false);
     const { toast } = useToast();
 
 
@@ -48,9 +53,12 @@ const EquipoAuditoria = () => {
                 nombreCompleto: filtroNombre,
                 correo: filtroCorreo,
                 rolEquipo: filtroRol || undefined,
+                estado: filtroEstado || undefined,
+                perfilCompleto: filtroPerfilCompleto || undefined,
             },
             headers: { Authorization: `Bearer ${token}` },
         });
+
         setMiembros(res.data);
     };
 
@@ -59,24 +67,36 @@ const EquipoAuditoria = () => {
         const token = localStorage.getItem("token");
 
         try {
+            // Solo activa si tú lo decides
+            if (editar.estado === "inactivo" && activarUsuario) {
+                await axios.put(
+                    `http://localhost:3000/usuarios/${editar.idUsuario}/reactivar`,
+                    {},
+                    { headers: { Authorization: `Bearer ${token}` } }
+                );
+            }
+
             await axios.put(
                 `http://localhost:3000/equipo/${editar.idUsuario}`,
                 {
                     rolEquipo: nuevoRol,
                     perfilCompleto: nuevoPerfilCompleto,
-                    estado: editar.estado,
                 },
                 { headers: { Authorization: `Bearer ${token}` } }
             );
-            toast(`✅ Rol actualizado para ${editar.nombreCompleto}`);
+
+            toast(`✅ actualizado para ${editar.nombreCompleto}`);
             setEditar(null);
             setNuevoRol("");
+            setActivarUsuario(false); // importante limpiar
             cargarMiembros();
         } catch (error) {
             console.error(error);
-            toast("❌ No se pudo actualizar el rol del miembro.");
+            toast("❌ No se pudo actualizar el miembro.");
         }
     };
+
+
 
 
     const eliminar = async () => {
@@ -85,11 +105,12 @@ const EquipoAuditoria = () => {
 
         try {
             await axios.delete(
-                `http://localhost:3000/equipo/forzar-eliminar/${confirmEliminarId}`,
+                `http://localhost:3000/equipo/eliminar-logico/${confirmEliminarId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
             );
+
             toast("✅ Usuario eliminado permanentemente.");
             setConfirmEliminarId(null);
             cargarMiembros();
@@ -106,17 +127,13 @@ const EquipoAuditoria = () => {
     }, []);
 
     const esAutorizado = usuario?.rol === "ADMIN" || usuario?.rol === "DESARROLLADOR";
-    
+
     if (!esAutorizado) {
         toast("⚠️ No tienes permisos para acceder a esta auditoría.");
         return <div className="text-center mt-20 text-red-600">Sin permisos para ver esta auditoría.</div>;
     }
 
-    const miembrosFiltrados = miembros.filter((m) => {
-        const nombreOK = m.nombreCompleto.toLowerCase().includes(filtroNombre.toLowerCase());
-        const correoOK = m.correo.toLowerCase().includes(filtroCorreo.toLowerCase());
-        return nombreOK && correoOK;
-    });
+
 
     return (
         <div className="p-5 max-w-6xl mx-auto">
@@ -146,8 +163,45 @@ const EquipoAuditoria = () => {
                         <option key={r} value={r}>{r}</option>
                     ))}
                 </select>
-                <button onClick={filtrar} className="bg-wine-red text-white px-4 py-2 rounded">Filtrar</button>
-                <button onClick={cargarMiembros} className="bg-gray-300 px-4 py-2 rounded">Limpiar</button>
+                <select
+                    value={filtroEstado}
+                    onChange={(e) => setFiltroEstado(e.target.value)}
+                    className="border rounded px-3 py-2"
+                >
+                    <option value="">Todos los estados</option>
+                    <option value="activo">Activo</option>
+                    <option value="inactivo">Inactivo</option>
+                </select>
+                <select
+                    value={filtroPerfilCompleto}
+                    onChange={(e) => setFiltroPerfilCompleto(e.target.value)}
+                    className="border rounded px-3 py-2"
+                >
+                    <option value="">Todos los perfiles</option>
+                    <option value="false">Perfil completo</option>
+                    <option value="true">Perfil incompleto</option>
+                </select>
+
+                <button
+                    onClick={filtrar}
+                    className="bg-wine-red text-white px-4 py-2 rounded"
+                >
+                    Filtrar
+                </button>
+                <button
+                    onClick={() => {
+                        setFiltroNombre("");
+                        setFiltroCorreo("");
+                        setFiltroRol("");
+                        setFiltroEstado("");
+                        setFiltroPerfilCompleto("");
+                        cargarMiembros();
+                    }}
+                    className="bg-gray-300 px-4 py-2 rounded"
+                >
+                    Limpiar
+                </button>
+
             </div>
 
             <table className="min-w-full border text-sm bg-white">
@@ -160,11 +214,14 @@ const EquipoAuditoria = () => {
                         <th className="px-4 py-2">Estado</th>
                         <th className="px-4 py-2">Empresa ID</th>
                         <th className="px-4 py-2">Completo</th>
+                        <th className="px-4 py-2">Creado</th>
+                        <th className="px-4 py-2">Actualizado</th>
+                        <th className="px-4 py-2">Eliminado</th>
                         <th className="px-4 py-2">Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {miembrosFiltrados.map((m) => (
+                    {miembros.map((m) => (
                         <tr key={m.idUsuario} className="border-t">
                             <td className="px-3 py-2 text-center">{m.idUsuario}</td>
                             <td className="px-3 py-2">{m.nombreCompleto}</td>
@@ -172,7 +229,11 @@ const EquipoAuditoria = () => {
                             <td className="px-3 py-2">{m.rolEquipo}</td>
                             <td className="px-3 py-2">{m.estado}</td>
                             <td className="px-3 py-2 text-center">{m.empresaId}</td>
-                            <td className="px-3 py-2">{!m.perfilCompleto ? "Sí" : "No"}</td>
+                            <td className="px-3 py-2">
+                                {m.perfilCompleto ? "Incompleto" : "Completo"}
+                            </td>                            <td>{new Date(m.createdAt).toLocaleString()}</td>
+                            <td>{new Date(m.updatedAt).toLocaleString()}</td>
+                            <td>{m.deletedAt ? new Date(m.deletedAt).toLocaleString() : "-"}</td>
                             <td className="px-3 py-2 flex gap-2">
                                 <button onClick={() => { setEditar(m); setNuevoRol(m.rolEquipo); }} className="text-blue-600"><Pencil size={16} /></button>
                                 {usuario?.rol === "ADMIN" && (
@@ -210,15 +271,19 @@ const EquipoAuditoria = () => {
                             <option value="true">Perfil incompleto</option>
                         </select>
 
-                        <select
-                            value={editar.estado}
-                            onChange={(e) => setEditar((prev) => prev ? { ...prev, estado: e.target.value as "activo" | "inactivo" } : null)}
-                            className="w-full border p-2 rounded mb-4"
-                        >
-                            <option value="activo">Activo</option>
-                            <option value="inactivo">Inactivo</option>
-                        </select>
-
+                        {editar.estado === "inactivo" && (
+                            <div className="mb-4">
+                                <label className="flex items-center space-x-2">
+                                    <input
+                                        type="checkbox"
+                                        checked={activarUsuario}
+                                        onChange={(e) => setActivarUsuario(e.target.checked)}
+                                        className="accent-wine-red"
+                                    />
+                                    <span>Activar este usuario</span>
+                                </label>
+                            </div>
+                        )}
 
                         <div className="flex justify-end gap-2">
                             <button onClick={() => setEditar(null)} className="px-4 py-2 bg-gray-300 rounded">Cancelar</button>
@@ -235,10 +300,9 @@ const EquipoAuditoria = () => {
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
                         <h2 className="text-lg font-semibold text-red-600 mb-4">
-                            ⚠️ Esta acción eliminará <span className="font-bold">físicamente</span> al usuario del sistema. No se puede deshacer.
-                        </h2>
+                            ⚠️ Esta acción marcará al usuario como <span className="font-bold">inactivo</span>.                        </h2>
                         <p className="mb-4 text-sm text-gray-700">
-                            Asegúrate de que esta acción es necesaria. El usuario no podrá ser recuperado.
+                            El usuario no podrá acceder al sistema, pero su información será conservada.
                         </p>
                         <div className="flex justify-end gap-2">
                             <button
