@@ -46,6 +46,6 @@ export const updateTeamMember = async (
 };
 
 export const deleteTeamMember = async (id: number) => {
-  const response = await axiosInstance.delete(`/equipo/${id}`);
+  const response = await axiosInstance.delete(`/equipo/eliminar-logico/${id}`);
   return response.data;
 };
