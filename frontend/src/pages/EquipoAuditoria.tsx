@@ -111,7 +111,7 @@ const EquipoAuditoria = () => {
                 }
             );
 
-            toast("✅ Usuario eliminado permanentemente.");
+            toast("✅ Usuario eliminado.");
             setConfirmEliminarId(null);
             cargarMiembros();
         } catch (error) {
@@ -119,8 +119,6 @@ const EquipoAuditoria = () => {
             toast("❌ No se pudo eliminar el usuario.");
         }
     };
-
-
 
     useEffect(() => {
         cargarMiembros();
@@ -136,7 +134,7 @@ const EquipoAuditoria = () => {
 
 
     return (
-        <div className="p-5 max-w-6xl mx-auto">
+        <div className="p-5 max-w-7xl mx-auto">
             <h1 className="text-3xl font-bold mb-6 text-wine-red">👥 Auditoría del Equipo</h1>
             <div className="flex flex-wrap gap-3 mb-4">
                 <input
@@ -204,8 +202,7 @@ const EquipoAuditoria = () => {
 
             </div>
 
-            <table className="min-w-full border text-sm bg-white">
-                <thead className="bg-wine-red text-white">
+  <table className="min-w-[1000px] w-full border text-sm bg-white">                <thead className="bg-wine-red text-white">
                     <tr>
                         <th className="px-4 py-2">ID</th>
                         <th className="px-4 py-2">Nombre</th>
