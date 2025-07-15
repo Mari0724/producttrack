@@ -36,7 +36,7 @@ export class EquipoController extends Controller {
 
     const creado = await equipoService.crearEquipo(data, empresaId);
     console.log("✅ Usuario creado desde controller:", creado);
-    return creado; 
+    return creado;
   }
 
 
@@ -48,7 +48,7 @@ export class EquipoController extends Controller {
       return { mensaje: "Acceso denegado. Solo empresas o administradores pueden ver el equipo." };
     }
     const empresaId: number | undefined = req.user.rol === "ADMIN" ? undefined : req.user.id;
-    return await equipoService.obtenerTodosLosEquipos(empresaId); 
+    return await equipoService.obtenerTodosLosEquipos(empresaId);
   }
 
   @Security("jwt")
@@ -57,6 +57,8 @@ export class EquipoController extends Controller {
     @Query() nombreCompleto?: string,
     @Query() correo?: string,
     @Query() rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR",
+    @Query() estado?: "activo" | "inactivo",
+    @Query() perfilCompleto?: "true" | "false", // 👈 NUEVO
     @Request() req?: any
   ) {
     if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
@@ -70,6 +72,8 @@ export class EquipoController extends Controller {
       nombreCompleto,
       correo,
       rolEquipo,
+      estado,
+      perfilCompleto: perfilCompleto !== undefined ? perfilCompleto === "true" : undefined, // 👈 Conversión de string a boolean
       empresaId,
     });
   }
@@ -106,8 +110,8 @@ export class EquipoController extends Controller {
   }
 
   @Security("jwt")
-  @Delete("{id}")
-  async eliminarEquipo(@Path() id: number, @Request() req: any) {
+  @Delete("eliminar-logico/{id}")
+  async eliminarLogico(@Path() id: number, @Request() req: any) {
     if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
       this.setStatus(403);
       return { mensaje: "Acceso denegado. Solo empresas o administradores pueden eliminar miembros del equipo." };
@@ -124,25 +128,9 @@ export class EquipoController extends Controller {
       return { mensaje: "Este miembro no pertenece a tu empresa." };
     }
 
-    return await equipoService.marcarComoEliminado(id);
+    return await equipoService.eliminarLogico(id, req.user.rol === "ADMIN" ? undefined : req.user.id);
   }
 
-  @Security("jwt")
-  @Delete("forzar-eliminar/{id}")
-  async eliminarFisicamente(@Path() id: number, @Request() req: any) {
-    if (req.user.rol !== "ADMIN") {
-      this.setStatus(403);
-      return { mensaje: "Solo el administrador puede eliminar completamente un usuario del equipo." };
-    }
-
-    try {
-      const eliminado = await equipoService.eliminarFisicamente(id);
-      return { mensaje: "Usuario eliminado físicamente con éxito.", eliminado };
-    } catch (error: any) {
-      this.setStatus(404);
-      return { mensaje: error.message };
-    }
-  }
 
 
 
