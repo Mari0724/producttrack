@@ -842,59 +842,27 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsEquipoController_eliminarEquipo: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsEquipoController_eliminarLogico: Record<string, TsoaRoute.ParameterSchema> = {
                 id: {"in":"path","name":"id","required":true,"dataType":"double"},
                 req: {"in":"request","name":"req","required":true,"dataType":"object"},
         };
-        app.delete('/equipo/:id',
+        app.delete('/equipo/eliminar-logico/:id',
             authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(EquipoController)),
-            ...(fetchMiddlewares<RequestHandler>(EquipoController.prototype.eliminarEquipo)),
+            ...(fetchMiddlewares<RequestHandler>(EquipoController.prototype.eliminarLogico)),
 
-            async function EquipoController_eliminarEquipo(request: ExRequest, response: ExResponse, next: any) {
+            async function EquipoController_eliminarLogico(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsEquipoController_eliminarEquipo, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsEquipoController_eliminarLogico, request, response });
 
                 const controller = new EquipoController();
 
               await templateService.apiHandler({
-                methodName: 'eliminarEquipo',
-                controller,
-                response,
-                next,
-                validatedArgs,
-                successStatus: undefined,
-              });
-            } catch (err) {
-                return next(err);
-            }
-        });
-        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsEquipoController_eliminarFisicamente: Record<string, TsoaRoute.ParameterSchema> = {
-                id: {"in":"path","name":"id","required":true,"dataType":"double"},
-                req: {"in":"request","name":"req","required":true,"dataType":"object"},
-        };
-        app.delete('/equipo/forzar-eliminar/:id',
-            authenticateMiddleware([{"jwt":[]}]),
-            ...(fetchMiddlewares<RequestHandler>(EquipoController)),
-            ...(fetchMiddlewares<RequestHandler>(EquipoController.prototype.eliminarFisicamente)),
-
-            async function EquipoController_eliminarFisicamente(request: ExRequest, response: ExResponse, next: any) {
-
-            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-            let validatedArgs: any[] = [];
-            try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsEquipoController_eliminarFisicamente, request, response });
-
-                const controller = new EquipoController();
-
-              await templateService.apiHandler({
-                methodName: 'eliminarFisicamente',
+                methodName: 'eliminarLogico',
                 controller,
                 response,
                 next,

@@ -2120,9 +2120,11 @@
 						}
 					}
 				}
-			},
+			}
+		},
+		"/equipo/eliminar-logico/{id}": {
 			"delete": {
-				"operationId": "EliminarEquipo",
+				"operationId": "EliminarLogico",
 				"responses": {
 					"200": {
 						"description": "Ok",
@@ -2223,153 +2225,6 @@
 												"mensaje": {
 													"type": "string"
 												}
-											},
-											"required": [
-												"mensaje"
-											],
-											"type": "object"
-										}
-									]
-								}
-							}
-						}
-					}
-				},
-				"tags": [
-					"Equipo"
-				],
-				"security": [
-					{
-						"jwt": []
-					}
-				],
-				"parameters": [
-					{
-						"in": "path",
-						"name": "id",
-						"required": true,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
-					}
-				]
-			}
-		},
-		"/equipo/forzar-eliminar/{id}": {
-			"delete": {
-				"operationId": "EliminarFisicamente",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"anyOf": [
-										{
-											"properties": {
-												"eliminado": {
-													"properties": {
-														"deletedAt": {
-															"type": "string",
-															"format": "date-time"
-														},
-														"updatedAt": {
-															"type": "string",
-															"format": "date-time"
-														},
-														"createdAt": {
-															"type": "string",
-															"format": "date-time"
-														},
-														"idUsuario": {
-															"type": "number",
-															"format": "double"
-														},
-														"perfilCompleto": {
-															"type": "boolean"
-														},
-														"empresaId": {
-															"type": "number",
-															"format": "double"
-														},
-														"estado": {
-															"type": "string"
-														},
-														"rolEquipo": {
-															"$ref": "#/components/schemas/_36_Enums.rolEquipo"
-														},
-														"rol": {
-															"type": "string"
-														},
-														"nit": {
-															"type": "string"
-														},
-														"nombreEmpresa": {
-															"type": "string"
-														},
-														"tipoUsuario": {
-															"$ref": "#/components/schemas/_36_Enums.TipoUsuario"
-														},
-														"fotoPerfil": {
-															"type": "string"
-														},
-														"direccion": {
-															"type": "string"
-														},
-														"telefono": {
-															"type": "string"
-														},
-														"nombreCompleto": {
-															"type": "string"
-														},
-														"password": {
-															"type": "string"
-														},
-														"correo": {
-															"type": "string"
-														},
-														"username": {
-															"type": "string"
-														}
-													},
-													"required": [
-														"deletedAt",
-														"updatedAt",
-														"createdAt",
-														"idUsuario",
-														"perfilCompleto",
-														"empresaId",
-														"estado",
-														"rolEquipo",
-														"rol",
-														"nit",
-														"nombreEmpresa",
-														"tipoUsuario",
-														"fotoPerfil",
-														"direccion",
-														"telefono",
-														"nombreCompleto",
-														"password",
-														"correo",
-														"username"
-													],
-													"type": "object"
-												},
-												"mensaje": {
-													"type": "string"
-												}
-											},
-											"required": [
-												"eliminado",
-												"mensaje"
-											],
-											"type": "object"
-										},
-										{
-											"properties": {
-												"eliminado": {},
-												"mensaje": {}
 											},
 											"required": [
 												"mensaje"

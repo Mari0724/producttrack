@@ -109,8 +109,8 @@ export class EquipoService {
     });
   }
 
-  // Borrado lógico de un usuario equipo
-  async marcarComoEliminado(id: number, empresaId?: number) {
+  // Eliminación lógica de un miembro del equipo (inactivo + deletedAt)
+  async eliminarLogico(id: number, empresaId?: number) {
     const condiciones: any = {
       idUsuario: id,
       rol: "EQUIPO",
@@ -135,33 +135,24 @@ export class EquipoService {
     });
   }
 
-  // Eliminación física (completa) de un miembro del equipo (solo ADMIN)
-  async eliminarFisicamente(id: number) {
-    const usuario = await prisma.users.findUnique({
-      where: { idUsuario: id },
-    });
-
-    if (!usuario || usuario.rol !== "EQUIPO") {
-      throw new Error("Usuario no encontrado o no es del tipo EQUIPO");
-    }
-
-    return await prisma.users.delete({
-      where: { idUsuario: id },
-    });
-  }
-
-
-  // Eliminar a todo el equipo de una empresa
+  // ✅ Eliminación lógica de todo el equipo de una empresa
   async eliminarTodoElEquipo(empresaId: number) {
-    const resultado = await prisma.users.deleteMany({
+    const resultado = await prisma.users.updateMany({
       where: {
         rol: "EQUIPO",
         empresaId,
+        estado: "activo", // para no repetir lógica si ya están inactivos
+        deletedAt: null
+      },
+      data: {
+        estado: "inactivo",
+        deletedAt: new Date(),
       },
     });
 
     return {
-      mensaje: `Se eliminaron ${resultado.count} usuarios del equipo de la empresa.`,
+      mensaje: `Se marcaron como inactivos ${resultado.count} usuarios del equipo de la empresa.`,
     };
   }
+
 }
