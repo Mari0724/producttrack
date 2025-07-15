@@ -74,7 +74,7 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
     console.log('🍽️ Nombre de producto usado para consulta:', nombreProducto || 'Ninguno');
 
     const esAlimento = true;
-    let openFoodFactsResultados = [];
+    let openFoodFactsResultados: any[] = [];
 
     if (esAlimento) {
       openFoodFactsResultados = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);

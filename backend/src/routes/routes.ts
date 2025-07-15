@@ -530,6 +530,7 @@ export function RegisterRoutes(app: Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         const argsProductosController_getAll: Record<string, TsoaRoute.ParameterSchema> = {
+                req: {"in":"request","name":"req","required":true,"dataType":"object"},
                 nombre: {"in":"query","name":"nombre","dataType":"string"},
                 categoria: {"in":"query","name":"categoria","dataType":"string"},
                 estado: {"in":"query","name":"estado","dataType":"string"},
@@ -540,6 +541,7 @@ export function RegisterRoutes(app: Router) {
                 usuarioId: {"in":"query","name":"usuarioId","dataType":"double"},
         };
         app.get('/productos',
+            authenticateMiddleware([{"jwt":[]}]),
             ...(fetchMiddlewares<RequestHandler>(ProductosController)),
             ...(fetchMiddlewares<RequestHandler>(ProductosController.prototype.getAll)),
 

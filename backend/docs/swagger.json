@@ -1095,7 +1095,11 @@
 				"tags": [
 					"productos"
 				],
-				"security": [],
+				"security": [
+					{
+						"jwt": []
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",

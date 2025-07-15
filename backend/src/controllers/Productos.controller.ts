@@ -32,8 +32,11 @@ import { AccionHistorial } from '@prisma/client';
 @Tags("productos")
 export class ProductosController extends Controller {
   // 🔍 Obtener productos con filtros
+  @Security("jwt")
+  @Middlewares([autenticarToken])
   @Get("/")
   public async getAll(
+    @Request() req: AuthenticatedRequest,
     @Query() nombre?: string,
     @Query() categoria?: string,
     @Query() estado?: string,
@@ -41,26 +44,37 @@ export class ProductosController extends Controller {
     @Query() fechaAdquisicionHasta?: string,
     @Query() fechaVencimientoDesde?: string,
     @Query() fechaVencimientoHasta?: string,
-    @Query() usuarioId?: number
+    @Query() usuarioId?: number // 👈 aún lo aceptamos por query para roles con permiso
   ): Promise<any[]> {
     const filters: any = {};
+    const { id, tipoUsuario, rol, empresaId, rolEquipo } = req.user!;
 
+    // 🔐 Solo para INDIVIDUAL forzamos que vea solo sus productos
+    if (tipoUsuario === "INDIVIDUAL") {
+      filters.usuarioId = id;
+    }
+
+    // 🎯 Empresarial puede ver productos de todos los miembros de su empresa
+    if (tipoUsuario === "EMPRESARIAL" && empresaId) {
+      filters.empresaId = empresaId;
+    }
+
+    // 👤 Filtros comunes
     if (nombre) filters.nombre = nombre;
     if (categoria) filters.categoria = categoria;
     if (estado) filters.estado = estado;
-    if (usuarioId) filters.usuarioId = usuarioId;
 
     if (fechaAdquisicionDesde || fechaAdquisicionHasta) {
       filters.fechaAdquisicion = {
         ...(fechaAdquisicionDesde && { gte: new Date(fechaAdquisicionDesde) }),
-        ...(fechaAdquisicionHasta && { lte: new Date(fechaAdquisicionHasta) })
+        ...(fechaAdquisicionHasta && { lte: new Date(fechaAdquisicionHasta) }),
       };
     }
 
     if (fechaVencimientoDesde || fechaVencimientoHasta) {
       filters.fechaVencimiento = {
         ...(fechaVencimientoDesde && { gte: new Date(fechaVencimientoDesde) }),
-        ...(fechaVencimientoHasta && { lte: new Date(fechaVencimientoHasta) })
+        ...(fechaVencimientoHasta && { lte: new Date(fechaVencimientoHasta) }),
       };
     }
 

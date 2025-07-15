@@ -3,7 +3,7 @@ import axios from "axios";
 export class OpenFoodFactsService {
   static async buscarAlimentoPorNombre(nombre: string) {
     try {
-      const response = await axios.get(
+      const response = await axios.get<{ products: any[] }>(
         "https://world.openfoodfacts.org/cgi/search.pl",
         {
           params: {
