@@ -58,7 +58,11 @@ export const EditMemberModal = ({ isOpen, member, onClose, onEdit }: EditMemberM
 
         try {
             await new Promise(resolve => setTimeout(resolve, 500));
-            onEdit(formData);
+            onEdit({
+                ...formData,
+                estado: member!.estado,
+            });
+
             toast(`✅ ${formData.name} actualizado correctamente.`);
             setErrors({});
         } catch (error) {

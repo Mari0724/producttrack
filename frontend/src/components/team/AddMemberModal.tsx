@@ -67,7 +67,11 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
 
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      onAdd({ ...formData, perfilCompleto: true });
+      onAdd({
+        ...formData,
+        perfilCompleto: true,
+        estado: "activo",
+      });
       toast(`✅ ${formData.name} agregado al equipo exitosamente.`);
       setFormData({ name: "", email: "", password: "", role: "LECTOR" });
       setErrors({});
@@ -162,7 +166,7 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
             {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
           </div>
 
-          
+
           {/* Rol */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">Rol asignado</label>
