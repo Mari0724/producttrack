@@ -14,7 +14,7 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
     name: "",
     email: "",
     password: "",
-    role: "LECTOR" as UserRole
+    role: "LECTOR" as UserRole,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -67,7 +67,7 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
 
     try {
       await new Promise(resolve => setTimeout(resolve, 500));
-      onAdd({ ...formData, perfilCompleto: true });
+      onAdd({ ...formData, perfilCompleto: true, estado: "activo" });
       toast(`✅ ${formData.name} agregado al equipo exitosamente.`);
       setFormData({ name: "", email: "", password: "", role: "LECTOR" });
       setErrors({});

@@ -33,6 +33,12 @@ const CompanyCommentsModal: React.FC<CompanyCommentsModalProps> = ({ productId, 
   const userId = parseInt(localStorage.getItem("userId") || "0", 10);
   const userName = localStorage.getItem("userName") || "Usuario";
   const userRol = localStorage.getItem("rolEquipo") || localStorage.getItem("rol") || "";
+  const tipoUsuario = localStorage.getItem("tipoUsuario");
+
+  const puedeComentar =
+    tipoUsuario === "EMPRESARIAL" ||
+    userRol === "EDITOR" ||
+    userRol === "COMENTARISTA";
 
   useEffect(() => {
     const fetchComments = async () => {
@@ -45,8 +51,8 @@ const CompanyCommentsModal: React.FC<CompanyCommentsModalProps> = ({ productId, 
             text: c.comentario || '',
             user: c.usuario?.nombre || 'Usuario',
             date: c.createdAt?.split('T')[0] || new Date().toISOString().split('T')[0],
-            }));
-            setComments(formateados);
+          }));
+          setComments(formateados);
         } else {
           setComments([]);
         }
@@ -115,7 +121,7 @@ const CompanyCommentsModal: React.FC<CompanyCommentsModalProps> = ({ productId, 
           </div>
         )}
 
-        {(userRol === "EDITOR" || userRol === "COMENTARISTA") ? (
+        {puedeComentar ? (
           <div>
             <textarea
               placeholder="Escribe tu comentario..."
