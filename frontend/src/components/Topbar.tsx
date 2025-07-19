@@ -21,7 +21,7 @@ const Topbar = () => {
   };
 
   const irAGestionEquipo = () => {
-    navigate("/equipo");
+    navigate("/app/empresarial/equipo");
   };
 
   return (
