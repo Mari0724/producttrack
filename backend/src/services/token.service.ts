@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-// Validación temprana del secreto
+// Validación de la variable JWT
 if (!process.env.JWT_SECRET) {
   throw new Error("Falta la variable JWT_SECRET en el archivo .env");
 }

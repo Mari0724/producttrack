@@ -3,22 +3,10 @@ import { Body, Controller, Delete, Get, Path, Put, Query, Security, Request, Res
 import { ProductosDTO } from "../models/ProductosDTO";
 import { zodValidate } from "../utils/zodValidate";
 import { productoSchema } from "../models/ProductosModel";
-import {
-  getAllProductos,
-  getProductoById,
-  createProducto,
-  updateProducto,
-  deleteProducto,
-  getCategoriasUnicas,
-  getCantidadPorCategoria,
-  getProductosPorCategoria,
-  getCantidadPorRangoPrecio,
-  obtenerProductoPorId
+import { getAllProductos, getProductoById, createProducto, updateProducto, deleteProducto,
+  getCategoriasUnicas, getCantidadPorCategoria, getProductosPorCategoria, getCantidadPorRangoPrecio, obtenerProductoPorId
 } from "../services/productos.service";
-import {
-  ResponseMessage,
-  ResponseMessageWithData
-} from "../interfaces/ResponseMenssage";
+import { ResponseMessage, ResponseMessageWithData } from "../interfaces/ResponseMenssage";
 import { AuthenticatedRequest } from "../types/express";
 import { puede } from "../utils/checkPermissions";
 import { Middlewares } from "tsoa";
@@ -31,7 +19,7 @@ import { AccionHistorial } from '@prisma/client';
 @Route("/productos")
 @Tags("productos")
 export class ProductosController extends Controller {
-  // 🔍 Obtener productos con filtros
+  // Obtener productos con filtros
   @Security("jwt")
   @Middlewares([autenticarToken])
   @Get("/")
@@ -44,22 +32,20 @@ export class ProductosController extends Controller {
     @Query() fechaAdquisicionHasta?: string,
     @Query() fechaVencimientoDesde?: string,
     @Query() fechaVencimientoHasta?: string,
-    @Query() usuarioId?: number // 👈 aún lo aceptamos por query para roles con permiso
   ): Promise<any[]> {
     const filters: any = {};
     const { id, tipoUsuario, rol, empresaId, rolEquipo } = req.user!;
 
-    // 🔐 Solo para INDIVIDUAL forzamos que vea solo sus productos
+    // Solo para INDIVIDUAL forzamos que vea solo sus productos
     if (tipoUsuario === "INDIVIDUAL") {
       filters.usuarioId = id;
     }
 
-    // 🎯 Empresarial puede ver productos de todos los miembros de su empresa
+    // Empresarial puede ver productos de todos los miembros de su empresa
     if (tipoUsuario === "EMPRESARIAL" && empresaId) {
       filters.empresaId = empresaId;
     }
 
-    // 👤 Filtros comunes
     if (nombre) filters.nombre = nombre;
     if (categoria) filters.categoria = categoria;
     if (estado) filters.estado = estado;
@@ -81,7 +67,7 @@ export class ProductosController extends Controller {
     return await getAllProductos(filters);
   }
 
-  // ✅ Obtener categorías únicas
+  // Obtener categorías únicas
   @Get("/categorias")
   public async obtenerCategorias(
     @Query() tipoUsuario?: string
@@ -101,7 +87,7 @@ export class ProductosController extends Controller {
     }
   }
 
-  // ✅ Obtener productos por categoría
+  // Obtener productos por categoría
   @Get("/por-categoria")
   public async getByCategoria(@Query() categoria: string): Promise<any> {
     if (!categoria?.trim()) {
@@ -124,7 +110,7 @@ export class ProductosController extends Controller {
     }
   }
 
-  // ✅ Devuelve los nombres de los productos del usuario
+  // Devuelve los nombres de los productos del usuario
   @Get('/nombres/:idUsuario')
   public async getNombresProductosDelUsuario(@Path() idUsuario: number) {
     const productos = await prisma.productos.findMany({
@@ -132,10 +118,10 @@ export class ProductosController extends Controller {
       select: { nombre: true },
     });
 
-    return productos.map(p => p.nombre); // 👈 debe devolver solo los nombres
+    return productos.map(p => p.nombre);
   }
 
-  // ✅ Cantidad de productos por categoría
+  // Cantidad de productos por categoría
   @Get("/cantidad-por-categoria")
   public async getCantidadPorCategoria(): Promise<any> {
     try {
@@ -151,7 +137,7 @@ export class ProductosController extends Controller {
     }
   }
 
-  // ✅ Cantidad de productos por rango de precio
+  // Cantidad de productos por rango de precio
   @Get("/cantidad-por-rango-precio")
   public async getCantidadPorRangoPrecio(): Promise<any> {
     try {
@@ -167,7 +153,7 @@ export class ProductosController extends Controller {
     }
   }
 
-  // ✅ Obtener producto por ID
+  // Obtener producto por ID
   @Get("/{id}")
   public async getById(@Path() id: string): Promise<any> {
     const numericId = Number(id);
@@ -186,7 +172,7 @@ export class ProductosController extends Controller {
     return producto;
   }
 
-  // ✅ Crear producto
+  // Crear producto
   @SuccessResponse("201", "Producto creado correctamente")
   @Response("400", "Datos inválidos")
   @Security("jwt")
@@ -222,15 +208,15 @@ export class ProductosController extends Controller {
       const nuevoProducto = await createProducto({
         ...parsed.data,
         precio: Number(parsed.data.precio),
-        usuarioId: id, // 🧩 este campo es clave
+        usuarioId: id,
       });
 
-      // 🟢 Registro en historial
+      // Registro en historial
       await prisma.histInv.create({
         data: {
           productoId: nuevoProducto.id,
           usuarioId: id,
-          accion: 'agregado', // o AccionHistorial.agregado si lo importas
+          accion: 'agregado',
           cantidad_anterior: 0,
           cantidad_nueva: nuevoProducto.cantidad,
           precio_anterior: 0,
@@ -260,7 +246,6 @@ export class ProductosController extends Controller {
     @Path() id: number,
     @Body() body: any
   ): Promise<ResponseMessage> {
-    console.log("👤 Usuario recibido:", req.user);
     const rol = req.user?.rol;
     const idUsuarioToken = (req.user as any)?.id;
 
@@ -280,12 +265,7 @@ export class ProductosController extends Controller {
     const esPropietario = Number(productoExistente.usuarioId) === Number(idUsuarioToken);
     const esEditorConPermiso = rolParaPermiso === "EDITOR" || rolParaPermiso === "ADMIN";
 
-    console.log("📦 productoExistente.usuarioId:", productoExistente.usuarioId);
-    console.log("🪪 idUsuarioToken:", idUsuarioToken);
-    console.log("🔑 esPropietario:", esPropietario);
-    console.log("🔐 esEditorConPermiso:", esEditorConPermiso);
-
-    // ✅ Solo permitimos si es propietario o tiene rol alto
+    // Solo permitimos si es propietario o tiene rol alto
     if (!esPropietario && !esEditorConPermiso) {
       this.setStatus(403);
       return { message: "No puedes editar productos de otro usuario." };
@@ -305,8 +285,6 @@ export class ProductosController extends Controller {
     }
 
     try {
-      console.log("🔧 Datos recibidos para actualización:", parsed.data);
-
       const { precio, ...resto } = parsed.data;
 
       await updateProducto(id, {
@@ -350,7 +328,7 @@ export class ProductosController extends Controller {
     }
   }
 
-  // ✅ Eliminar producto
+  // Eliminar producto
   @Delete("/{id}")
   @Security("jwt")
   @Middlewares([autenticarToken])
@@ -367,7 +345,7 @@ export class ProductosController extends Controller {
     }
 
     try {
-      // 🔍 Buscar producto antes de eliminar
+      // Buscar producto antes de eliminar
       const producto = await obtenerProductoPorId(id);
       const idUsuarioToken = (req.user as any)?.id;
 
@@ -376,7 +354,7 @@ export class ProductosController extends Controller {
         return { message: "Producto no encontrado" };
       }
 
-      // 📝 Registrar en historial antes de borrar
+      // Registrar en historial antes de borrar
       await prisma.histInv.create({
         data: {
           productoId: producto.id,
@@ -390,7 +368,7 @@ export class ProductosController extends Controller {
         },
       });
 
-      // 🗑️ Eliminar el producto
+      // Eliminar el producto
       await deleteProducto(id);
       return { message: "Producto eliminado correctamente" };
     } catch (error) {

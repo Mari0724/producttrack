@@ -2,7 +2,6 @@ import { z } from "zod";
 
 export const estadoEnum = z.enum(["DISPONIBLE", "AGOTADO", "RESERVADO", "VENCIDO", "ELIMINADO"]);
 
-// Esquema de validación con Zod
 export const productoSchema = z.object({
   codigoBarras: z.string().optional().nullable(),
   codigoQR: z.string().optional().nullable(),
@@ -24,5 +23,4 @@ export const productoSchema = z.object({
   imagen: z.string().trim().url({ message: "imagen debe ser una URL válida" }),
 });
 
-// Tipo TypeScript para entrada de datos
 export type ProductoInput = z.infer<typeof productoSchema>;

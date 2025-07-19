@@ -38,18 +38,16 @@ export const userSchema = z.object({
         .url("La foto de perfil debe ser una URL válida")
         .optional(),
 
-    // Nombre de la empresa solo es obligatorio si tipoUsuario es EMPRESARIAL
     nombreEmpresa: z
         .string()
         .min(3, "El nombre de la empresa es requerido")
         .trim()
-        .optional(),  // Esto lo hacemos opcional inicialmente
+        .optional(),
 
-    // NIT solo es obligatorio si tipoUsuario es EMPRESARIAL
     nit: z
         .string()
         .regex(/^\d{9,15}$/, "El NIT debe tener entre 9 y 15 dígitos")
-        .optional(),  // Lo dejamos opcional inicialmente
+        .optional(),
 
     estado: z
         .enum(["activo", "inactivo"])
@@ -62,7 +60,6 @@ export const userSchema = z.object({
         .enum(["LECTOR", "COMENTARISTA", "EDITOR"])
         .optional(),
 
-    // Campo para indicar si es un usuario individual o empresarial
     tipoUsuario: z
         .enum(["INDIVIDUAL", "EMPRESARIAL"])
         .optional(),
@@ -77,7 +74,6 @@ export const userSchema = z.object({
 
 })
 
-    // 1️⃣ Validación: tipoUsuario es obligatorio si rol es USUARIO
     .refine(
         (data) => {
             if (data.rol === "USUARIO") {
@@ -91,7 +87,7 @@ export const userSchema = z.object({
         }
     )
 
-    // 1️⃣ Validación: Si es EMPRESARIAL, debe tener nombreEmpresa y nit
+    // Validación: Si es EMPRESARIAL, debe tener nombreEmpresa y nit
     .refine(
         (data) => {
             if (data.tipoUsuario === "EMPRESARIAL") {
@@ -105,7 +101,7 @@ export const userSchema = z.object({
         }
     )
 
-    // 2️⃣ Validación: Si el rol es EQUIPO, debe tener empresaId
+    // Validación: Si el rol es EQUIPO, debe tener empresaId
     .refine(
         (data) => {
             if (data.rol === "EQUIPO") {
@@ -132,7 +128,4 @@ export const userSchema = z.object({
         }
     );
 
-
-
 export type ValidatedUser = z.infer<typeof userSchema>;
-

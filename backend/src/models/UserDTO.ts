@@ -13,10 +13,9 @@ export interface UserDTO {
   rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR";
   estado?: "activo" | "inactivo";
   empresaId?: number;
-  perfilCompleto?: boolean; // 👈 nuevo campo agregado como opcional
+  perfilCompleto?: boolean;
 }
 
-// ✅ Clase decorada para cambio de contraseña
 import { IsInt, IsString, MinLength } from "class-validator";
 import { Type } from "class-transformer";
 

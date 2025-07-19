@@ -6,7 +6,6 @@ import { EquipoService } from "../services/equipo.service";
 import { EquipoDTO } from "../models/EquipoDTO";
 
 const equipoService = new EquipoService();
-console.log("📍 CONTROLADOR DE EQUIPO CARGADO");
 
 @Route("equipo")
 @Tags("Equipo")
@@ -15,7 +14,6 @@ export class EquipoController extends Controller {
   @Security("jwt")
   @Post()
   async crearEquipo(@Body() data: EquipoDTO, @Request() req: any) {
-    console.log("📥 Entró a EquipoController.crearEquipo");
 
     if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
       this.setStatus(403);
@@ -35,10 +33,8 @@ export class EquipoController extends Controller {
     }
 
     const creado = await equipoService.crearEquipo(data, empresaId);
-    console.log("✅ Usuario creado desde controller:", creado);
     return creado;
   }
-
 
   @Security("jwt")
   @Get()
@@ -58,7 +54,7 @@ export class EquipoController extends Controller {
     @Query() correo?: string,
     @Query() rolEquipo?: "LECTOR" | "COMENTARISTA" | "EDITOR",
     @Query() estado?: "activo" | "inactivo",
-    @Query() perfilCompleto?: "true" | "false", // 👈 NUEVO
+    @Query() perfilCompleto?: "true" | "false",
     @Request() req?: any
   ) {
     if (!(req.user.tipoUsuario === "EMPRESARIAL" || req.user.rol === "ADMIN")) {
@@ -73,7 +69,7 @@ export class EquipoController extends Controller {
       correo,
       rolEquipo,
       estado,
-      perfilCompleto: perfilCompleto !== undefined ? perfilCompleto === "true" : undefined, // 👈 Conversión de string a boolean
+      perfilCompleto: perfilCompleto !== undefined ? perfilCompleto === "true" : undefined, // Conversión de string a boolean
       empresaId,
     });
   }
@@ -130,9 +126,6 @@ export class EquipoController extends Controller {
 
     return await equipoService.eliminarLogico(id, req.user.rol === "ADMIN" ? undefined : req.user.id);
   }
-
-
-
 
   @Security("jwt")
   @Delete("todos/{empresaId}")

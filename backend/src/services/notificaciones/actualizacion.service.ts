@@ -37,8 +37,5 @@ export async function notificarActualizacionApp(titulo: string, mensaje: string)
     await prisma.notificaciones.createMany({
       data: notificaciones,
     });
-    console.log(`✅ Se notificó a ${notificaciones.length} usuarios sobre la actualización de la app`);
-  } else {
-    console.log('ℹ️ Ningún usuario tiene activa la notificación de actualización.');
   }
 }

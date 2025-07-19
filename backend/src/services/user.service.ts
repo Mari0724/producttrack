@@ -6,7 +6,7 @@ import jwt from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET!;
 
-// 🔍 Obtener 
+// Obtener 
 export async function getAllUsers(filters: Partial<UserDTO>) {
   return await prisma.users.findMany({
     where: {
@@ -23,17 +23,14 @@ export async function getAllUsers(filters: Partial<UserDTO>) {
   });
 }
 
-
-// 🔍 Obtener un usuario por ID
+// Obtener un usuario por ID
 export async function getUserById(id: number) {
   return await prisma.users.findUnique({
     where: { idUsuario: id },
   });
 }
 
-
-
-// 🆕 Crear usuario
+// Crear usuario
 export async function createUser(data: UserDTO) {
   if (data.rol === "USUARIO" && !data.tipoUsuario) {
     throw new Error("El tipoUsuario es obligatorio para rol USUARIO");
@@ -66,13 +63,13 @@ export async function createUser(data: UserDTO) {
   };
 
   if (data.telefono) userData.telefono = data.telefono;
-  if (data.direccion) userData.direccion = data.direccion; // ✅ esta es la línea que te falta
+  if (data.direccion) userData.direccion = data.direccion;
   if (data.nit) userData.nit = data.nit;
   if (data.tipoUsuario) userData.tipoUsuario = data.tipoUsuario;
   if (data.rolEquipo) userData.rolEquipo = data.rolEquipo;
   if (data.empresaId) userData.empresaId = data.empresaId;
   if (data.fotoPerfil) userData.fotoPerfil = data.fotoPerfil;
-  if (data.nombreEmpresa) userData.nombreEmpresa = data.nombreEmpresa; // <-- AGREGA ESTA LÍNEA
+  if (data.nombreEmpresa) userData.nombreEmpresa = data.nombreEmpresa;
   if (typeof data.perfilCompleto === 'boolean') { userData.perfilCompleto = data.perfilCompleto; }
 
   const newUser = await prisma.users.create({ data: userData });
@@ -92,11 +89,10 @@ export async function createUser(data: UserDTO) {
     { expiresIn: '24h' }
   );
 
-
   return { user: newUser, token };
 }
 
-// 🔍 Obtener una empresa por ID
+// Obtener una empresa por ID
 export async function getEmpresaById(id: number) {
   const empresa = await prisma.users.findUnique({
     where: { idUsuario: id },
@@ -113,9 +109,7 @@ export async function getEmpresaById(id: number) {
   return empresa;
 }
 
-
-
-// 🆙 Actualizar usuario
+// Actualizar usuario
 export async function updateUser(id: number, data: Partial<UserDTO>) {
   const user = await prisma.users.findUnique({
     where: { idUsuario: id },
@@ -123,18 +117,18 @@ export async function updateUser(id: number, data: Partial<UserDTO>) {
 
   if (!user) throw new Error("Usuario no encontrado");
 
-  // ❌ No permitir cambiar el rol
+  // No permitir cambiar el rol
   if (data.rol && data.rol !== user.rol) {
     throw new Error("No está permitido cambiar el rol del usuario.");
   }
 
-  // 🔒 Encriptar la nueva contraseña si viene en la solicitud
+  // Encriptar la nueva contraseña si viene en la solicitud
   if (data.password) {
     const saltRounds = 10;
     data.password = await bcrypt.hash(data.password, saltRounds);
   }
 
-  // 🔄 Si hay una nueva fotoPerfil y la antigua existe, eliminarla de Cloudinary
+  // Si hay una nueva fotoPerfil y la antigua existe, eliminarla de Cloudinary
   if (data.fotoPerfil && user.fotoPerfil) {
     const oldUrl = user.fotoPerfil;
     const parts = oldUrl.split('/upload/');
@@ -144,14 +138,13 @@ export async function updateUser(id: number, data: Partial<UserDTO>) {
 
       try {
         await cloudinary.uploader.destroy(publicId);
-        console.log(`Imagen antigua eliminada: ${publicId}`);
       } catch (error) {
         console.error("Error eliminando imagen antigua:", error);
       }
     }
   }
 
-  // ✅ Finalmente actualizamos el usuario
+  // Finalmente actualizamos el usuario
   return await prisma.users.update({
     where: { idUsuario: id },
     data: {
@@ -160,7 +153,6 @@ export async function updateUser(id: number, data: Partial<UserDTO>) {
     },
   });
 }
-
 
 // Cambiar contraseña de un usuario
 export async function changeUserPassword(id: number, currentPassword: string, newPassword: string) {
@@ -189,7 +181,7 @@ export async function changeUserPassword(id: number, currentPassword: string, ne
   return { message: "Contraseña actualizada correctamente" };
 }
 
-// 🟢 Reactivar usuario
+// Reactivar usuario
 export async function reactivarUsuario(id: number) {
   const user = await prisma.users.findUnique({
     where: { idUsuario: id },
@@ -214,8 +206,7 @@ export async function reactivarUsuario(id: number) {
   });
 }
 
-
-// ✖️ Eliminar usuario
+// Eliminar usuario
 export async function deleteUser(id: number) {
   const user = await prisma.users.findUnique({
     where: { idUsuario: id },
@@ -229,7 +220,7 @@ export async function deleteUser(id: number) {
       where: {
         empresaId: user.idUsuario,
         rol: "EQUIPO",
-        estado: "activo", // solo los activos
+        estado: "activo",
       },
       data: {
         estado: "inactivo",
@@ -242,7 +233,7 @@ export async function deleteUser(id: number) {
     where: { idUsuario: id },
     data: {
       deletedAt: new Date(),
-      estado: "inactivo", // para reflejar que está eliminado/inactivo
+      estado: "inactivo",
       updatedAt: new Date(),
     },
   });

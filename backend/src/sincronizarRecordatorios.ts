@@ -22,7 +22,7 @@ async function sincronizarRecordatorios() {
 
         const existente = await prisma.recorStock.findFirst({
             where: { productoId: producto.id },
-            select: { cantidadMinima: true, idRecordatorio: true }, // 👈 aseguramos traer la clave única correcta
+            select: { cantidadMinima: true, idRecordatorio: true }, // aseguramos traer la clave única correcta
         });
 
         if (existente) {
@@ -30,16 +30,13 @@ async function sincronizarRecordatorios() {
 
             if (existente.cantidadMinima !== cantidadMinimaDeseada) {
                 await prisma.recorStock.update({
-                    where: { idRecordatorio: existente.idRecordatorio }, // ✅ usamos la clave única correcta
+                    where: { idRecordatorio: existente.idRecordatorio }, // usamos la clave única correcta
                     data: { cantidadMinima: cantidadMinimaDeseada },
                 });
 
-                console.log(`🔄 Actualizado recordatorio para producto ${producto.id}`);
             }
         }
     }
-
-    console.log("🎯 Sincronización finalizada correctamente.");
 }
 
 sincronizarRecordatorios()

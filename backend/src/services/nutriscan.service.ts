@@ -76,7 +76,7 @@ export class NutriScanService {
     });
   }
 
-  // ✅ Actualizado con NutriScanUpdateSchema
+  // Actualizado con NutriScanUpdateSchema
   async update(id: number, data: unknown) {
     const parsed = NutriScanUpdateSchema.parse(data);
     return prisma.nutriScan.update({

@@ -39,7 +39,6 @@ export class EquipoService {
     return nuevoEquipo;
   }
 
-
   // Obtener todos los usuarios equipo (sin filtros)
   async obtenerTodosLosEquipos(empresaId?: number) {
     return await prisma.users.findMany({
@@ -51,7 +50,6 @@ export class EquipoService {
       },
     });
   }
-
 
   // Filtro múltiple (por nombre, correo, rolEquipo, empresaId)
   async filtrarEquipos(filtros: {
@@ -139,13 +137,13 @@ export class EquipoService {
     });
   }
 
-  // ✅ Eliminación lógica de todo el equipo de una empresa
+  // Eliminación lógica de todo el equipo de una empresa
   async eliminarTodoElEquipo(empresaId: number) {
     const resultado = await prisma.users.updateMany({
       where: {
         rol: "EQUIPO",
         empresaId,
-        estado: "activo", // para no repetir lógica si ya están inactivos
+        estado: "activo",
         deletedAt: null
       },
       data: {
@@ -158,5 +156,4 @@ export class EquipoService {
       mensaje: `Se marcaron como inactivos ${resultado.count} usuarios del equipo de la empresa.`,
     };
   }
-
 }

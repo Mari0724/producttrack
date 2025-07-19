@@ -10,9 +10,8 @@ export const equipoSchema = z.object({
   fotoPerfil: z.string().url("La foto de perfil debe ser una URL válida").optional(),
   rolEquipo: z.enum(["LECTOR", "COMENTARISTA", "EDITOR"]),
   estado: z .enum(["activo", "inactivo"]) .default("activo"),
-  empresaId: z.number().optional(), // solo si lo envía un ADMIN
-  perfilCompleto: z.boolean().optional(), // 👈 NUEVO CAMPO
-
+  empresaId: z.number().optional(),
+  perfilCompleto: z.boolean().optional(),
 });
 
 export type EquipoModel = z.infer<typeof equipoSchema>;

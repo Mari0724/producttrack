@@ -8,7 +8,7 @@ export async function notificarComentarioProducto(idComentario: number) {
     include: {
       producto: {
         include: {
-          usuario: true, // el dueño del producto
+          usuario: true,
         },
       },
     },
@@ -59,6 +59,4 @@ export async function notificarComentarioProducto(idComentario: number) {
       data: notificaciones,
     });
   }
-
-  console.log('✅ Notificaciones enviadas a miembros con preferencias activas para el comentario', idComentario);
 }

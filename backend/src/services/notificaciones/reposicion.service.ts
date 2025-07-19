@@ -71,6 +71,4 @@ export async function notificarReposicionRecomendada(productosOpcionales?: Produ
       }
     }
   }
-
-  console.log('✅ Notificaciones de reposición recomendada enviadas correctamente');
 }

@@ -21,7 +21,7 @@ export async function obtenerHistorialInventario(idUsuario: number): Promise<His
         });
         productosIds = productos.map((p) => p.id);
     } else if (usuario.tipoUsuario === "EMPRESARIAL") {
-        // 🔹 Validación de empresaId por si está nulo
+        // Validación de empresaId por si está nulo
         const empresaId = usuario.empresaId ?? idUsuario;
 
         const productos = await prisma.productos.findMany({

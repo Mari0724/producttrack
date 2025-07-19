@@ -9,5 +9,5 @@ export interface EquipoDTO {
   rolEquipo: "LECTOR" | "COMENTARISTA" | "EDITOR";
   estado?: "activo" | "inactivo";
   empresaId?: number;
-  perfilCompleto?: boolean; // 👈 también aquí como opcional
+  perfilCompleto?: boolean;
 }

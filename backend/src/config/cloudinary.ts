@@ -1,10 +1,5 @@
-import dotenv from 'dotenv';
-import path from 'path';
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
-
-// ✅ Cargar variables de entorno (solo si aún no están cargadas)
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
 
 // ✅ Configurar Cloudinary
 cloudinary.config({

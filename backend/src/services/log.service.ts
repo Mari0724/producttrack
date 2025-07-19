@@ -42,9 +42,7 @@ export class LogService {
     const resolvedEmpresaId =
       user.tipoUsuario === "EMPRESARIAL" ? user.idUsuario : user.empresaId;
 
-
-
-    // ✅ Solo retornar los datos relevantes del usuario
+    // Solo retornar los datos relevantes del usuario
     return {
       user: {
         idUsuario: user.idUsuario,
@@ -91,15 +89,14 @@ export class LogService {
     };
   }
 
-
   async confirmarReset(token: string, nuevaContrasena: string) {
     const intento = await prisma.passwordReset.findFirst({
       where: {
         token,
         usado: false,
-        fechaExpiracion: { gt: new Date() }, // no expirado
+        fechaExpiracion: { gt: new Date() },
       },
-      orderBy: { fechaSolicitud: "desc" }, // por si hay varios
+      orderBy: { fechaSolicitud: "desc" },
     });
 
     if (!intento) {
@@ -134,8 +131,6 @@ export class LogService {
 
     return resultado;
   }
-
-
 }
 
 export const validarCredenciales = async (email: string, password: string) => {

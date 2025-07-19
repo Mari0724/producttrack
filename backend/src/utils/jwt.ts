@@ -7,7 +7,6 @@ export async function expressAuthentication(
   securityName: string,
   scopes?: string[]
 ): Promise<any> {
-  console.log("JWT_SECRET:", JWT_SECRET);
   const authHeader = request.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -18,7 +17,6 @@ export async function expressAuthentication(
 
   try {
     const decoded = jwt.verify(token, JWT_SECRET);
-    console.log("Token decodificado:", decoded);
     return decoded; // Esto se guarda como request['user']
   } catch (error) {
     throw new Error("Token inválido o expirado");

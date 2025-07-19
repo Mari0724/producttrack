@@ -26,7 +26,6 @@ export function permitirRolesYRolEquipo(
       return res.status(403).json({ mensaje: "Rol de equipo no permitido" });
     }
 
-
     next();
   };
 }

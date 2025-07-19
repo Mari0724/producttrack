@@ -1,13 +1,12 @@
 // Limpia texto OCR de saltos de línea, caracteres basura, símbolos raros
 export const limpiarTextoOCR = (texto: string): string => {
   return texto
-    .toLowerCase() // ✅ pasa todo a minúsculas para normalizar
+    .toLowerCase() // pasa todo a minúsculas para normalizar
     .replace(/\n/g, ' ') // reemplaza saltos de línea por espacio
     .replace(/[^a-z0-9áéíóúüñ\s\-]/g, '') // elimina todo excepto letras, números, espacios y guiones
     .replace(/\s+/g, ' ') // colapsa múltiples espacios en uno solo
     .trim();
 };
-
 
 // Corrige errores comunes de OCR (ejemplo simple)
 export const corregirErroresOCR = (texto: string): string => {
@@ -15,12 +14,6 @@ export const corregirErroresOCR = (texto: string): string => {
     .replace(/\b1entejas\b/gi, 'lentejas')
     .replace(/\bgarbansos\b/gi, 'garbanzos')
     .replace(/\baros\b/gi, 'arroz');
-};
-
-// Detecta palabra más larga en un string (plan B si no hay candidatos)
-export const palabraMasLarga = (texto: string): string => {
-  const palabras = texto.split(/\s+/);
-  return palabras.reduce((a, b) => (b.length > a.length ? b : a), '');
 };
 
 // Busca coincidencias con alimentos comunes en español

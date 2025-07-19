@@ -77,6 +77,4 @@ export async function notificarProductoVencido(productosOpcionales?: Producto[])
       }
     }
   }
-
-  console.log('✅ Notificaciones de productos vencidos enviadas.');
 }

@@ -4,7 +4,6 @@ import { LoginRequest, LoginResponse } from "../interfaces/log.interface";
 import { LogService } from "../services/log.service";
 import { SolicitudResetDTO, ConfirmacionResetDTO } from "../models/PasswordResetDTO";
 
-
 @Route("auth")
 @Tags("Autenticación")
 export class AuthController extends Controller {
@@ -31,8 +30,6 @@ export class AuthController extends Controller {
     };
   }
 
-
-
   @Post("solicitar-reset")
   public async solicitarReset(
     @Body() body: SolicitudResetDTO
@@ -40,7 +37,6 @@ export class AuthController extends Controller {
     const service = new LogService();
     return await service.solicitarReset(body.correo);
   }
-
 
   @Post("confirmar-reset")
   public async confirmarReset(

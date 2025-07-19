@@ -5,7 +5,6 @@ import { getAllUsers, changeUserPassword, getUserById, createUser, updateUser, d
 import { UserDTO, ChangePasswordDTO } from "../models/UserDTO";
 import { ResponseMessage, ResponseMessageWithToken } from "../interfaces/ResponseMenssage";
 
-
 @Route("usuarios")//Todas las rutas dentro del controlador comenzarán con /usuarios.
 @Tags("Usuarios")//Agrupa todas las rutas de este controlador bajo el tag Usuarios
 export class UserController extends Controller {
@@ -13,8 +12,7 @@ export class UserController extends Controller {
     super();
   }
 
-
-  // 🔍 Obtener 
+  // Obtener 
   @Get("/")
   public async getAll(
     @Query() username?: string,
@@ -55,14 +53,12 @@ export class UserController extends Controller {
     return users;
   }
 
-
-  // 🔍 Obtener un usuario por ID
+  // Obtener un usuario por ID
   @Get("/{id}")
   public async getById(id: string): Promise<any> {
     // Intentar convertir el id a número entero
     const numericId = Number(id);
 
-    // Validar si no es número o es NaN o menor o igual a 0 (opcional)
     if (isNaN(numericId) || numericId <= 0) {
       const res: ResponseMessage = { message: "ID inválido" };
       return res;
@@ -79,7 +75,7 @@ export class UserController extends Controller {
     return user;
   }
 
-  // 🆕 Crear usuario
+  // Crear usuario
   @SuccessResponse("201", "Usuario creado correctamente")
   @Response("400", "Datos inválidos")
   @Post("/")
@@ -107,7 +103,6 @@ export class UserController extends Controller {
         message: "Solo se debe asignar empresaId a usuarios con rol EQUIPO",
       };
     }
-
 
     try {
       const { user, token } = await createUser(parsed.data);
@@ -149,7 +144,6 @@ export class UserController extends Controller {
     }
   }
 
-  
   /**
   * Cambia la contraseña de un usuario.
   */
@@ -178,7 +172,7 @@ export class UserController extends Controller {
     }
   }
 
-  //🐉 Modificar usuaro con su ID
+  // Modificar usuaro con su ID
   @Put("{id}")
   @SuccessResponse("200", "Usuario actualizado")
   @Response("404", "Usuario no encontrado")
@@ -188,7 +182,7 @@ export class UserController extends Controller {
     @Body() body: Partial<UserDTO>
   ): Promise<ResponseMessage> {
 
-    // 🚫 Validación especial para evitar mal uso del campo empresaId
+    // Validación especial para evitar mal uso del campo empresaId
     try {
       if (body.rol && body.rol !== "EQUIPO" && body.empresaId) {
         this.setStatus(400);
@@ -197,7 +191,7 @@ export class UserController extends Controller {
         };
       }
 
-      // ✅ Actualizar usuario (incluye hash de contraseña si se envía)
+      // Actualizar usuario (incluye hash de contraseña si se envía)
       await updateUser(id, body);
 
       return { message: "Usuario actualizado correctamente" };
@@ -237,10 +231,7 @@ export class UserController extends Controller {
     }
   }
 
-
-
-
-  //🛑 Eliminar (soft delete) un usuario por su ID
+  // Eliminar (soft delete) un usuario por su ID
 
   @Delete("{id}")
   @SuccessResponse("200", "Usuario eliminado")

@@ -26,7 +26,7 @@ export class NotificacionesController extends Controller {
     const productos = body?.productos;
 
     if (productos && productos.length > 0) {
-      await notificarProductoVencido(productos as any); // También puedes tipar mejor si quieres
+      await notificarProductoVencido(productos as any);
     } else {
       await notificarProductoVencido(); // Si no se pasan productos, notifica todos los vencidos
     }
@@ -48,7 +48,7 @@ export class NotificacionesController extends Controller {
     @Body() body?: { productos?: { id: number }[] }
   ): Promise<{ mensaje: string }> {
     const productos = body?.productos;
-    await notificarReposicionRecomendada(productos as any); // puedes tiparlo mejor si quieres
+    await notificarReposicionRecomendada(productos as any);
     return { mensaje: 'Notificaciones de reposición recomendada enviadas correctamente' };
   }
 
@@ -77,8 +77,6 @@ export class NotificacionesController extends Controller {
     const preferencias = await prisma.preferenciasNotificaciones.findFirst({
       where: { idUsuario },
     });
-
-    console.log("🎯 Preferencias obtenidas del backend:", preferencias);
 
     if (!preferencias) {
       await prisma.preferenciasNotificaciones.create({

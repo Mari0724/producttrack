@@ -15,8 +15,6 @@ export async function puedeNotificar(idUsuario: number, tipo: string): Promise<b
     where: { idUsuario },
   });
 
-  console.log("🎯 Preferencias obtenidas del backend:", prefs);
-
   if (!prefs) return true;
 
   const tipoNormalizado = tipo.toUpperCase() as string;

@@ -1,4 +1,3 @@
-// storage.ts
 import '../config/env'
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
@@ -11,7 +10,7 @@ cloudinary.config({
 });
 
 const storageProductos = new CloudinaryStorage({
-  cloudinary, // 👈 esta instancia debe ser la misma que configuraste
+  cloudinary,
   params: async () => ({
     folder: 'producttrack/productos',
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],
@@ -20,7 +19,7 @@ const storageProductos = new CloudinaryStorage({
 });
 
 const storagePerfiles = new CloudinaryStorage({
-  cloudinary, // 👈 esta instancia debe ser la misma que configuraste
+  cloudinary,
   params: async () => ({
     folder: 'producttrack/perfiles',
     allowed_formats: ['jpg', 'png', 'jpeg', 'webp'],

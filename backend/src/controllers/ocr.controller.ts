@@ -1,25 +1,17 @@
 import { obtenerUrlPreprocesada, cloudinaryUploadBuffer } from '../utils/cloudinary';
 import { createOcrClient } from '../utils/ocr';
-import {
-  limpiarTextoOCR,
-  palabraMasLarga,
-  corregirErroresOCR,
-  obtenerCandidatosProductos,
-  elegirMejorResultado,
-} from '../utils/texto';
+import { limpiarTextoOCR, corregirErroresOCR, obtenerCandidatosProductos, elegirMejorResultado, } from '../utils/texto';
 import { Request, Response } from 'express';
 import { OpenFoodFactsService } from '../services/openfoodfacts.service';
 import { gptService } from '../services/gpt.service';
 import prisma from '../utils/prismaClient';
 import { preprocesarImagen } from '../utils/preprocesarImagen';
 
-// 📌 Endpoint principal OCR con extracción y análisis
+// Endpoint principal OCR con extracción y análisis
 export const extraerTextoDesdeImagen = async (req: Request, res: Response): Promise<void> => {
   try {
     const file = req.file;
     const { usuarioId, tipoAnalisis = 'ocr-gpt-only' } = req.body;
-
-    console.log('📦 File recibido:', file);
 
     if (!file) {
       res.status(400).json({ message: 'No se envió ninguna imagen' });
@@ -27,7 +19,6 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
     }
 
     const preprocessedBuffer = await preprocesarImagen(file.buffer);
-    console.log('✅ Imagen preprocesada en buffer');
 
     let textoExtraido: string;
     let imageUrl: string;
@@ -35,7 +26,6 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
     if (tipoAnalisis === 'ocr-gpt-only') {
       const uploadResult: any = await cloudinaryUploadBuffer(preprocessedBuffer, 'producttrack/ocr');
       imageUrl = obtenerUrlPreprocesada(uploadResult.public_id);
-      console.log('📷 Imagen subida a Cloudinary:', imageUrl);
 
       textoExtraido = await createOcrClient(imageUrl);
     } else {
@@ -48,17 +38,12 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
       return;
     }
 
-    console.log('📝 Texto detectado por OCR:', textoExtraido);
-
     // Limpiar texto OCR para asegurar consulta fiable
     const textoLimpio = limpiarTextoOCR(textoExtraido);
-    console.log('🧹 Texto limpio:', textoLimpio);
 
     const textoCorregido = corregirErroresOCR(textoLimpio);
-    console.log('🔧 Texto corregido:', textoCorregido);
 
     const candidatos = obtenerCandidatosProductos(textoCorregido);
-    console.log('🎯 Candidatos detectados:', candidatos);
 
     let nombreProducto = '';
     let requiereConfirmacion = false;
@@ -66,25 +51,19 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
     if (candidatos.length > 0) {
       nombreProducto = candidatos[0];
     } else {
-      // Si no hay candidatos, intenta usar al menos el texto limpio completo para buscar
+      // Si no hay candidatos, intenta usar al menos el texto limpio completo que se intentara buscar
       nombreProducto = textoCorregido;
       requiereConfirmacion = true;
     }
 
-    console.log('🍽️ Nombre de producto usado para consulta:', nombreProducto || 'Ninguno');
+    let openFoodFactsResultados = [];
 
-    const esAlimento = true;
-    let openFoodFactsResultados: any[] = [];
-
-    if (esAlimento) {
-      openFoodFactsResultados = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
-      console.log('📦 Resultados OpenFoodFacts:', openFoodFactsResultados);
-    }
-
+    openFoodFactsResultados = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
 
     const mejorResultado = elegirMejorResultado(openFoodFactsResultados, textoCorregido);
-    const mensajeGPT = await gptService.generarMensajeNutricional(
+    const esAlimento = !!mejorResultado;
 
+    const mensajeGPT = await gptService.generarMensajeNutricional(
       nombreProducto || 'Producto desconocido',
       mejorResultado ? [mejorResultado] : []
     );
@@ -118,7 +97,7 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
   }
 };
 
-// 📌 Nuevo endpoint: confirmar nombre manual y actualizar registro existente
+// Nuevo endpoint: confirmar nombre manual y actualizar registro existente
 export const confirmarNombreManual = async (req: Request, res: Response): Promise<void> => {
   try {
     const { registroId, nombreProducto, tipoAnalisis = 'manual' } = req.body;
@@ -133,18 +112,18 @@ export const confirmarNombreManual = async (req: Request, res: Response): Promis
       return;
     }
 
-    // ⚙️ Buscar alimento en OpenFoodFacts
+    // Buscar alimento en OpenFoodFacts
     const openFoodFactsResultados = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
     const mejorResultado = elegirMejorResultado(openFoodFactsResultados, nombreProducto);
 
-    // ⚙️ Generar mensaje GPT
+    // Generar mensaje GPT
     const mensajeGPT = await gptService.generarMensajeNutricional(
 
       nombreProducto,
       mejorResultado ? [mejorResultado] : []
     );
 
-    // 📌 Actualizar registro existente
+    // Actualizar registro existente
     const registroActualizado = await prisma.nutriScan.update({
       where: { id: Number(registroId) },
       data: {

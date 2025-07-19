@@ -1,7 +1,7 @@
 import { EstadoProducto } from "@prisma/client";
 
 export interface ProductosDTO {
-    id?: number; // ✅ para que TSOA lo permita
+    id?: number;
     codigoBarras?: string | null;
     codigoQR?: string | null;
     nombre: string;

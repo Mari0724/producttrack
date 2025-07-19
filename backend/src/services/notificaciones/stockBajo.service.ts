@@ -12,28 +12,28 @@ export async function notificarStockBajo(productosOpcionales?: Producto[]) {
 
   const recordatorios = productosVerificar
     ? await Promise.all(
-        productosVerificar.map((producto) =>
-          prisma.recorStock.findFirst({
-            where: {
-              productoId: producto.id,
-              estado: EstadoRecordatorio.PENDIENTE,
-            },
-            include: {
-              producto: {
-                include: { usuario: true },
-              },
-            },
-          })
-        )
-      )
-    : await prisma.recorStock.findMany({
-        where: { estado: EstadoRecordatorio.PENDIENTE },
-        include: {
-          producto: {
-            include: { usuario: true },
+      productosVerificar.map((producto) =>
+        prisma.recorStock.findFirst({
+          where: {
+            productoId: producto.id,
+            estado: EstadoRecordatorio.PENDIENTE,
           },
+          include: {
+            producto: {
+              include: { usuario: true },
+            },
+          },
+        })
+      )
+    )
+    : await prisma.recorStock.findMany({
+      where: { estado: EstadoRecordatorio.PENDIENTE },
+      include: {
+        producto: {
+          include: { usuario: true },
         },
-      });
+      },
+    });
 
   for (const recordatorio of recordatorios) {
     if (!recordatorio || !recordatorio.producto) continue;

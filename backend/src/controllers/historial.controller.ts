@@ -1,10 +1,4 @@
-import {
-    Controller,
-    Get,
-    Path,
-    Route,
-    Tags,
-} from "tsoa";
+import { Controller, Get, Path, Route, Tags, } from "tsoa";
 import { obtenerHistorialInventario } from "../services/historial.service";
 import { HistorialInventarioDTO } from "../types/historial";
 

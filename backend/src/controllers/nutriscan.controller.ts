@@ -1,24 +1,8 @@
-import {
-  Controller,
-  Route,
-  Tags,
-  Post,
-  Get,
-  Put,
-  Delete,
-  Body,
-  Path,
-  SuccessResponse,
-  Response,
-  Security,
-  Request,
+import { Controller, Route, Tags, Post, Get, Put, Delete,
+  Body, Path, SuccessResponse, Response, Security, Request,
 } from "tsoa";
-
 import { NutriScanService } from "../services/nutriscan.service";
-import {
-  NutriScanSchemaWithoutUserId,
-  NutriScanUpdateSchema,
-} from "../models/NutriScanModel";
+import { NutriScanSchemaWithoutUserId, NutriScanUpdateSchema, } from "../models/NutriScanModel";
 
 @Route("nutriscan")
 @Tags("NutriScan")
@@ -94,7 +78,7 @@ export class NutriScanController extends Controller {
     return this.service.findByUserId(usuarioId);
   }
 
-  // ✅ Actualizar un análisis
+  // Actualizar un análisis
   @Security("jwt")
   @Put("{id}")
   @Response("400", "Datos inválidos")
