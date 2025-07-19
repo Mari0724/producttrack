@@ -20,17 +20,22 @@ export async function obtenerHistorialInventario(idUsuario: number): Promise<His
             select: { id: true },
         });
         productosIds = productos.map((p) => p.id);
-    } else if (usuario.tipoUsuario === "EMPRESARIAL" && usuario.empresaId) {
+    } else if (usuario.tipoUsuario === "EMPRESARIAL") {
+        // 🔹 Validación de empresaId por si está nulo
+        const empresaId = usuario.empresaId ?? idUsuario;
+
         const productos = await prisma.productos.findMany({
             where: {
                 usuario: {
-                    empresaId: usuario.empresaId,
+                    empresaId: empresaId,
                 },
             },
             select: { id: true },
         });
         productosIds = productos.map((p) => p.id);
     }
+
+    if (productosIds.length === 0) return [];
 
     const historial = await prisma.histInv.findMany({
         where: {
@@ -55,8 +60,8 @@ export async function obtenerHistorialInventario(idUsuario: number): Promise<His
         accion: h.accion,
         cantidad_anterior: h.cantidad_anterior,
         cantidad_nueva: h.cantidad_nueva,
-        precio_anterior: Number(h.precio_anterior), // 👈 conversión aquí
-        precio_nuevo: Number(h.precio_nuevo), // 👈 y aquí
+        precio_anterior: Number(h.precio_anterior),
+        precio_nuevo: Number(h.precio_nuevo),
         fechaCambio: h.fechaCambio,
     }));
 }
