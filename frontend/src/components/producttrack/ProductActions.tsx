@@ -43,7 +43,7 @@ const ProductActions: React.FC<ProductActionsProps> = ({
         </>
       )}
 
-      {/* ✅ Mostrar botón para ver notas si es INDIVIDUAL o si tiene permiso */}
+      {/* Mostrar botón para ver notas si es INDIVIDUAL o si tiene permiso */}
       {(rol === "EDITOR" || rol === "COMENTARISTA" || isIndividual) && (
         <button
           onClick={onView}
@@ -55,6 +55,5 @@ const ProductActions: React.FC<ProductActionsProps> = ({
     </div>
   );
 };
-
 
 export default ProductActions;

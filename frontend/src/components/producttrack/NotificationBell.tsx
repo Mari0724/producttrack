@@ -33,7 +33,6 @@ const NotificationBell = () => {
         actualizacion: true,
     });
 
-
     // Aplica filtro según el tipo de usuario
     const notificacionesFiltradas = notifications.filter((n) => {
         const preferenciasActivas: Record<string, boolean> = {
@@ -67,9 +66,8 @@ const NotificationBell = () => {
                 const data = await getNotificacionesUsuario(idUsuario);
                 setNotifications(data);
 
-                // 🔐 Traer las preferencias del usuario
+                // Traer las preferencias del usuario
                 const prefs = await getPreferenciasUsuario(idUsuario);
-                console.log("🔐 Preferencias del usuario:", prefs);
                 setPreferencias(prefs);
 
                 if (tipoUsuario === 'INDIVIDUAL') {
@@ -82,7 +80,6 @@ const NotificationBell = () => {
         };
         fetchData();
     }, [tipoUsuario]);
-
 
     const getIcon = (tipo: Notification['tipo']) => {
         switch (tipo) {
@@ -138,14 +135,13 @@ const NotificationBell = () => {
         }
     };
 
-
     const markAsRead = async (notificationId: number) => {
         try {
-            await marcarNotificacionLeida(notificationId); // 🟢 Marca como leída en el backend
+            await marcarNotificacionLeida(notificationId); // Marca como leída en el backend
             setNotifications(prev =>
                 prev.map(notification =>
                     notification.idNotificacion === notificationId
-                        ? { ...notification, leida: true } // 🟢 Actualiza visualmente
+                        ? { ...notification, leida: true } // Actualiza visualmente
                         : notification
                 )
             );
@@ -153,7 +149,6 @@ const NotificationBell = () => {
             console.error("Error al marcar como leída:", error);
         }
     };
-
 
     return (
         <div className="relative">
@@ -235,7 +230,6 @@ const NotificationBell = () => {
                                         setSelectedNotification(notification);
                                         markAsRead(notification.idNotificacion);
                                     }}
-                                    // Abrir modal y marcar como leída
                                     className={`
                                         p-4 border-b border-gray-light/20 hover:bg-gray-light/10 
                                         transition-colors cursor-pointer relative
@@ -286,7 +280,6 @@ const NotificationBell = () => {
                             ))
                         )}
                     </div>
-
                 </div>
             )}
         </div>

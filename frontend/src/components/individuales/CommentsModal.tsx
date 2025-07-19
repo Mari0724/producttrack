@@ -3,7 +3,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { getComentariosPorProducto, crearComentario } from '../../api/comentarios';
 import toast from 'react-hot-toast';
 
-// ✅ Tipo que viene del backend
+// Tipo que viene del backend
 type ComentarioDesdeAPI = {
   id: number;
   comentario: string;
@@ -13,7 +13,7 @@ type ComentarioDesdeAPI = {
   };
 };
 
-// ✅ Tipo que usamos en el componente
+// Tipo que usamos en el componente
 interface Comment {
   id: number;
   text: string;

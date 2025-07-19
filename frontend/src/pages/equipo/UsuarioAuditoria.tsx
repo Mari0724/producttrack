@@ -61,8 +61,6 @@ const UsuarioAuditoria = () => {
             headers: { Authorization: `Bearer ${token}` },
         });
         setUsuarios(res.data as Usuario[]);
-
-
     };
 
     const eliminarUsuario = async () => {
@@ -77,7 +75,6 @@ const UsuarioAuditoria = () => {
             await axios.delete(`http://localhost:3000/usuarios/${confirmEliminarId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
             toast("✅ Usuario marcado como inactivo.");
             setConfirmEliminarId(null);
             cargarUsuarios();
@@ -86,12 +83,9 @@ const UsuarioAuditoria = () => {
         }
     };
 
-
-
     const reactivarUsuario = async (id: number) => {
         const token = localStorage.getItem("token");
         if (!token) return;
-
         try {
             await axios.put(
                 `http://localhost:3000/usuarios/${id}/reactivar`,
@@ -105,8 +99,6 @@ const UsuarioAuditoria = () => {
         }
     };
 
-
-
     useEffect(() => {
         cargarUsuarios();
     }, []);
@@ -119,7 +111,6 @@ const UsuarioAuditoria = () => {
     return (
         <div className="p-5 max-w-7xl mx-auto">
             <h1 className="text-3xl font-bold mb-6 text-wine-red">👤 Auditoría de Usuarios</h1>
-
             <div className="flex flex-wrap gap-3 mb-4">
                 <input type="text" placeholder="Nombre" value={filtroNombre} onChange={(e) => setFiltroNombre(e.target.value)} className="border rounded px-3 py-2" />
                 <input type="text" placeholder="Correo" value={filtroCorreo} onChange={(e) => setFiltroCorreo(e.target.value)} className="border rounded px-3 py-2" />
@@ -186,8 +177,6 @@ const UsuarioAuditoria = () => {
                                     >
                                         <Pencil size={16} className="text-green-600" />
                                     </button>
-
-
                                 </td>
                             </tr>
                         ))}
@@ -228,7 +217,6 @@ const UsuarioAuditoria = () => {
                     </div>
                 </div>
             )}
-
         </div>
     );
 };

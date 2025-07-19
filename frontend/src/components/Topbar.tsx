@@ -73,7 +73,7 @@ const Topbar = () => {
                 En el asunto, indique claramente el motivo de su mensaje para facilitar la atención.
               </p>
               <p className="text-gray-600 text-xs italic">
-                ⏳ Tiempo de Respuesta: dentro de 30 días calendario. Para solicitudes complejas, hasta 60 días con notificación previa.
+                Tiempo de Respuesta: dentro de 30 días calendario. Para solicitudes complejas, hasta 60 días con notificación previa.
               </p>
             </div>
           )}

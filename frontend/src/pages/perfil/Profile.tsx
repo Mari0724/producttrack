@@ -169,7 +169,6 @@ const Profile = () => {
           return;
         }
       }
-
       toast.error("Error al cambiar la contraseña ❌");
     }
   };

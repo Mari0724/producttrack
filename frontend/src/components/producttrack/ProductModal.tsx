@@ -31,7 +31,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
     precio: 0,
     fechaAdquisicion: '',
     fechaVencimiento: '',
-    usuarioId: 0, // se actualizará luego
+    usuarioId: 0,
     estado: 'DISPONIBLE',
     imagen: '',
     categoria: '',
@@ -39,7 +39,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   const [uploading, setUploading] = useState(false);
 
-  // 🧠 Cuando cambia el usuario, actualiza el usuarioId del formulario
+  // Cuando cambia el usuario, actualiza el usuarioId del formulario
   useEffect(() => {
     if (usuario && form.usuarioId !== usuario.idUsuario) {
       setForm((prev) => ({
@@ -143,7 +143,6 @@ const ProductModal: React.FC<ProductModalProps> = ({
       ...(categoriaLimpia ? { categoria: categoriaLimpia } : {}),
     };
 
-    console.log('✅ Producto que se enviará:', JSON.stringify(productoAEnviar, null, 2));
     onSave(productoAEnviar);
     onClose();
   };

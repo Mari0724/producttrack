@@ -28,7 +28,6 @@ const Inventario: React.FC = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
-  // ✅ CAMBIO: función que puedes usar en cualquier parte
   const fetchProductos = async () => {
     try {
       const res = await getProductos();
@@ -80,7 +79,7 @@ const Inventario: React.FC = () => {
         productosFiltrados = res.data;
       }
 
-      // Aplicar filtro por tipo de usuario también
+      // Aplicar filtro por tipo de usuario
       const tipoUsuarioStorage = localStorage.getItem("tipoUsuario")?.toUpperCase();
       const soloDelUsuario = productosFiltrados.filter(
         (p) => p.usuario?.tipoUsuario === tipoUsuarioStorage
@@ -107,7 +106,7 @@ const Inventario: React.FC = () => {
       toast.success("Producto creado correctamente");
       setShowProductModal(false);
 
-      // ✅ Enviar notificación si aplica
+      // Enviar notificación si aplica
       if (puedeNotificar("reposicion")) {
         try {
           await enviarNotificacionReposicion({
@@ -121,7 +120,7 @@ const Inventario: React.FC = () => {
         }
       }
 
-      await fetchProductos(); // recarga lista
+      await fetchProductos();
     } catch (error) {
       toast.error("Error al guardar producto");
       console.error(error);
@@ -140,7 +139,7 @@ const Inventario: React.FC = () => {
       setProductToEdit(null);
       setShowProductModal(false);
 
-      await fetchProductos(); // ✅ CAMBIO: recarga lista tras editar
+      await fetchProductos(); 
     } catch {
       toast.error("Error al editar producto");
     }
@@ -162,7 +161,7 @@ const Inventario: React.FC = () => {
         await eliminarProducto(productToDelete);
         toast.success("Producto eliminado exitosamente");
 
-        await fetchProductos(); // ✅ CAMBIO: lista actualizada tras borrar
+        await fetchProductos();
 
         setShowConfirmModal(false);
         setProductToDelete(null);
@@ -234,7 +233,7 @@ const Inventario: React.FC = () => {
                   }
                 />
 
-                {/* ✅ Notas personales si es usuario individual */}
+                {/* Notas personales si es usuario individual */}
                 {tipoUsuario === "individual" && (
                   <button
                     onClick={() => openCommentsModal(product)}

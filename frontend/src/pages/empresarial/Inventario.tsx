@@ -31,7 +31,7 @@ const InventarioEmpresarial: React.FC = () => {
     setSearchTerm(e.target.value);
   };
 
-  // ✅ Primero: función fetchProductos afuera del useEffect
+  // Primero: función fetchProductos afuera del useEffect
   const fetchProductos = async () => {
     try {
       const res = await getProductos();
@@ -47,24 +47,21 @@ const InventarioEmpresarial: React.FC = () => {
     }
   };
 
-  // ✅ Luego el useEffect simplemente llama las dos funciones
   useEffect(() => {
     fetchProductos();
     fetchCategorias();
   }, []);
 
-  // ✅ La función fetchCategorias puede ir arriba o aquí mismo
   const fetchCategorias = async () => {
     try {
       const tipoUsuario = localStorage.getItem("tipoUsuario")?.toUpperCase() || "";
-      const res = await getCategorias(tipoUsuario); // ✅ enviamos el tipoUsuario
+      const res = await getCategorias(tipoUsuario);
       setCategorias(res.data);
     } catch (error) {
       console.error("Error al cargar categorías:", error);
     }
   };
 
-  // ✅ Cambio en handleCategoriaChange
   const handleCategoriaChange = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     const nuevaCategoria = e.target.value;
     setCategoriaSeleccionada(nuevaCategoria);
@@ -94,7 +91,6 @@ const InventarioEmpresarial: React.FC = () => {
     }
   };
 
-  // ✅ Corregido: ahora handleSaveProduct sí puede usar fetchProductos
   const handleSaveProduct = async (product: Product) => {
     try {
       const productoConUsuario = {
@@ -103,23 +99,21 @@ const InventarioEmpresarial: React.FC = () => {
       };
 
       const res = await crearProducto(productoConUsuario);
-      await fetchProductos(); // 🔁 vuelve a traer productos completos y filtrados
+      await fetchProductos();
       setShowProductModal(false);
 
-      // 🔎 Verificar tipo de usuario
+      // Verificar tipo de usuario
       const tipo = tipoUsuario?.toLowerCase() || 'empresarial';
       const umbral = tipo === 'individual' ? 2 : 30;
       const stockActual = res.data.cantidad;
 
-      // 🔔 Revisar si debe notificar por stock bajo
+      // Revisar si debe notificar por stock bajo
       if (stockActual <= umbral && puedeNotificar('stockBajo')) {
         toast.custom(() => (
           <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded shadow max-w-sm">
             ⚠️ El producto <strong>{res.data.nombre}</strong> tiene stock bajo ({stockActual} unidades)
           </div>
         ));
-        // 👉 Si tuvieras una API real para notificar:
-        // await enviarNotificacionStockBajo(res.data);
       }
 
     } catch {
@@ -153,7 +147,6 @@ const InventarioEmpresarial: React.FC = () => {
       toast.error("Error al editar producto");
     }
   };
-
 
   const openEditModal = (product: Product) => {
     setProductToEdit(product);
@@ -226,7 +219,7 @@ const InventarioEmpresarial: React.FC = () => {
           </div>
         </div>
 
-        {/* 📦 Productos */}
+        {/* Productos */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-4 gap-y-3">
           {products
             .filter(
@@ -254,12 +247,12 @@ const InventarioEmpresarial: React.FC = () => {
             ))}
         </div>
 
-        {/* ➕ Botón flotante */}
+        {/* Botón flotante */}
         {userRol === "EDITOR" && (
           <FloatingButton onAddProduct={() => setShowProductModal(true)} />
         )}
 
-        {/* 🗑️ Modal de confirmación de eliminación */}
+        {/* Modal de confirmación de eliminación */}
         <ConfirmDeleteModal
           isOpen={showConfirmModal}
           onClose={() => setShowConfirmModal(false)}
@@ -267,7 +260,7 @@ const InventarioEmpresarial: React.FC = () => {
           productName={productToDelete?.toString() || ""}
         />
 
-        {/* 📝 Modal de producto */}
+        {/* Modal de producto */}
         <ProductModal
           isOpen={showProductModal}
           onClose={() => {
@@ -278,7 +271,7 @@ const InventarioEmpresarial: React.FC = () => {
           initialData={productToEdit ?? undefined}
         />
 
-        {/* 💬 Modal de comentarios */}
+        {/* Modal de comentarios */}
         {selectedProduct && showCommentsModal && (
           <EnterpriseCommentsModal
             productId={selectedProduct.id!}

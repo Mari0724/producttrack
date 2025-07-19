@@ -20,8 +20,6 @@ const Footer = () => (
           </div>
         </div>
 
-
-
         {/* Sección Legal */}
         <div>
           <h4 className="font-semibold text-burgundy mb-4">Legal</h4>

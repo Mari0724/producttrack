@@ -10,7 +10,7 @@ export interface CreateTeamMemberDTO {
   direccion: string;
   fotoPerfil?: string;
   estado?: "activo" | "inactivo";
-  empresaId?: number; // porque es opcional si no es admin
+  empresaId?: number;
   perfilCompleto?: boolean;
 }
 
@@ -25,13 +25,13 @@ export interface UpdateTeamMemberDTO {
 }
 
 export async function createTeamMember(data: CreateTeamMemberDTO) {
-    const response = await axiosInstance.post("/equipo", data);
-    return response.data;
+  const response = await axiosInstance.post("/equipo", data);
+  return response.data;
 }
 
 export const getAllTeamMembers = async () => {
 
-    const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
   console.log("🔑 Token desde service:", token);
   const response = await axiosInstance.get("/equipo");
   return response.data;

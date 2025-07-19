@@ -10,10 +10,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
-  // ✅ Solo mostrar el token en consola si estamos en desarrollo
-  if (import.meta.env.MODE === "development") {
-    console.log("📤 Enviando token en header:", token);
-  }
+  if (import.meta.env.MODE === "development") 
 
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;

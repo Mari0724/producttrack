@@ -2,7 +2,6 @@ import React, { useRef } from 'react';
 import { Camera, Upload, ImagePlus, Image, Ruler } from 'lucide-react';
 import { resizeImage } from '../../utils/resizeImage';
 
-
 interface ImageUploadProps {
   onImageSelect: (imageUrl: string) => void;
 }
@@ -22,7 +21,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({ onImageSelect }) => {
       }
     }
   };
-
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();

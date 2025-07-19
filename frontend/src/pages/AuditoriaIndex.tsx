@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { SearchCheck } from "lucide-react"; // ✅ importamos el ícono
+import { SearchCheck } from "lucide-react";
 
 const AuditoriaIndex = () => {
   const navigate = useNavigate();

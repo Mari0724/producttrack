@@ -1,19 +1,19 @@
 import axios from "../utils/axiosInstance";
 import type { UserDTO } from "../types/UserDTO";
 
-// 🔍 Obtener empresa por ID
+// Obtener empresa por ID
 export const getEmpresaById = async (id: number) => {
   const response = await axios.get<UserDTO>(`/usuarios/empresa/${id}`);
   return response.data;
 };
 
-// 🔍 Obtener usuario por ID
+// Obtener usuario por ID
 export const getUserById = async (id: number) => {
   const response = await axios.get<UserDTO>(`/usuarios/${id}`);
   return response.data;
 };
 
-// 🆙 Actualizar usuario
+// Actualizar usuario
 export const updateUsuario = async (id: number, data: Partial<UserDTO>) => {
   const response = await axios.put<{ message: string }>(`/usuarios/${id}`, data);
   return response.data;

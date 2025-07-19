@@ -1,12 +1,5 @@
 import React, { useState } from "react";
-import {
-  FaUser,
-  FaEnvelope,
-  FaPhone,
-  FaHome,
-  FaBuilding,
-  FaIdCard,
-} from "react-icons/fa";
+import { FaUser, FaEnvelope, FaPhone, FaHome, FaBuilding, FaIdCard, } from "react-icons/fa";
 import { FaLock } from "react-icons/fa6";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -34,8 +27,6 @@ interface Props {
   setNit: React.Dispatch<React.SetStateAction<string>>;
   acceptPolicies: boolean;
   setAcceptPolicies: React.Dispatch<React.SetStateAction<boolean>>;
-
-
 }
 
 const RegisterForm: React.FC<Props> = ({
@@ -225,8 +216,6 @@ const RegisterForm: React.FC<Props> = ({
             .
           </label>
         </div>
-
-
 
         <button
           type="submit"

@@ -7,7 +7,7 @@ const NutriScan = () => {
     entrada: string,
     token: string,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-   _nombreManual?: string // <- lo agregas así aunque no lo uses
+   _nombreManual?: string
   ): Promise<RespuestaNutriScan> => {
     try {
       const isBase64 = entrada.startsWith("data:image");
@@ -34,7 +34,6 @@ const NutriScan = () => {
         }
       );
 
-      console.log("✅ Respuesta de OCR:", response.data);
       return response.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
@@ -66,7 +65,6 @@ const NutriScan = () => {
         }
       );
 
-      console.log("✅ Confirmación enviada:", response.data);
       return response.data;
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {

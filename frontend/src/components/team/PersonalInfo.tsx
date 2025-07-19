@@ -2,7 +2,6 @@ import { User, Mail, Phone, MapPin, FileText } from "lucide-react";
 import React from "react";
 import type { UserProfile } from "../../types/UserProfile"; // ajusta la ruta según tu estructura
 
-
 interface Props {
     userProfile: UserProfile;
     setUserProfile: React.Dispatch<React.SetStateAction<UserProfile>>;
@@ -27,7 +26,6 @@ const PersonalInfo: React.FC<Props> = ({
     return (
         <div className="bg-white shadow rounded p-6 mb-6">
             <h2 className="text-[#667233] text-xl font-semibold mb-4">Información Personal</h2>
-
             <div className="flex justify-center mb-4">
                 <div className="relative w-28 h-28 rounded-full overflow-hidden border-4 border-[#667233] bg-gray-100 shadow">
                     {photo ? (
@@ -187,8 +185,6 @@ const PersonalInfo: React.FC<Props> = ({
                         )}
                     </>
                 )}
-
-
             </div>
         </div>
     );

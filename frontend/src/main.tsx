@@ -7,7 +7,7 @@ import './index.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <UserProvider> {/* 👈 envolvemos toda la app */}
+    <UserProvider> {/* envolvemos toda la app */}
       <App />
     </UserProvider>
   </StrictMode>,

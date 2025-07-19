@@ -1,4 +1,3 @@
-// EstadoProducto posible: "DISPONIBLE" | "AGOTADO" | etc. (según los valores reales del backend)
 export type EstadoProducto = 'DISPONIBLE' | 'AGOTADO' | 'RESERVADO' | 'VENCIDO';
 
 export interface Product {

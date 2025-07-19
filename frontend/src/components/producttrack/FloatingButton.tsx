@@ -18,5 +18,4 @@ const FloatingButton: React.FC<FloatingButtonProps> = ({ onAddProduct }) => {
   );
 };
 
-
 export default FloatingButton;

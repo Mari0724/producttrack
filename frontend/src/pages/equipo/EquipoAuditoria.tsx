@@ -4,7 +4,6 @@ import { useUser } from "../../context/UserContext";
 import { Pencil, Trash } from "lucide-react";
 import { useToast } from "../../hooks/useToast";
 
-
 interface MiembroEquipo {
     idUsuario: number;
     nombreCompleto: string;
@@ -34,7 +33,6 @@ const EquipoAuditoria = () => {
     const [filtroPerfilCompleto, setFiltroPerfilCompleto] = useState("");
     const [activarUsuario, setActivarUsuario] = useState(false);
     const { toast } = useToast();
-
 
     const cargarMiembros = async () => {
         const token = localStorage.getItem("token");
@@ -96,9 +94,6 @@ const EquipoAuditoria = () => {
         }
     };
 
-
-
-
     const eliminar = async () => {
         const token = localStorage.getItem("token");
         if (!token || confirmEliminarId == null) return;
@@ -130,8 +125,6 @@ const EquipoAuditoria = () => {
         toast("⚠️ No tienes permisos para acceder a esta auditoría.");
         return <div className="text-center mt-20 text-red-600">Sin permisos para ver esta auditoría.</div>;
     }
-
-
 
     return (
         <div className="p-5 max-w-7xl mx-auto">
@@ -199,24 +192,22 @@ const EquipoAuditoria = () => {
                 >
                     Limpiar
                 </button>
-
             </div>
-
-  <table className="min-w-[1000px] w-full border text-sm bg-white">                <thead className="bg-wine-red text-white">
-                    <tr>
-                        <th className="px-4 py-2">ID</th>
-                        <th className="px-4 py-2">Nombre</th>
-                        <th className="px-4 py-2">Correo</th>
-                        <th className="px-4 py-2">Rol</th>
-                        <th className="px-4 py-2">Estado</th>
-                        <th className="px-4 py-2">Empresa ID</th>
-                        <th className="px-4 py-2">Completo</th>
-                        <th className="px-4 py-2">Creado</th>
-                        <th className="px-4 py-2">Actualizado</th>
-                        <th className="px-4 py-2">Eliminado</th>
-                        <th className="px-4 py-2">Acciones</th>
-                    </tr>
-                </thead>
+            <table className="min-w-[1000px] w-full border text-sm bg-white">                <thead className="bg-wine-red text-white">
+                <tr>
+                    <th className="px-4 py-2">ID</th>
+                    <th className="px-4 py-2">Nombre</th>
+                    <th className="px-4 py-2">Correo</th>
+                    <th className="px-4 py-2">Rol</th>
+                    <th className="px-4 py-2">Estado</th>
+                    <th className="px-4 py-2">Empresa ID</th>
+                    <th className="px-4 py-2">Completo</th>
+                    <th className="px-4 py-2">Creado</th>
+                    <th className="px-4 py-2">Actualizado</th>
+                    <th className="px-4 py-2">Eliminado</th>
+                    <th className="px-4 py-2">Acciones</th>
+                </tr>
+            </thead>
                 <tbody>
                     {miembros.map((m) => (
                         <tr key={m.idUsuario} className="border-t">
@@ -291,8 +282,6 @@ const EquipoAuditoria = () => {
             )
             }
 
-
-
             {confirmEliminarId !== null && usuario?.rol === "ADMIN" && (
                 <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
                     <div className="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
@@ -318,7 +307,6 @@ const EquipoAuditoria = () => {
                     </div>
                 </div>
             )}
-
         </div >
     );
 };

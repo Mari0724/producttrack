@@ -147,7 +147,6 @@ const VerificarCodigo = () => {
                                     )}
                                 </button>
                             </div>
-
                             {password && (
                                 <div className="mt-3 space-y-2">
                                     {[
@@ -209,7 +208,6 @@ const VerificarCodigo = () => {
                         <span className="font-semibold text-vinotinto">ProductTrack</span> 
                     </p>
                 </div>
-                
             </div>
         </div>
     );

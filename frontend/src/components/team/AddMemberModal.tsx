@@ -161,7 +161,6 @@ export const AddMemberModal = ({ isOpen, onClose, onAdd }: AddMemberModalProps) 
             </div>
             {errors.password && <p className="text-red-600 text-sm mt-1">{errors.password}</p>}
           </div>
-
           
           {/* Rol */}
           <div>

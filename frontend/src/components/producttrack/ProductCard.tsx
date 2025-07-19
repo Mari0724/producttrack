@@ -32,7 +32,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
     usuario,
   } = product;
 
-  const userId = Number(localStorage.getItem("userId") || 0);
   const tipoUsuario = (usuario?.tipoUsuario || 'INDIVIDUAL').toUpperCase();
 
   const isLowStock = tipoUsuario === 'EMPRESARIAL' ? cantidad <= 30 : cantidad <= 1;
@@ -46,9 +45,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const handleView = () => {
     setShowCommentsModal(true);
   };
-
-  console.log("👀 Producto recibido:", product);
-  console.log("🙋‍♀️ Usuario actual:", userId);
 
   return (
     <>
@@ -85,7 +81,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
               <p><strong>Vence:</strong> {fechaVencimiento}</p>
             </div>
 
-            {/* ✅ Mostrar acciones solo si el producto es del usuario */}
+            {/* Mostrar acciones solo si el producto es del usuario */}
             {(rol === "EDITOR" || rol === "COMENTARISTA") && (
               <ProductActions
                 onEdit={onEdit}
@@ -98,7 +94,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </div>
         )}
 
-        {/* ✅ Modal de comentarios según tipo de usuario */}
+        {/* Modal de comentarios según tipo de usuario */}
         {showCommentsModal && (
           tipoUsuario === 'INDIVIDUAL' ? (
             <CommentsModal

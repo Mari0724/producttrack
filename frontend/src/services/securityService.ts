@@ -1,6 +1,6 @@
 import axios from "../utils/axiosInstance";
 
-// 🔒 Cambiar contraseña
+// Cambiar contraseña
 export const changeUserPassword = async (
   id: number,
   currentPassword: string,

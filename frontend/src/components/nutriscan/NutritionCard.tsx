@@ -4,7 +4,7 @@ import { UtensilsCrossed, Info, Lightbulb } from 'lucide-react';
 interface NutritionData {
   food: string;
   calories?: number;
-  nutritionInfo: string; // This will be the GPT-generated paragraph
+  nutritionInfo: string;
 }
 
 interface NutritionCardProps {

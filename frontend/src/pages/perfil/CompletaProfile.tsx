@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Eye, EyeOff, CheckCircle,
-  User, Building2, Mail, Phone, MapPin, Lock, Image as ImageIcon
-} from "lucide-react";
+import { Eye, EyeOff, CheckCircle, User, Building2, Mail, Phone, MapPin, Lock, Image as ImageIcon } from "lucide-react";
 import { getEmpresaById, getUserById, updateUsuario, subirFotoPerfil } from "../../services/userService";
 import { AxiosError } from "axios";
 import type { UserDTO } from "../../types/UserDTO";
@@ -49,8 +46,6 @@ const CompleteProfile = () => {
     cargarDatos();
   }, [usuario]);
 
-
-
   const handleInputChange = (field: keyof typeof formData, value: string | File | null) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
     if (field === "username") setUsernameError("");
@@ -82,7 +77,6 @@ const CompleteProfile = () => {
     if (formData.address) dataToSend.direccion = formData.address;
     if (formData.profilePhoto) {
       const subida = await subirFotoPerfil(usuario?.idUsuario || 0, formData.profilePhoto);
-      console.log("✅ Imagen subida:", subida.url);
       dataToSend.fotoPerfil = subida.url;
     }
 

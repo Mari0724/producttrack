@@ -131,7 +131,6 @@ const Register: React.FC = () => {
           />
         </div>
       </div>
-
       <LandingInfo />
       <Footer />
     </>

@@ -31,8 +31,6 @@ const TeamManagement = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
-  const empresaId = usuario?.empresaId ?? usuario?.idUsuario;
-  console.log("✅ empresaId usado en fetchMembers:", empresaId);
 
   const { toast } = useToast();
 
@@ -41,11 +39,9 @@ const TeamManagement = () => {
     if (!usuario) return;
 
     const empresaId = usuario.empresaId ?? usuario.idUsuario;
-    console.log("✅ empresaId usado en fetchMembers:", empresaId);
 
     try {
       const members = await getAllTeamMembers();
-      console.log("📦 Miembros recibidos desde API:", members);
       const parsed: TeamMemberWithStatus[] = members
         .filter((m: MemberFromAPI) =>
           m.rol === "EQUIPO" &&
@@ -72,7 +68,6 @@ const TeamManagement = () => {
 
   useEffect(() => {
     if (!cargando && usuario?.idUsuario) {
-      console.log("🌀 useEffect ejecutado con usuario:", usuario);
       fetchMembers();
     }
   }, [cargando, usuario, fetchMembers]);
@@ -94,7 +89,7 @@ const TeamManagement = () => {
       };
 
       const created = await createTeamMember(payload);
-      console.log("🆕 Miembro creado por el backend:", created);
+      console.log("Miembro creado por el backend:", created);
 
       await refreshUsuario();
       await fetchMembers();
@@ -137,7 +132,6 @@ const TeamManagement = () => {
     }
   };
 
-
   const handleDeleteMember = async (id: string) => {
     try {
       await deleteTeamMember(Number(id));
@@ -152,16 +146,11 @@ const TeamManagement = () => {
     }
   };
 
-
   const filteredMembers = teamMembers.filter(
     (member) =>
       member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       member.email.toLowerCase().includes(searchTerm.toLowerCase())
   );
-
-  console.log("🧪 Termino de búsqueda:", searchTerm);
-  console.log("👥 Miembros sin filtrar:", teamMembers);
-  console.log("✅ Miembros después del filtro:", filteredMembers);
 
   if (!usuario || usuario.tipoUsuario !== "EMPRESARIAL" || usuario.rol !== "USUARIO") {
     return (

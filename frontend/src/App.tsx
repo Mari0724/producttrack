@@ -77,13 +77,13 @@ function App() {
           <Route path="/home" element={<LayoutWrapper><Index /></LayoutWrapper>} />
           <Route path="/nutriscan" element={<LayoutWrapper><NutriScan /></LayoutWrapper>} />
           <Route path="/perfil" element={<LayoutWrapper><Profile /></LayoutWrapper>} />
-          
+
           {/* INDIVIDUAL */}
           <Route path="/app/individual/home" element={<LayoutWrapper><Index /></LayoutWrapper>} />
           <Route path="/app/individual/inventario" element={<LayoutWrapper><InventarioIndividual /></LayoutWrapper>} />
           <Route path="/app/individual/historial" element={<LayoutWrapper><HistorialIndividual /></LayoutWrapper>} />
           <Route path="/app/individual/configuracion" element={<LayoutWrapper><NotificacionesConfig /></LayoutWrapper>} />
-          
+
           {/* EMPRESARIAL */}
           <Route path="/app/empresarial/home" element={<LayoutWrapper><Index /></LayoutWrapper>} />
           <Route path="/app/empresarial/inventario" element={<LayoutWrapper><InventarioEmpresarial /></LayoutWrapper>} />

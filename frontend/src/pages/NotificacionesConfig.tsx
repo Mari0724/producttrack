@@ -19,15 +19,12 @@ const NotificacionesConfig = () => {
     return data ? parseInt(data) : null;
   }, []);
 
-  console.log("🟢 ID usuario detectado:", usuarioId);
-
   useEffect(() => {
     const fetchPreferencias = async () => {
       if (!usuarioId) return;
 
       try {
         const prefs = await getPreferenciasUsuario(usuarioId);
-        console.log("🎯 Preferencias del backend:", prefs);
         setPreferencias(prefs);
       } catch (error) {
         console.error("Error obteniendo preferencias del backend:", error);
@@ -38,13 +35,10 @@ const NotificacionesConfig = () => {
   }, [usuarioId]);
 
   const handleToggle = async (id: string) => {
-    console.log("🔁 Cambiando preferencia:", id);
-
 
     if (!preferencias || !usuarioId) return;
 
     const nuevas = { ...preferencias, [id]: !preferencias[id] };
-    console.log("Nuevo estado:", nuevas);
     setPreferencias(nuevas);
     localStorage.setItem("preferenciasNotificaciones", JSON.stringify(nuevas));
 

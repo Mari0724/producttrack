@@ -15,7 +15,6 @@ interface EmpresaInfo {
 const Index = () => {
     const { usuario } = useUser();
     const [empresaData, setEmpresaData] = useState<EmpresaInfo | null>(null);
-
     const [totalEquipo, setTotalEquipo] = useState(0);
     const [totalEditores, setTotalEditores] = useState(0);
     const [totalComentaristas, setTotalComentaristas] = useState(0);
@@ -58,8 +57,7 @@ const Index = () => {
         fetchEmpresaInfo();
     }, [usuario]);
 
-
-    // 👉 Efecto para obtener el resumen
+    // Efecto para obtener el resumen
     useEffect(() => {
         const fetchResumen = async () => {
             if (!usuario || usuario.tipoUsuario !== "EMPRESARIAL") return;
@@ -88,8 +86,6 @@ const Index = () => {
 
         fetchResumen();
     }, [usuario]);
-
-    console.log("📦 Componente Index montado");
 
     useEffect(() => {
         const fetchResumenInventario = async () => {
@@ -125,8 +121,6 @@ const Index = () => {
 
         fetchResumenInventario();
     }, [usuario]);
-
-    console.log("📦 Componente Index montado");
 
     return (
         <div className="p-6 bg-[#fffaf0]">

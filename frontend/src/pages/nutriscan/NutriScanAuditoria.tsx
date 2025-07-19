@@ -66,7 +66,6 @@ const NutriScanAuditoria = () => {
     cargarTodos();
   };
 
-
   const manejarEditar = (registro: Registro) => {
     setRegistroEditando({
       ...registro,
@@ -102,7 +101,6 @@ const NutriScanAuditoria = () => {
     cargarTodos();
   };
 
-
   const confirmarEliminar = (id: number) => setConfirmEliminarId(id);
 
   const eliminarRegistro = async () => {
@@ -133,7 +131,6 @@ const NutriScanAuditoria = () => {
   return (
     <div className="p-5 max-w-7xl mx-auto">
       <h1 className="text-3xl font-bold mb-6 text-wine-red">🧾 Auditoría de Análisis Nutricionales</h1>
-
       <div className="flex flex-wrap gap-3 mb-5">
         <input
           type="number"
@@ -168,7 +165,6 @@ const NutriScanAuditoria = () => {
           className="border rounded px-3 py-2"
         />
       </div>
-
 
       {error && <p className="text-red-600 mb-2">{error}</p>}
 
@@ -245,7 +241,6 @@ const NutriScanAuditoria = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

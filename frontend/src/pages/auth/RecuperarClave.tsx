@@ -5,7 +5,6 @@ import { useToast } from '../../hooks/useToast';
 import type { AxiosError } from "axios";
 import { solicitarReset } from "../../services/authService";
 
-
 const RecuperarClave = () => {
     const [email, setEmail] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -43,8 +42,6 @@ const RecuperarClave = () => {
         } finally {
             setIsLoading(false);
         }
-
-
     };
 
     return (

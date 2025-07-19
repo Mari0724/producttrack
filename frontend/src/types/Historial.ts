@@ -6,5 +6,5 @@ cantidad_anterior: number;
 cantidad_nueva: number;
 precio_anterior: number;
 precio_nuevo: number;
-fechaCambio: string; // o Date si ya lo transformas
+fechaCambio: string;
 }

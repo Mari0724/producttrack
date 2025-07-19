@@ -26,7 +26,7 @@ export const resizeImage = (file: File, maxWidth = 800, maxHeight = 800): Promis
         const ctx = canvas.getContext("2d");
         ctx?.drawImage(img, 0, 0, width, height);
 
-        const resizedBase64 = canvas.toDataURL("image/jpeg", 0.7); // calidad 70%
+        const resizedBase64 = canvas.toDataURL("image/jpeg", 0.7);
         resolve(resizedBase64);
       };
 

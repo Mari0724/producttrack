@@ -7,7 +7,6 @@ import Footer from "../../components/team/Footer";
 import { useUser } from "../../context/UserContext";
 import { useToast } from '../../hooks/useToast';
 
-
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -34,7 +33,6 @@ const Login: React.FC = () => {
       }
 
       const data = await response.json();
-      console.log("📥 Login response:", data);
 
       // Guarda token y datos de usuario en localStorage
       localStorage.setItem("token", data.token);
@@ -57,7 +55,7 @@ const Login: React.FC = () => {
       // Guarda el usuario en contexto
       setUsuario(data.user);
 
-      // ⚠️ En este sistema, perfilCompleto = true significa que DEBE completar su perfil
+      // En este sistema, perfilCompleto = true significa que DEBE completar su perfil
       if (data.user.rol === "EQUIPO" && data.user.perfilCompleto) {
         navigate("/completar-perfil");
       } else {
@@ -128,7 +126,6 @@ const Login: React.FC = () => {
                 </button>
               </div>
 
-
               <div className="text-right text-sm text-[#35492c] hover:underline cursor-pointer">
                 <span onClick={() => navigate("/recuperar-clave")}>
                   ¿Olvidaste tu contraseña?
@@ -145,7 +142,6 @@ const Login: React.FC = () => {
           </div>
         </div>
       </div>
-
       <LandingInfo />
       <Footer />
     </>

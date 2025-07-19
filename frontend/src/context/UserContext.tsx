@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { jwtDecode } from "jwt-decode";
 
-// 🎭 Interfaz del usuario que extraemos del token
+// Interfaz del usuario que extraemos del token
 export interface Usuario {
   idUsuario: number;
   username: string;
@@ -27,8 +27,7 @@ interface RawToken {
   exp?: number;
 }
 
-
-// 📦 Tipo del contexto
+// Tipo del contexto
 interface UserContextType {
   usuario: Usuario | null;
   setUsuario: (user: Usuario | null) => void;
@@ -36,11 +35,10 @@ interface UserContextType {
   refreshUsuario: () => void;
 }
 
-// 🧠 Creamos el contexto
+// Creamos el contexto
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
-
-// 🌍 Proveedor de usuario
+// Proveedor de usuario
 export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [cargando, setCargando] = useState(true); // 🔄 Estado de carga inicial
@@ -49,10 +47,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const token = localStorage.getItem("token");
     if (token) {
       try {
-        const decoded = jwtDecode<RawToken>(token); // 👈 Usamos la interfaz correcta
-
-        console.log("🔐 Usuario cargado desde token:", decoded);
-        console.log("📦 Contenido exacto del token decodificado:", JSON.stringify(decoded, null, 2));
+        const decoded = jwtDecode<RawToken>(token);
 
         // Adaptar el token al formato que espera la app
         const adapted: Usuario = {
@@ -71,29 +66,22 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } catch (e) {
         console.error("❌ Error al decodificar token:", e);
       }
-    } else {
-      console.log("⚠ No hay token en localStorage");
     }
     setCargando(false);
   }, []);
 
-
-
-
-  // ✅ Función para refrescar manualmente el usuario desde el token
+  // Función para refrescar manualmente el usuario desde el token
   const refreshUsuario = () => {
     const token = localStorage.getItem("token");
     if (token) {
       try {
         const decoded = jwtDecode<Usuario>(token);
-        console.log("🔁 Usuario refrescado desde token:", decoded);
         setUsuario(decoded);
       } catch (e) {
         console.error("❌ Error al refrescar token:", e);
       }
     }
   };
-
 
   return (
     <UserContext.Provider value={{ usuario, setUsuario, cargando, refreshUsuario }}>
@@ -102,7 +90,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-// 📟 Hook personalizado para acceder al contexto
+// Hook personalizado para acceder al contexto
 /* eslint-disable react-refresh/only-export-components */
 export const useUser = () => {
   const context = useContext(UserContext);

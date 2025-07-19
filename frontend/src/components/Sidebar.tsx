@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
-import {
-  FaHome,
-  FaChartBar,
-  FaBox,
-  FaHistory,
-  FaQrcode,
-  FaCog,
-  FaClipboardList,
-} from "react-icons/fa";
+import { FaHome, FaChartBar, FaBox, FaHistory, FaQrcode, FaCog, FaClipboardList, } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
 import clsx from "clsx";
 
