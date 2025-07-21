@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "index.ts",
   "scripts": {
-    "start": "node dist/index.ts",
+    "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "tsoa:gen": "tsoa spec && tsoa routes"
+    "tsoa:gen": "tsoa spec && tsoa routes",
+    "build": "tsc && npx tsoa routes && npx tsoa spec"
   },
   "keywords": [],
   "author": "@mariaximena0724 y emilia",
