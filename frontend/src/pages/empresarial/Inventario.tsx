@@ -6,11 +6,13 @@ import ConfirmDeleteModal from '../../components/producttrack/ConfirmDeleteModal
 import EnterpriseCommentsModal from '../../components/empresarial/CompanyCommentsModal';
 import type { Product } from '../../types/Product';
 import { getProductos, getProductoPorId, crearProducto, editarProducto, eliminarProducto, getCategorias, getProductosPorCategoria } from '../../api/productos';
-import toast from 'react-hot-toast';
+import { useToast } from "../../hooks/useToast";
+import { enviarNotificacionReposicion } from "../../api/notificaciones";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import { puedeNotificar } from '../../utils/enviarNotificacion';
 
 const InventarioEmpresarial: React.FC = () => {
+  const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [categorias, setCategorias] = useState<string[]>([]);
   const [showProductModal, setShowProductModal] = useState(false);
@@ -21,8 +23,6 @@ const InventarioEmpresarial: React.FC = () => {
 
   const [selectedProduct] = useState<Product | null>(null);
   const [showCommentsModal, setShowCommentsModal] = useState(false);
-
-  const userId = Number(localStorage.getItem("userId"));
   const userRol = localStorage.getItem("rolEquipo") || localStorage.getItem("rol") || "";
 
   const tipoUsuario = localStorage.getItem('tipoUsuario');
@@ -93,22 +93,28 @@ const InventarioEmpresarial: React.FC = () => {
 
   const handleSaveProduct = async (product: Product) => {
     try {
+      const userId = Number(localStorage.getItem("userId"));
+
       const productoConUsuario = {
         ...product,
         usuarioId: userId,
       };
 
       const res = await crearProducto(productoConUsuario);
-      await fetchProductos();
       setShowProductModal(false);
 
-      // Verificar tipo de usuario
-      const tipo = tipoUsuario?.toLowerCase() || 'empresarial';
-      const umbral = tipo === 'individual' ? 2 : 30;
+      // Notificación de éxito
+      toast.success("Producto creado correctamente", {
+        description: `Has añadido el producto ${product.nombre} al inventario.`,
+      });
+
+      // Verificar tipo de usuario y umbral
+      const tipo = tipoUsuario?.toLowerCase() || "empresarial";
+      const umbral = tipo === "individual" ? 2 : 30;
       const stockActual = res.data.cantidad;
 
-      // Revisar si debe notificar por stock bajo
-      if (stockActual <= umbral && puedeNotificar('stockBajo')) {
+      // Notificación de stock bajo
+      if (stockActual <= umbral && puedeNotificar("stockBajo")) {
         toast.custom(() => (
           <div className="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 rounded shadow max-w-sm">
             ⚠️ El producto <strong>{res.data.nombre}</strong> tiene stock bajo ({stockActual} unidades)
@@ -116,8 +122,25 @@ const InventarioEmpresarial: React.FC = () => {
         ));
       }
 
-    } catch {
-      alert("Error al guardar producto");
+      // Notificación de reposición
+      if (puedeNotificar("reposicion")) {
+        try {
+          await enviarNotificacionReposicion({
+            tipo: "reposicion",
+            titulo: "🛒 Producto añadido",
+            mensaje: `Has añadido el producto ${product.nombre} al inventario.`,
+            idUsuario: userId,
+          });
+        } catch (error) {
+          console.warn("❌ Error enviando notificación, pero seguimos:", error);
+        }
+      }
+
+      await fetchProductos();
+
+    } catch (error) {
+      toast.error("Error al guardar producto");
+      console.error(error);
     }
   };
 

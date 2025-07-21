@@ -5,13 +5,14 @@ import ProductModal from '../../components/producttrack/ProductModal';
 import ConfirmDeleteModal from '../../components/producttrack/ConfirmDeleteModal';
 import type { Product } from '../../types/Product';
 import { getProductos, crearProducto, editarProducto, eliminarProducto, getCategorias, getProductosPorCategoria } from '../../api/productos';
-import toast from 'react-hot-toast';
+import { useToast } from "../../hooks/useToast";
 import ProductCommentsModal from '../../components/individuales/CommentsModal';
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid';
 import { enviarNotificacionReposicion } from "../../api/notificaciones";
 import { puedeNotificar } from "../../utils/enviarNotificacion";
 
 const Inventario: React.FC = () => {
+  const { toast } = useToast();
   const [products, setProducts] = useState<Product[]>([]);
   const [showProductModal, setShowProductModal] = useState(false);
   const [productToEdit, setProductToEdit] = useState<Product | null>(null);
@@ -103,10 +104,13 @@ const Inventario: React.FC = () => {
       };
 
       await crearProducto(productoConUsuario);
-      toast.success("Producto creado correctamente");
+
+      toast.success("Producto creado correctamente", {
+        description: `Has añadido el producto ${product.nombre} al inventario.`,
+      });
+
       setShowProductModal(false);
 
-      // Enviar notificación si aplica
       if (puedeNotificar("reposicion")) {
         try {
           await enviarNotificacionReposicion({
@@ -139,7 +143,7 @@ const Inventario: React.FC = () => {
       setProductToEdit(null);
       setShowProductModal(false);
 
-      await fetchProductos(); 
+      await fetchProductos();
     } catch {
       toast.error("Error al editar producto");
     }

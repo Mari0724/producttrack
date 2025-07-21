@@ -222,7 +222,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
             onClick={handleSubmit}
             className="bg-[#81203D] text-white px-4 py-2 rounded text-sm hover:bg-[#9c2c53]"
           >
-            💾 Guardar
+            Guardar
           </button>
         </div>
       </div>

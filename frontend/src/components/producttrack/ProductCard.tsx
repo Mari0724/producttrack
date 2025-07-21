@@ -78,7 +78,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
             <div className="flex items-center gap-2 text-sm">
               <CalendarDays className="w-4 h-4 text-[#81203D]" />
-              <p><strong>Vence:</strong> {fechaVencimiento}</p>
+              <p>
+                <strong>Vence:</strong>{" "}
+                {fechaVencimiento ? new Date(fechaVencimiento).toISOString().split("T")[0] : "Sin fecha"}
+              </p>
             </div>
 
             {/* Mostrar acciones solo si el producto es del usuario */}
