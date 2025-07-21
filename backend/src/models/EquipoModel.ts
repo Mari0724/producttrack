@@ -12,7 +12,6 @@ export const equipoSchema = z.object({
   estado: z .enum(["activo", "inactivo"]) .default("activo"),
   empresaId: z.number().optional(), // solo si lo envía un ADMIN
   perfilCompleto: z.boolean().optional(), // 👈 NUEVO CAMPO
-
 });
 
 export type EquipoModel = z.infer<typeof equipoSchema>;

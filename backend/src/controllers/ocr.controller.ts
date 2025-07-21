@@ -73,21 +73,19 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
 
     console.log('🍽️ Nombre de producto usado para consulta:', nombreProducto || 'Ninguno');
 
-    const esAlimento = true;
     let openFoodFactsResultados = [];
 
-    if (esAlimento) {
-      openFoodFactsResultados = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
-      console.log('📦 Resultados OpenFoodFacts:', openFoodFactsResultados);
-    }
-
+    openFoodFactsResultados = await OpenFoodFactsService.buscarAlimentoPorNombre(nombreProducto);
+    console.log('📦 Resultados OpenFoodFacts:', openFoodFactsResultados);
 
     const mejorResultado = elegirMejorResultado(openFoodFactsResultados, textoCorregido);
-    const mensajeGPT = await gptService.generarMensajeNutricional(
+    const esAlimento = !!mejorResultado;
 
+    const mensajeGPT = await gptService.generarMensajeNutricional(
       nombreProducto || 'Producto desconocido',
       mejorResultado ? [mejorResultado] : []
     );
+
 
     const nuevoRegistro = await prisma.nutriScan.create({
       data: {
