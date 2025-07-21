@@ -6,7 +6,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import "reflect-metadata";
 import swaggerUi from "swagger-ui-express";
-import { RegisterRoutes } from "../src/routes/routes";
+import { RegisterRoutes } from "./routes/routes";
 import nutriscanOCRRoutes from './routes/ocr.routes';
 import userRoutes from "./routes/user.routes";
 import { uploadProductos } from './middleware/allCloudinaryUploads';

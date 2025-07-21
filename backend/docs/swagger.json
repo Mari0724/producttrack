@@ -1156,15 +1156,6 @@
 						"schema": {
 							"type": "string"
 						}
-					},
-					{
-						"in": "query",
-						"name": "usuarioId",
-						"required": false,
-						"schema": {
-							"format": "double",
-							"type": "number"
-						}
 					}
 				]
 			},

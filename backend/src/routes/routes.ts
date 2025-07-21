@@ -538,7 +538,6 @@ export function RegisterRoutes(app: Router) {
                 fechaAdquisicionHasta: {"in":"query","name":"fechaAdquisicionHasta","dataType":"string"},
                 fechaVencimientoDesde: {"in":"query","name":"fechaVencimientoDesde","dataType":"string"},
                 fechaVencimientoHasta: {"in":"query","name":"fechaVencimientoHasta","dataType":"string"},
-                usuarioId: {"in":"query","name":"usuarioId","dataType":"double"},
         };
         app.get('/productos',
             authenticateMiddleware([{"jwt":[]}]),

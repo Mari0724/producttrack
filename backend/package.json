@@ -5,8 +5,9 @@
   "scripts": {
     "start": "node dist/index.js",
     "dev": "nodemon src/index.ts",
-    "tsoa:gen": "tsoa spec && tsoa routes",
-    "build": "tsc && npx tsoa routes && npx tsoa spec"
+    "tsoa:routes": "tsoa routes",
+    "tsoa:spec": "tsoa spec",
+    "build": "tsc && npm run tsoa:routes && npm run tsoa:spec"
   },
   "keywords": [],
   "author": "@mariaximena0724 y emilia",
@@ -33,7 +34,6 @@
     "nodemon": "^3.1.10",
     "openai": "^4.50.0",
     "prisma": "^6.7.0",
-    "producttrack": "file:",
     "reflect-metadata": "^0.2.2",
     "sharp": "^0.34.2",
     "streamifier": "^0.1.1",
