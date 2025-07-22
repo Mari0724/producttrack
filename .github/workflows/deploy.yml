@@ -13,15 +13,21 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Instalar Railway CLI
+      - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Linkear el proyecto a Railway
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway link 8261cd1c-3419-42b6-a40f-4e1ef940ce80
+      - name: Move into backend directory
+        run: cd producttrack/backend
+        working-directory: producttrack/backend
 
-      - name: Deploy a Railway
+      - name: Link Railway project
+        working-directory: producttrack/backend
+        run: railway link --project 8261cd1c-3419-42b6-a40f-4e1ef940ce80
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Deploy to Railway
+        working-directory: producttrack/backend
         run: railway up --service=producttrack --ci
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
