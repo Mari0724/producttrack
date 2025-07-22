@@ -26,9 +26,9 @@ jobs:
 
 
 
-      - name: Install Railway CLI
+      - name: Instalar Railway CLI nuevo
 
-        run: npm install -g railway
+        run: npm install -g @railway/cli
 
 
 
