@@ -82,7 +82,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Mokaps",
         descripcion: "Vistas preliminares del sistema diseñadas durante la etapa de prototipo.",
-        link: "#"
+        link: "https://www.figma.com/design/QL9A3uCMo9Rwof7htdo0ap/Untitled?node-id=0-1&t=LH2mw4rgggmzu3ck-1"
       },
       {
         nombre: "Diagrama de Arquitectura del Sistema",
