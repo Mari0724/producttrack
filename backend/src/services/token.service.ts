@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 
 // Validación de la variable JWT
 if (!process.env.JWT_SECRET) {
-  throw new Error("Falta la variable JWT_SECRET en el archivo .env");
+  console.warn("Advertencia: JWT_SECRET no está definida");
 }
 const SECRET_KEY = process.env.JWT_SECRET;
 

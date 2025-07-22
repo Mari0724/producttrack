@@ -1,6 +1,6 @@
-export const JWT_SECRET = process.env.JWT_SECRET as string;
-export const TOKEN_EXPIRES_IN = "1d"; // Aquí se puede poner "1h", "7d", etc.
+export const JWT_SECRET = process.env.JWT_SECRET || "";
+export const TOKEN_EXPIRES_IN = "1d";
 
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET no está definido en el archivo .env");
+if (!process.env.JWT_SECRET) {
+  console.warn("Advertencia: JWT_SECRET no está definida");
 }

@@ -1,5 +1,8 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-// Cargar dotenv desde ruta absoluta
-dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+// Solo usar dotenv si NO estamos en Railway
+
+if (!process.env.RAILWAY_ENVIRONMENT) {
+    dotenv.config({ path: path.resolve(__dirname, '../../.env') });
+}
