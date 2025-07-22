@@ -1,7 +1,6 @@
-./node_modules 
-node_modules
-
-test-upload.html
-test/
-
+node_modules/
+dist/
 .env
+
+test/
+test-upload.html
