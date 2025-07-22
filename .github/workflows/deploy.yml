@@ -19,7 +19,7 @@ jobs:
       - name: Linkear proyecto a Railway
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-        run: railway link 8261cd1c-3419-42b6-a40f-4e1ef940ce80
+        run: railway link --project 8261cd1c-3419-42b6-a40f-4e1ef940ce80
 
       - name: Deploy a Railway
         env:
