@@ -11,12 +11,11 @@ on:
       - main
 
 
-
 jobs:
 
   deploy:
 
-    runs-on: Ubuntu-latest
+    runs-on: ubuntu-latest
 
 
 
@@ -34,19 +33,9 @@ jobs:
 
 
 
-      - name: Linkear proyecto
-
-        run: railway link --project 8261cd1c-3419-42b6-a40f-4e1ef940ce80
-
-        env:
-
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-
-
-
       - name: Deploy a Railway
 
-        run: railway up --service=producttrack
+        run: railway up --service=producttrack -- --project=8261cd1c-3419-42b6-a40f-4e1ef940ce80
 
         env:
 
