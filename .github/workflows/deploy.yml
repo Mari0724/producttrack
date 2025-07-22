@@ -1,30 +1,63 @@
 name: Deploy to Railway
 
+
+
 on:
+
   push:
+
     branches:
+
       - main
 
+
+
 jobs:
+
   deploy:
+
     runs-on: ubuntu-latest
 
+
+
     steps:
+
       - name: Checkout code
+
         uses: actions/checkout@v3
 
+
+
       - name: Install Railway CLI
+
         run: npm install -g @railway/cli
 
-      - name: Link Railway project
+
+
+      - name: Railway Login
+
+        run: echo "${{ secrets.RAILWAY_TOKEN }}" | railway login --apiKey -
+
+
+
+      - name: Link Railway Project
+
         working-directory: backend
+
         run: railway link --project 8261cd1c-3419-42b6-a40f-4e1ef940ce80
+
         env:
+
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
 
+
+
       - name: Deploy to Railway
+
         working-directory: backend
+
         run: railway up --service=producttrack --ci
+
         env:
+
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
-          
