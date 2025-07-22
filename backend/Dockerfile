@@ -1,3 +1,5 @@
+# Dummy change to trigger Railway build
+
 # Usa una imagen oficial de Node.js
 FROM node:18
 
