@@ -18,6 +18,8 @@ jobs:
 
     runs-on: Ubuntu-latest
 
+
+
     steps:
 
       - name: Checkout code
@@ -26,15 +28,25 @@ jobs:
 
 
 
-      - name: Instalar Railway CLI nuevo
+      - name: Instalar Railway CLI
 
         run: npm install -g @railway/cli
 
 
 
-      - name: Deploy to Railway (con token y Project ID)
+      - name: Linkear Proyecto
 
-        run: railway up --service=producttrack --project=8261cd1c-3419-42b6-a40f-4e1ef940ce80
+        run: railway link 8261cd1c-3419-42b6-a40f-4e1ef940ce80
+
+        env:
+
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+
+
+      - name: Deploy a Railway
+
+        run: railway up --service=producttrack
 
         env:
 
