@@ -16,10 +16,6 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
-      - name: Move into backend directory
-        run: cd producttrack/backend
-        working-directory: producttrack/backend
-
       - name: Link Railway project
         working-directory: producttrack/backend
         run: railway link --project 8261cd1c-3419-42b6-a40f-4e1ef940ce80
