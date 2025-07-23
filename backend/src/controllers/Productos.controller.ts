@@ -126,7 +126,7 @@ export class ProductosController extends Controller {
   public async getCantidadPorCategoria(): Promise<any> {
     try {
       const resultados = await getCantidadPorCategoria();
-      return resultados.map((item) => ({
+      return resultados.map((item: any) => ({
         categoria: item.categoria ?? "Sin categoría",
         cantidad: item._count.id
       }));
