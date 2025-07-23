@@ -21,4 +21,4 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          railway up --service=producttrack --project=8261cd1c-3419-42b6-a40f-4e1ef940ce80 --ci
+          railway up --service=producttrack --ci -- --project=8261cd1c-3419-42b6-a40f-4e1ef940ce80
