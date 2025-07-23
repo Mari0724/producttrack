@@ -7,7 +7,7 @@
     "dev": "nodemon src/index.ts",
     "tsoa:routes": "tsoa routes",
     "tsoa:spec": "tsoa spec",
-    "build": "tsc && npm run tsoa:routes && npm run tsoa:spec"
+    "build": "tsc || exit 1 && npm run tsoa:routes || exit 1 && npm run tsoa:spec || exit 1"
   },
   "keywords": [],
   "author": "@mariaximena0724 y emilia",
