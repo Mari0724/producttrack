@@ -119,7 +119,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Decisiones Arquitectónicas",
         descripcion: "Justificación de tecnologías, estructura del sistema y componentes técnicos.",
-        link: "#"
+        link: "https://drive.google.com/file/d/1XEfPIlHr5Vrnlw9b4MEvf5BWnKQOCoYN/view?usp=sharing"
       },
       {
         nombre: "Diagrama Eraser (BD actual)",
