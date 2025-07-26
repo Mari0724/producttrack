@@ -8,7 +8,8 @@
     "debug": "tsc && dir dist && node dist/index.js",
     "tsoa:routes": "tsoa routes --logLevel warn",
     "tsoa:spec": "tsoa spec --logLevel warn",
-    "build": "npm run tsoa:routes && npm run tsoa:spec && tsc"
+    "build": "npm run tsoa:routes && npm run tsoa:spec && tsc",
+    "migrate:prod": "prisma migrate deploy"
   },
   "keywords": [],
   "author": "@mariaximena0724 y emilia",
