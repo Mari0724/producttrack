@@ -15,9 +15,12 @@ const config: Config = {
   },
 
   url: 'https://Mari0724.github.io',
-  baseUrl: '/',
+  baseUrl: '/producttrack/',
   organizationName: 'Mari0724',
   projectName: 'producttrack',
+
+  deploymentBranch: 'gh-pages',
+  trailingSlash: false,
 
 
   // Even if you don't use internationalization, you can use this field to set

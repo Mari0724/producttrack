@@ -8,8 +8,8 @@ backend/dist/
 frontend/dist/
 
 # Ignora build y dist de Docusaurus o tsc accidentales
-/docs/build/
-/docs/dist/
+docs/build/
+docs/dist/
 
 # Variables de entorno
 .env
