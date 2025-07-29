@@ -5,7 +5,7 @@
     "src/controllers/*.ts"
   ],
   "spec": {
-    "outputDirectory": "build",
+    "outputDirectory": "docs",
     "specVersion": 3,
     "basePath": "/",
     "securityDefinitions": {
