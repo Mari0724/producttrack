@@ -1,4 +1,4 @@
-import './config/env';
+
 import fs from "fs";
 import path from "path";
 import express, { Request, Response } from 'express';
@@ -11,8 +11,10 @@ import nutriscanOCRRoutes from './routes/ocr.routes';
 import userRoutes from "./routes/user.routes";
 import { uploadProductos } from './middleware/allCloudinaryUploads';
 import './utils/cronJobs';
+import dotenv from 'dotenv';
 
 const app = express();
+dotenv.config()
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;
@@ -61,6 +63,11 @@ app.post('/upload', uploadProductos.single('image'), (req: MulterRequest, res: R
 
 app.get('/', (req: Request, res: Response) => {
   res.json({"ms": "BIenvenido a mi aplicación para ver el Swagger agregue en la barra de navegaciòn /docs"});
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`El server corre bien en http://localhost:${PORT}`);
 });
 
 export default app;
