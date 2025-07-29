@@ -12,13 +12,13 @@ export interface JwtPayload {
 }
 
 // Request extendido con el usuario autenticado
-export interface AuthenticatedRequest extends Request {
+export interface AuthenticatedRequestTocken extends Request {
   user?: JwtPayload;
 }
 
 // Middleware de autenticación
 export function autenticarToken(
-  req: AuthenticatedRequest,
+  req: AuthenticatedRequestTocken,
   res: Response,
   next: NextFunction
 ) {

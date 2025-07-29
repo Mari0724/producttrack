@@ -1,11 +1,11 @@
 {
-  "entryFile": "src/index.ts",
+  "entryFile": "src/app.ts",
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": [
     "src/controllers/*.ts"
   ],
   "spec": {
-    "outputDirectory": "docs",
+    "outputDirectory": "build",
     "specVersion": 3,
     "basePath": "/",
     "securityDefinitions": {

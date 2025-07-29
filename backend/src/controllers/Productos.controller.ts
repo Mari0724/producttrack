@@ -7,7 +7,7 @@ import { getAllProductos, getProductoById, createProducto, updateProducto, delet
   getCategoriasUnicas, getCantidadPorCategoria, getProductosPorCategoria, getCantidadPorRangoPrecio, obtenerProductoPorId
 } from "../services/productos.service";
 import { ResponseMessage, ResponseMessageWithData } from "../interfaces/ResponseMenssage";
-import { AuthenticatedRequest } from "../types/express";
+import { AuthenticatedRequest } from "../types/autheticatedRequest";
 import { puede } from "../utils/checkPermissions";
 import { Middlewares } from "tsoa";
 import { autenticarToken } from "../middleware/token.middleware";

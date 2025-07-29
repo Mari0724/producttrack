@@ -1,6 +1,7 @@
 import { themes as prismThemes } from 'prism-react-renderer';
 import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
+import path from 'path';
 
 // This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
 
@@ -56,9 +57,6 @@ const config: Config = {
           onInlineTags: 'warn',
           onInlineAuthors: 'warn',
           onUntruncatedBlogPosts: 'warn',
-        },
-        theme: {
-          customCss: './src/css/custom.css',
         },
       } satisfies Preset.Options,
     ],
@@ -119,6 +117,12 @@ const config: Config = {
       darkTheme: prismThemes.dracula,
     },
   } satisfies Preset.ThemeConfig,
+
+  stylesheets: [
+    'src/css/custom.css',   
+    'src/css/producttrack-home.css', 
+  ],
+
 };
 
 export default config;

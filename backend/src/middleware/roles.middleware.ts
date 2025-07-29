@@ -1,12 +1,12 @@
 import { Response, NextFunction } from "express";
-import { AuthenticatedRequest } from "./token.middleware";
+import { AuthenticatedRequestTocken } from "./token.middleware";
 
 export function permitirRolesYRolEquipo(
   rolesPermitidos: string[],
   rolesEquipoPermitidos?: string[],
   requiereTipoEmpresarial = false // nuevo parámetro
 ) {
-  return (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
+  return (req: AuthenticatedRequestTocken, res: Response, next: NextFunction) => {
     const user = req.user;
     if (!user) {
       return res.status(403).json({ mensaje: "Acceso no autorizado" });
