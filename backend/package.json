@@ -5,8 +5,7 @@
   "scripts": {
     "start": "ts-node src/app.ts",
     "dev": "ts-node-dev --respawn --transpile-only src/app.ts",
-    "build": "tsoa:routes && tsc",
-    "tsoa:routes": "tsoa routes --logLevel warn",
+    "build": "npx tsoa routes --logLevel warn && tsc",
     "tsoa:spec": "tsoa spec --logLevel warn",
     "migrate:prod": "prisma migrate deploy"
   },
