@@ -13,22 +13,22 @@ Aquí encontrarás la arquitectura, tecnologías utilizadas, estructura de carpe
 
 ## 🧱 Arquitectura
 
-La arquitectura se conoce comúnmente como "Arquitectura en capas" (o Layered Architecture), y también se puede describir como una arquitectura modular basada en responsabilidad separada.
+La arquitectura se conoce comúnmente como "Arquitectura en capas" (o Layered Architecture), y también se puede describir como una arquitectura modular basada en responsabilidad separada. 
 
 ---
 
 ## 🚀 Tecnologías utilizadas
 
-- **Node.js** – Motor de ejecución JavaScript  
-- **Express** – Framework para manejar rutas y middlewares  
-- **TypeScript** – Tipado estático para mayor mantenibilidad  
-- **TSOA** – Decoradores para generar rutas y documentación Swagger  
-- **Zod** – Validación de datos segura  
-- **Prisma** – ORM para PostgreSQL  
-- **Swagger UI** – Documentación automática de la API  
-- **Multer y Cloudinary** – Para gestión de imágenes  
-- **JWT (jsonwebtoken)** – Autenticación basada en tokens  
-- **Bcrypt** – Encriptación de contraseñas  
+- **Node.js** – Motor de ejecución JavaScript
+- **Express** – Framework para manejar rutas y middlewares
+- **TypeScript** – Tipado estático para mayor mantenibilidad
+- **TSOA** – Decoradores para generar rutas y documentación Swagger
+- **Zod** – Validación de datos segura
+- **Prisma** – ORM para PostgreSQL
+- **Swagger UI** – Documentación automática de la API
+- **Multer y Cloudinary** – Para gestión de imágenes 
+- **JWT (jsonwebtoken)** – Autenticación basada en tokens
+- **Bcrypt** – Encriptación de contraseñas
 
 ---
 

@@ -6,7 +6,7 @@ sidebar_label: Log Interface
 
 # log.interface.ts
 
-Este archivo define las interfaces utilizadas en el proceso de *autenticación y generación de tokens* para el login de usuarios.
+Este archivo define las interfaces utilizadas en el proceso de **autenticación y generación de tokens** para el login de usuarios.
 
 ## 🔍 Ubicación
 
@@ -22,7 +22,6 @@ export interface LoginRequest {
   password: string;
 }
 ```
-
 Descripción
 Representa el cuerpo (body) esperado en una solicitud de inicio de sesión.
 
@@ -44,7 +43,6 @@ export interface LoginResponse {
   requiereCompletarPerfil: boolean;
 }
 ```
-
 Descripción
 Representa la estructura de la respuesta enviada al cliente después de un inicio de sesión exitoso.
 

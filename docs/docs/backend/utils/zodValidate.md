@@ -4,17 +4,14 @@ title: Validacion zod
 sidebar_label: Zod Validate
 ---
 
-Aquí tienes la documentación en formato .md para el archivo zodValidate.ts, ubicado en la carpeta utils:
 
----
-
-### 📄 zodValidate.ts
+### 📄 `zodValidate.ts`
 
 Esta utilidad proporciona una función genérica para validar datos con [Zod](https://zod.dev/), simplificando el manejo de errores en controladores y servicios.
 
 ---
 
-## 🔧 Función: zodValidate
+## 🔧 Función: `zodValidate`
 
 ```ts
 export const zodValidate = <T>(
@@ -33,26 +30,26 @@ Valida cualquier objeto de entrada contra un esquema de Zod y devuelve un result
 
 | Nombre   | Tipo           | Descripción                                                |
 | -------- | -------------- | ---------------------------------------------------------- |
-| schema | ZodSchema[T] | Esquema de Zod que define la forma y reglas de validación. |
-| data   | unknown      | Objeto de datos que se desea validar.                      |
+| `schema` | `ZodSchema<T>` | Esquema de Zod que define la forma y reglas de validación. |
+| `data`   | `unknown`      | Objeto de datos que se desea validar.                      |
 
 ---
 
 ### 📤 Retorno:
 
-* Si la validación es *exitosa*:
+* Si la validación es **exitosa**:
 
 ```ts
 { success: true, data: T }
 ```
 
-* Si la validación *falla*:
+* Si la validación **falla**:
 
 ```ts
 { success: false, error: string } // mensaje con errores concatenados
 ```
 
-El campo error contiene un resumen legible de todos los errores de validación en una sola cadena, útil para mostrar en respuestas HTTP.
+El campo `error` contiene un resumen legible de todos los errores de validación en una sola cadena, útil para mostrar en respuestas HTTP.
 
 ---
 
@@ -73,5 +70,5 @@ if (!result.success) {
 
 ## 🧰 Utiliza:
 
-* Zod.safeParse: método seguro que evita excepciones y devuelve un objeto de éxito o error.
-* Mapeo de errores personalizados usando result.error.errors.
+* `Zod.safeParse`: método seguro que evita excepciones y devuelve un objeto de éxito o error.
+* Mapeo de errores personalizados usando `result.error.errors`.
