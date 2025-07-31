@@ -126,6 +126,13 @@
   color: #fff176; /* Amarillo más claro */
 }
 
+/* Modo oscuro: estilos para las cards */
+[data-theme='dark'] .card {
+  background-color: #1e1e1e;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
 /* Responsive: 1 columna en celular */
 @media screen and (max-width: 768px) {
   .card {

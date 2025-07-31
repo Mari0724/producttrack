@@ -6,14 +6,14 @@ sidebar_label: Servidor
 
 # 📄  index.ts
 
-Este archivo es el *punto de entrada principal* del backend. Se encarga de iniciar el servidor Express previamente configurado en app.ts y ponerlo a escuchar en un puerto determinado.
+Este archivo es el **punto de entrada principal** del backend. Se encarga de iniciar el servidor Express previamente configurado en `app.ts` y ponerlo a escuchar en un puerto determinado.
 
 
 ---
 
 ## 🔍 Ubicación
 
-src/index.ts
+`src/index.ts`
 
 ---
 
@@ -23,7 +23,7 @@ src/index.ts
 import app from './app';
 ```
 
-* Se importa la aplicación Express configurada en app.ts, donde ya están definidos los middlewares, rutas y Swagger.
+* Se importa la aplicación Express configurada en `app.ts`, donde ya están definidos los middlewares, rutas y Swagger.
 
 ---
 
@@ -34,11 +34,11 @@ const PORT = 3000;
 ```
 
 * Define el puerto en el cual el servidor va a escuchar.
-* Puedes reemplazar 3000 por process.env.PORT || 3000 si deseas hacerlo dinámico con variables de entorno.
+* Puedes reemplazar `3000` por `process.env.PORT || 3000` si deseas hacerlo dinámico con variables de entorno.
 
 ---
 
-## ▶ Inicio del servidor
+## ▶️ Inicio del servidor
 
 ```ts
 app.listen(PORT, () => {
@@ -55,8 +55,8 @@ app.listen(PORT, () => {
 
 Una vez el servidor esté corriendo, puedes acceder a:
 
-* Tu API en: http://localhost:3000
-* Documentación Swagger en: http://localhost:3000/docs
+* Tu API en: `http://localhost:3000`
+* Documentación Swagger en: `http://localhost:3000/docs`
 
 ---
 
@@ -68,7 +68,8 @@ Para producción o configuraciones más robustas, es buena práctica:
 const PORT = process.env.PORT || 3000;
 ```
 
-Y tener configurado un archivo .env así:
+Y tener configurado un archivo `.env` así:
 
-
+```
 PORT=3000
+```

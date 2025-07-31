@@ -8,7 +8,7 @@ Este archivo proporciona un sistema básico de control de acceso basado en roles
 
 ---
 
-## 🗂 Objeto: permisos
+## 🗂️ Objeto: `permisos`
 
 ```ts
 const permisos = {
@@ -27,7 +27,7 @@ Está diseñado para ser reutilizable y fácilmente extensible.
 
 ---
 
-## 🔧 Función: puede
+## 🔧 Función: `puede`
 
 ```ts
 export function puede(accion: keyof typeof permisos, rol: string): boolean
@@ -35,7 +35,7 @@ export function puede(accion: keyof typeof permisos, rol: string): boolean
 
 ### ✅ Propósito:
 
-Determina si un rol específico (rol) tiene permiso para realizar una determinada acción (accion).
+Determina si un rol específico (`rol`) tiene permiso para realizar una determinada acción (`accion`).
 
 ---
 
@@ -43,8 +43,8 @@ Determina si un rol específico (rol) tiene permiso para realizar una determinad
 
 | Nombre   | Tipo                    | Descripción                              |
 | -------- | ----------------------- | ---------------------------------------- |
-| accion | keyof typeof permisos | Acción a validar (ver, crear, etc.). |
-| rol    | string                | Rol del usuario a verificar.             |
+| `accion` | `keyof typeof permisos` | Acción a validar (`ver`, `crear`, etc.). |
+| `rol`    | `string`                | Rol del usuario a verificar.             |
 
 ---
 
@@ -52,7 +52,7 @@ Determina si un rol específico (rol) tiene permiso para realizar una determinad
 
 | Tipo      | Descripción                                                   |
 | --------- | ------------------------------------------------------------- |
-| boolean | true si el rol tiene permiso para la acción, false si no. |
+| `boolean` | `true` si el rol tiene permiso para la acción, `false` si no. |
 
 ---
 
@@ -71,3 +71,4 @@ if (!puede("eliminar", usuario.rol)) {
 * Centraliza la lógica de permisos.
 * Facilita el mantenimiento y escalabilidad del control de acceso.
 * Se puede usar tanto en middleware como directamente en controladores o servicios.
+

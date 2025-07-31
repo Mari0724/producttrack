@@ -8,11 +8,12 @@ sidebar_label: ResponseMessage
 
 Este archivo contiene interfaces reutilizables que definen el formato estándar de las respuestas enviadas desde el servidor, con o sin token.
 
+---
+
 ## 🔍 Ubicación
 
 `src/interfaces/ResponseMessage.ts`
 
----
 
 ## 📦 ResponseMessage
 
@@ -39,7 +40,6 @@ export interface ResponseMessageWithToken extends ResponseMessage {
   token?: string;
 }
 ```
-
 
 Descripción
 Extiende ResponseMessage para incluir un token JWT opcional. Se utiliza comúnmente después de autenticaciones o renovaciones de sesión.
