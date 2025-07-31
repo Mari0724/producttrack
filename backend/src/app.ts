@@ -62,7 +62,7 @@ app.post('/upload', uploadProductos.single('image'), (req: MulterRequest, res: R
 });
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({ "ms": "BIenvenido a mi aplicación para ver el Swagger agregue en la barra de navegaciòn /docs" });
+  res.json({ "ms": "Bienvenido a mi aplicación para probar las rutas en Swagger necesitas estar en entorno local por seguridad, si estas en producción puedes probar las mismas rutas en Postman" });
 });
 
 const PORT = process.env.PORT || 3000;
