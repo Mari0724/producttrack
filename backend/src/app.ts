@@ -62,12 +62,12 @@ app.post('/upload', uploadProductos.single('image'), (req: MulterRequest, res: R
 });
 
 app.get('/', (req: Request, res: Response) => {
-  res.json({"ms": "BIenvenido a mi aplicación para ver el Swagger agregue en la barra de navegaciòn /docs"});
+  res.json({ "ms": "BIenvenido a mi aplicación para ver el Swagger agregue en la barra de navegaciòn /docs" });
 });
 
-const PORT = Number(process.env.PORT) || 3000;
-app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on 0.0.0.0:${PORT}`);
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`El server corre bien en http://localhost:${PORT}`);
 });
 
 export default app;
