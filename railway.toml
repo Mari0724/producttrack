@@ -3,4 +3,4 @@
   buildCommand = "cd backend && npm install && npm run build"
 
 [deploy]
-  startCommand = "cd backend && node dist/app.js"
+startCommand = "cd backend && node dist/app.js"
