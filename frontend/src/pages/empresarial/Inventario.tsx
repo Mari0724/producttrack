@@ -146,7 +146,7 @@ const InventarioEmpresarial: React.FC = () => {
 
   const handleEditProduct = async (updatedProduct: Product) => {
     if (updatedProduct.id === undefined) {
-      alert("Producto sin ID, no se puede editar");
+      toast.error("Producto sin ID, no se puede editar");
       return;
     }
 

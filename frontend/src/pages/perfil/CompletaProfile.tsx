@@ -5,6 +5,7 @@ import { getEmpresaById, getUserById, updateUsuario, subirFotoPerfil } from "../
 import { AxiosError } from "axios";
 import type { UserDTO } from "../../types/UserDTO";
 import { useUser } from "../../context/UserContext";
+import { useToast } from "../../hooks/useToast";
 
 const CompleteProfile = () => {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ const CompleteProfile = () => {
 
   const [empresaNombre, setEmpresaNombre] = useState("Sin empresa");
   const [correoUsuario, setCorreoUsuario] = useState("");
+  const { toast } = useToast();
 
   useEffect(() => {
     const cargarDatos = async () => {
@@ -56,13 +58,12 @@ const CompleteProfile = () => {
     setIsSubmitting(true);
 
     if (!formData.newPassword) {
-      alert("Debes ingresar una nueva contraseña.");
-      setIsSubmitting(false);
+     toast.error("Debes ingresar una nueva contraseña."); setIsSubmitting(false);
       return;
     }
 
     if (formData.newPassword !== formData.confirmPassword) {
-      alert("Las contraseñas no coinciden.");
+      toast.error("Las contraseñas no coinciden.");
       setIsSubmitting(false);
       return;
     }
@@ -82,7 +83,7 @@ const CompleteProfile = () => {
 
     try {
       const response = await updateUsuario(usuario?.idUsuario || 0, dataToSend);
-      alert(response.message);
+      toast.success(response.message);
       navigate("/");
     } catch (error) {
       const err = error as AxiosError<{ message: string }>;
@@ -90,7 +91,7 @@ const CompleteProfile = () => {
       if (errorMsg.includes("Unique constraint failed") || errorMsg.includes("ya está en uso")) {
         setUsernameError("Ese nombre de usuario ya está en uso.");
       } else {
-        alert(errorMsg);
+        toast.error(errorMsg);
       }
     } finally {
       setIsSubmitting(false);

@@ -3,6 +3,7 @@ import { AiOutlineClose } from 'react-icons/ai';
 import { createPortal } from 'react-dom';
 import type { Product } from '../../types/Product';
 import { useUser } from '../../context/UserContext';
+import { useToast } from '../../hooks/useToast';
 
 interface ProductModalProps {
   isOpen: boolean;
@@ -36,7 +37,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
     imagen: '',
     categoria: '',
   });
-
+  const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
 
   // Cuando cambia el usuario, actualiza el usuarioId del formulario
@@ -82,7 +83,7 @@ const ProductModal: React.FC<ProductModalProps> = ({
     if (!file) return;
 
     if (!file.type.startsWith('image/')) {
-      alert('Solo se permiten archivos de imagen');
+      toast.error('Solo se permiten archivos de imagen');
       return;
     }
 
@@ -103,11 +104,11 @@ const ProductModal: React.FC<ProductModalProps> = ({
       if (data.secure_url) {
         setForm((prev) => ({ ...prev, imagen: data.secure_url }));
       } else {
-        alert('Error al subir imagen: ' + data.error?.message);
+        toast.error('Error al subir imagen: ' + data.error?.message);
       }
     } catch (error) {
       console.error('Error al subir la imagen:', error);
-      alert('Error al subir la imagen');
+      toast.error('Error al subir la imagen');
     } finally {
       setUploading(false);
     }
@@ -115,14 +116,13 @@ const ProductModal: React.FC<ProductModalProps> = ({
 
   const handleSubmit = () => {
     if (!form.nombre || !form.descripcion || !form.precio || !form.fechaAdquisicion) {
-      alert('Por favor completa todos los campos requeridos');
+      toast.error('Por favor completa todos los campos requeridos');
       return;
     }
 
     const parsedPrecio = parseFloat(form.precio.toString());
     if (isNaN(parsedPrecio)) {
-      alert('El precio debe ser un número válido');
-      return;
+      toast.error('El precio debe ser un número válido'); return;
     }
 
     const categoriaLimpia = form.categoria?.trim();
