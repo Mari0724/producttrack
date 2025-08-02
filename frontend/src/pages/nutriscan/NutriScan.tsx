@@ -24,7 +24,7 @@ const NutriScan = () => {
       }
 
       const response = await axios.post(
-        "producttrack-production.up.railway.app/api/ocr/nutriscan-ocr",
+        "https://producttrack-production.up.railway.app/api/ocr/nutriscan-ocr",
         formData,
         {
           headers: {
@@ -52,7 +52,7 @@ const NutriScan = () => {
   ): Promise<RespuestaNutriScan> => {
     try {
       const response = await axios.post(
-        "producttrack-production.up.railway.app/api/ocr/confirmar-nombre",
+        "https://producttrack-production.up.railway.app/api/ocr/confirmar-nombre",
         {
           registroId,
           nombreProducto,

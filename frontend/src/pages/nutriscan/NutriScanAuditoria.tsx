@@ -35,7 +35,7 @@ const NutriScanAuditoria = () => {
   const cargarTodos = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    const res = await axios.get<Registro[]>("producttrack-production.up.railway.app/nutriscan", {
+    const res = await axios.get<Registro[]>("https://producttrack-production.up.railway.app/nutriscan", {
       headers: { Authorization: `Bearer ${token}` },
     });
     setRegistros(res.data);
@@ -45,7 +45,7 @@ const NutriScanAuditoria = () => {
     if (!usuarioId.trim()) return;
     const token = localStorage.getItem("token");
     if (!token) return;
-    const res = await axios.get<Registro[]>(`producttrack-production.up.railway.app/nutriscan/usuario/${usuarioId}`, {
+    const res = await axios.get<Registro[]>(`https://producttrack-production.up.railway.app/nutriscan/usuario/${usuarioId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -92,7 +92,7 @@ const NutriScanAuditoria = () => {
     };
 
     await axios.put(
-      `producttrack-production.up.railway.app/nutriscan/${registroEditando.id}`,
+      `https://producttrack-production.up.railway.app/nutriscan/${registroEditando.id}`,
       datosActualizados,
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -107,7 +107,7 @@ const NutriScanAuditoria = () => {
     if (confirmEliminarId == null) return;
     const token = localStorage.getItem("token");
     if (!token) return;
-    await axios.delete(`producttrack-production.up.railway.app/nutriscan/${confirmEliminarId}`, {
+    await axios.delete(`https://producttrack-production.up.railway.app/nutriscan/${confirmEliminarId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setConfirmEliminarId(null);

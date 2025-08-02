@@ -37,7 +37,7 @@ const EquipoAuditoria = () => {
     const cargarMiembros = async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("producttrack-production.up.railway.app/equipo", {
+        const res = await axios.get("https://producttrack-production.up.railway.app/equipo", {
             headers: { Authorization: `Bearer ${token}` },
         });
         setMiembros(res.data);
@@ -46,7 +46,7 @@ const EquipoAuditoria = () => {
     const filtrar = async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("producttrack-production.up.railway.app/equipo/filtrar", {
+        const res = await axios.get("https://producttrack-production.up.railway.app/equipo/filtrar", {
             params: {
                 nombreCompleto: filtroNombre,
                 correo: filtroCorreo,
@@ -68,14 +68,14 @@ const EquipoAuditoria = () => {
             // Solo activa si tú lo decides
             if (editar.estado === "inactivo" && activarUsuario) {
                 await axios.put(
-                    `producttrack-production.up.railway.app/usuarios/${editar.idUsuario}/reactivar`,
+                    `https://producttrack-production.up.railway.app/usuarios/${editar.idUsuario}/reactivar`,
                     {},
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
             }
 
             await axios.put(
-                `producttrack-production.up.railway.app/equipo/${editar.idUsuario}`,
+                `https://producttrack-production.up.railway.app/equipo/${editar.idUsuario}`,
                 {
                     rolEquipo: nuevoRol,
                     perfilCompleto: nuevoPerfilCompleto,
@@ -100,7 +100,7 @@ const EquipoAuditoria = () => {
 
         try {
             await axios.delete(
-                `producttrack-production.up.railway.app/equipo/eliminar-logico/${confirmEliminarId}`,
+                `https://producttrack-production.up.railway.app/equipo/eliminar-logico/${confirmEliminarId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
