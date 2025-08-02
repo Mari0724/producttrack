@@ -84,7 +84,7 @@ const Register: React.FC = () => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:3000/usuarios", datos);
+      await axios.post("producttrack-production.up.railway.app/usuarios", datos);
       toast.success("Usuario registrado correctamente 🎉");
       navigate("/login");
     } catch (error: unknown) {
