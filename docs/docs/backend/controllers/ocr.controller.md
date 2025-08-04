@@ -1,7 +1,7 @@
 ---
 id: ocr.controller
 title: Controlador OCR
-sidebar_label: OCRController 
+sidebar_label: OCR
 ---
 
 # OCRController

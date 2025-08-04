@@ -1,7 +1,7 @@
 ---
 id: notificaciones.controller
 title: NotificacionesController
-sidebar_label: NotificacionesController
+sidebar_label: Notificaciones
 ---
 
 # NotificacionesController

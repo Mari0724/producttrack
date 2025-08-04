@@ -1,7 +1,7 @@
 ---
 id: comentarios.controller
 title: ComentariosController
-sidebar_label: ComentariosController
+sidebar_label: Comentarios
 ---
 
 # ComentariosController

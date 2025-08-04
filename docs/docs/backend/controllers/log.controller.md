@@ -1,7 +1,7 @@
 ---
 id: log.controller
 title: Controlador de Autenticación
-sidebar_label: LoginController
+sidebar_label: Login
 ---
 
 # Controlador de Autenticación

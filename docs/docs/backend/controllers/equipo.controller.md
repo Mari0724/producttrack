@@ -1,7 +1,7 @@
 ---
 id: equipo.controller
 title: EquipoController
-sidebar_label: EquipoController
+sidebar_label: Equipo
 ---
 
 # Controlador de Equipo

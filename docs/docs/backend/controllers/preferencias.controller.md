@@ -1,7 +1,7 @@
 ---
 id: preferencias.controller
 title: PreferenciasNotificacionesController
-sidebar_label: PreferenciasController
+sidebar_label: Preferencias
 ---
 
 # PreferenciasController

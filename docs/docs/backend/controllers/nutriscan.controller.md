@@ -1,7 +1,7 @@
 ---
 id: nutriscan.controller
 title: Controlador NutriScan
-sidebar_label: NutriScanController
+sidebar_label: NutriScan
 ---
 
 # NutriScanController

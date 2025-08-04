@@ -1,7 +1,7 @@
 ---
 id: historial.controller
 title: HistorialController
-sidebar_label: HistorialController
+sidebar_label: Historial
 ---
 
 # HistorialController

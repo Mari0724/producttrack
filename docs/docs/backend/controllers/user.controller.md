@@ -1,7 +1,7 @@
 ---
 id: user.controller
 title: UserController
-sidebar_label: UserController
+sidebar_label: User
 ---
 
 # UserController

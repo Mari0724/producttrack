@@ -1,7 +1,7 @@
 ---
 id: productos.controller
 title: ProductosController
-sidebar_label: ProductosController
+sidebar_label: Productos
 ---
 
 # ProductosController
