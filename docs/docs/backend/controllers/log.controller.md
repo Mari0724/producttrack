@@ -1,12 +1,16 @@
 ---
 id: log.controller
-title: Controlador del Login
-sidebar_label: Login
+title: Controlador de Autenticación
+sidebar_label: LoginController
 ---
 
 # Controlador de Autenticación
 
-Este controlador gestiona el proceso de autenticación de usuarios. Actualmente, expone la ruta `POST /auth/login`, la cual permite iniciar sesión y obtener un token JWT junto con información del usuario.
+Este controlador gestiona el proceso de **inicio de sesión** y **restablecimiento de contraseña** para los usuarios registrados. Forma parte del módulo de autenticación de la aplicación y expone tres endpoints principales:
+
+- `POST /auth/login`: Iniciar sesión.
+- `POST /auth/solicitar-reset`: Solicitar restablecimiento de contraseña.
+- `POST /auth/confirmar-reset`: Confirmar nueva contraseña usando token.
 
 ---
 
@@ -14,49 +18,104 @@ Este controlador gestiona el proceso de autenticación de usuarios. Actualmente,
 
 `src/controllers/log.controller.ts`
 
-## 📌 Ruta: `POST /auth/login`
+---
 
-Autentica a un usuario a partir de sus credenciales. Si las credenciales son válidas, devuelve un token de acceso junto con la información relevante del usuario.
+## 📌 Endpoint: `POST /auth/login`
+
+Autentica a un usuario a partir de sus credenciales. Si son válidas, devuelve un token JWT y los datos del usuario.
 
 ### 🧾 Request Body
-
-El cuerpo de la solicitud debe contener los siguientes campos:
-
-| Campo    | Tipo   | Descripción                     |
-|----------|--------|---------------------------------------|
-| correo   | string | Correo electrónico del usuario. |
-| password | string | Contraseña del usuario.         |
 
 ```json
 {
   "correo": "usuario@ejemplo.com",
   "password": "123456"
 }
-```
+````
+
+| Campo    | Tipo   | Descripción                     |
+| -------- | ------ | ------------------------------- |
+| correo   | string | Correo electrónico del usuario. |
+| password | string | Contraseña del usuario.         |
 
 ---
 
-### ✅ Respuesta
-
-Si la autenticación es exitosa, se devuelve un objeto con el token de acceso y los datos del usuario:
-
-| Campo                   | Tipo    | Descripción                                                |
-|-------------------------|---------|------------------------------------------------------------|
-| token                   | string  | Token JWT válido para autenticación.                       |
-| username                | string  | Nombre de usuario.                                         |
-| rol                     | string  | Rol principal del usuario (por ejemplo, admin, lector).    |
-| tipoUsuario             | string  | Tipo de cuenta: individual, empresarial, equipo.           |
-| rolEquipo               | string  | Rol dentro del equipo (si aplica).                         |
-| requiereCompletarPerfil| boolean | Indica si el usuario debe completar información adicional. |
+### ✅ Respuesta exitosa
 
 ```json
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR...",
-  "username": "ximena_dev",
-  "rol": "admin",
-  "tipoUsuario": "empresarial",
-  "rolEquipo": "editor",
-  "requiereCompletarPerfil": false
+  "requiereCompletarPerfil": false,
+  "user": {
+    "idUsuario": 1,
+    "username": "ximena_dev",
+    "correo": "ximena@empresa.com",
+    "rol": "admin",
+    "tipoUsuario": "empresarial",
+    "rolEquipo": "editor",
+    "perfilCompleto": true,
+    "empresaId": 101
+  }
+}
+```
+
+| Campo                   | Tipo    | Descripción                                           |
+| ----------------------- | ------- | ----------------------------------------------------- |
+| token                   | string  | Token JWT válido para autenticación.                  |
+| requiereCompletarPerfil | boolean | Indica si falta información para completar el perfil. |
+| user                    | object  | Información detallada del usuario autenticado.        |
+
+---
+
+## 🔑 Endpoint: `POST /auth/solicitar-reset`
+
+Envía un correo con un token temporal para restablecer la contraseña.
+
+### 🧾 Request Body
+
+```json
+{
+  "correo": "usuario@ejemplo.com"
+}
+```
+
+| Campo  | Tipo   | Descripción                    |
+| ------ | ------ | ------------------------------ |
+| correo | string | Correo del usuario registrado. |
+
+### ✅ Respuesta
+
+```json
+{
+  "mensaje": "Se ha enviado un enlace de restablecimiento a tu correo."
+}
+```
+
+---
+
+## 🔐 Endpoint: `POST /auth/confirmar-reset`
+
+Confirma el cambio de contraseña utilizando el token enviado al correo.
+
+### 🧾 Request Body
+
+```json
+{
+  "token": "ABC123TOKEN",
+  "nuevaContrasena": "nuevaSegura123"
+}
+```
+
+| Campo           | Tipo   | Descripción                              |
+| --------------- | ------ | ---------------------------------------- |
+| token           | string | Token recibido por correo.               |
+| nuevaContrasena | string | Nueva contraseña elegida por el usuario. |
+
+### ✅ Respuesta
+
+```json
+{
+  "mensaje": "La contraseña ha sido restablecida con éxito."
 }
 ```
 
@@ -64,6 +123,7 @@ Si la autenticación es exitosa, se devuelve un objeto con el token de acceso y 
 
 ## 🛠️ Notas técnicas
 
-- El método `validarCredenciales` es el encargado de validar el correo y la contraseña.
-- Este controlador hace uso de las decoraciones de `tsoa` para generar la documentación Swagger automáticamente (`@Post`, `@Route`, `@Body`, etc.).
-- El token JWT devuelto puede utilizarse en futuras solicitudes protegidas para autorizar el acceso.
+* `validarCredenciales` se encarga de validar correo y contraseña.
+* `LogService` implementa la lógica de recuperación y cambio de contraseña.
+* Todas las rutas usan decoradores de `tsoa` (`@Post`, `@Body`, `@Route`, etc.) para generar documentación Swagger automáticamente.
+* El token JWT debe ser enviado en futuras peticiones protegidas usando el header `Authorization: Bearer <token>`.

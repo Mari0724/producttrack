@@ -1,22 +1,27 @@
 ---
 id: equipo.controller
 title: EquipoController
-sidebar_label: Equipos
+sidebar_label: EquipoController
 ---
 
 # Controlador de Equipo
 
-Este controlador maneja las operaciones relacionadas con la gestión de usuarios tipo "equipo" en el sistema.
+Este controlador maneja las operaciones relacionadas con la gestión de usuarios tipo "equipo" en el sistema. Permite crear, actualizar, filtrar, eliminar (lógicamente) y listar miembros del equipo, con base en el rol y tipo de usuario autenticado.
+
+---
 
 ## 🔐 Seguridad
 
-Todas las rutas están protegidas por JWT (`@Security("jwt")`). Solo los usuarios **tipo EMPRESARIAL** o con rol **ADMIN** pueden realizar acciones sobre los miembros del equipo.
+Todas las rutas están protegidas por JWT (`@Security("jwt")`).  
+Solo los usuarios con **tipoUsuario = EMPRESARIAL** o **rol = ADMIN** pueden realizar acciones sobre los miembros del equipo.
 
 ---
 
 ## 🔍 Ubicación
 
 `src/controllers/equipo.controller.ts`
+
+---
 
 ## 📌 Endpoints
 
@@ -29,12 +34,11 @@ Crea un nuevo usuario de tipo equipo para una empresa.
 #### Requiere
 - Token JWT válido.
 - Objeto `EquipoDTO` en el cuerpo de la solicitud.
-- **Solo pueden acceder usuarios con `tipoUsuario: EMPRESARIAL` o `rol: ADMIN`.**
-  - Si el usuario es `ADMIN`, debe incluir `empresaId` en el cuerpo.
+- Si el usuario es `ADMIN`, debe incluir `empresaId` explícitamente.
 
 #### Respuesta
 - `201 Created` con el equipo creado.
-- `400 Bad Request` si falta `empresaId` siendo ADMIN.
+- `400 Bad Request` si falta `empresaId` siendo `ADMIN`.
 - `403 Forbidden` si no tiene permisos.
 
 ---
@@ -43,36 +47,37 @@ Crea un nuevo usuario de tipo equipo para una empresa.
 
 **GET** `/equipo`
 
-Devuelve una lista de todos los usuarios de equipo.
+Lista todos los equipos.  
+Si el usuario es EMPRESARIAL, se limita a su propia empresa.
 
 #### Requiere
 - Token JWT válido.
-- **Solo pueden acceder usuarios con `tipoUsuario: EMPRESARIAL` o `rol: ADMIN`.**
 
 #### Respuesta
-- Lista de equipos.
+- Lista de equipos según el contexto.
 - `403 Forbidden` si no tiene permisos.
 
 ---
 
-### 🔍 Filtrar equipos
+### 🔎 Filtrar equipos
 
 **GET** `/equipo/filtrar`
 
-Permite filtrar equipos por nombre, correo o rol dentro del equipo.
+Permite filtrar equipos por múltiples parámetros.
 
-#### Parámetros (query)
-- `nombreCompleto` (string) - Nombre completo del equipo.
-- `correo` (string) - Correo electrónico.
-- `rolEquipo` (`LECTOR` | `COMENTARISTA` | `EDITOR`) - Rol asignado.
+#### Parámetros (`query`)
+- `nombreCompleto` (string) – Filtrar por nombre.
+- `correo` (string) – Filtrar por correo.
+- `rolEquipo` (`LECTOR` | `COMENTARISTA` | `EDITOR`) – Rol dentro del equipo.
+- `estado` (`activo` | `inactivo`) – Estado del equipo.
+- `perfilCompleto` (`true` | `false`) – Si el equipo completó el perfil.
 
 #### Requiere
 - Token JWT válido.
-- **Solo pueden acceder usuarios con `tipoUsuario: EMPRESARIAL` o `rol: ADMIN`.**
-- Si el usuario es EMPRESARIAL, solo puede ver equipos de su empresa.
+- Si es EMPRESARIAL, solo verá equipos de su empresa.
 
 #### Respuesta
-- Lista de equipos que coinciden con los filtros.
+- Lista de equipos filtrados.
 - `403 Forbidden` si no tiene permisos.
 
 ---
@@ -81,16 +86,15 @@ Permite filtrar equipos por nombre, correo o rol dentro del equipo.
 
 **GET** `/equipo/{id}`
 
-Obtiene un equipo específico por su ID.
+Obtiene los datos de un miembro del equipo por su ID.
 
 #### Requiere
 - Token JWT válido.
-- **Solo pueden acceder usuarios con `tipoUsuario: EMPRESARIAL` o `rol: ADMIN`.**
-- Los usuarios EMPRESARIALES solo pueden ver equipos que pertenezcan a su empresa.
+- Si el usuario es EMPRESARIAL, solo podrá acceder a miembros de su empresa.
 
 #### Respuesta
-- Objeto del equipo solicitado.
-- `403 Forbidden` si el equipo no pertenece a su empresa.
+- Objeto del equipo.
+- `403 Forbidden` si intenta acceder a otro equipo fuera de su empresa.
 
 ---
 
@@ -98,59 +102,57 @@ Obtiene un equipo específico por su ID.
 
 **PUT** `/equipo/{id}`
 
-Actualiza los datos de un equipo por su ID.
+Actualiza campos específicos de un usuario equipo.
 
 #### Requiere
 - Token JWT válido.
-- Cuerpo con campos a actualizar (`Partial<EquipoDTO>`).
-- **Solo pueden acceder usuarios con `tipoUsuario: EMPRESARIAL` o `rol: ADMIN`.**
+- Cuerpo con los campos a modificar (`Partial<EquipoDTO>`).
+- EMPRESARIAL solo puede modificar equipos de su empresa.
 
 #### Respuesta
-- Objeto del equipo actualizado.
-- `403 Forbidden` si no tiene permisos o no pertenece a su empresa.
+- Equipo actualizado.
+- `403 Forbidden` si no tiene permisos.
 
 ---
 
-### ❌ Eliminar equipo
+### 🗑️ Eliminación lógica de equipo
 
-**DELETE** `/equipo/{id}`
+**DELETE** `/equipo/eliminar-logico/{id}`
 
-Elimina un equipo por su ID.
+Realiza una **eliminación lógica** (no física) de un miembro del equipo.
 
 #### Requiere
 - Token JWT válido.
-- **Solo pueden acceder usuarios con `tipoUsuario: EMPRESARIAL` o `rol: ADMIN`.**
-- Los usuarios EMPRESARIALES solo pueden eliminar equipos de su propia empresa.
+- El equipo debe pertenecer a la empresa del usuario si es EMPRESARIAL.
 
 #### Respuesta
 - Confirmación de eliminación.
-- `403 Forbidden` si no tiene permisos o no pertenece a su empresa.
+- `403 Forbidden` si no tiene permisos o el equipo no pertenece a su empresa.
+- `404 Not Found` si el equipo no existe.
 
 ---
 
-### ❌ Eliminar todos los equipos de una empresa
+### 🧨 Eliminar todos los equipos de una empresa
 
 **DELETE** `/equipo/todos/{empresaId}`
 
-Elimina todos los equipos asociados a una empresa.
+Elimina todos los usuarios de equipo asociados a una empresa.
 
 #### Requiere
 - Token JWT válido.
-- **Solo pueden acceder:**
-  - Usuarios con `rol: ADMIN`.
-  - Usuarios EMPRESARIALES que quieran eliminar los equipos de su **propia** empresa.
-
-#### Parámetros
-- `empresaId` (path) – ID de la empresa cuyos equipos serán eliminados.
+- Solo `ADMIN` o EMPRESARIAL **de la misma empresa** pueden ejecutar esta acción.
 
 #### Respuesta
 - Confirmación de eliminación masiva.
-- `403 Forbidden` si intenta eliminar los equipos de otra empresa.
+- `403 Forbidden` si se intenta eliminar los equipos de otra empresa.
 
 ---
 
 ## 🛠️ Notas técnicas
 
-- Todas las acciones usan `EquipoService` para la lógica de negocio.
-- Se verifica el tipo de usuario (`EMPRESARIAL`) o el rol (`ADMIN`) en cada endpoint.
-- Se protege el acceso y la integridad de los datos según el `empresaId`.
+- Toda la lógica está contenida en el `EquipoService`.
+- Se aplica validación de acceso según:
+  - `req.user.tipoUsuario === "EMPRESARIAL"`
+  - `req.user.rol === "ADMIN"`
+- Si el usuario es EMPRESARIAL, se restringen acciones a su propio `empresaId`.
+- Los campos `estado` y `perfilCompleto` pueden usarse como filtros adicionales en los endpoints de consulta.
