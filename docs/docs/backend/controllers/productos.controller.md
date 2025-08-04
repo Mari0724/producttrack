@@ -9,17 +9,16 @@ sidebar_label: ProductosController
 Este controlador maneja las operaciones CRUD sobre los productos del sistema, incluyendo funcionalidades adicionales como filtros, estadísticas por categoría y rango de precio, validaciones de permisos, y generación de historial de cambios.
 
 ---
+## 🔍 Ubicación
+
+`src/controllers/productos.controller.ts`
+
+---
 
 ## 🔐 Seguridad
 
 * La mayoría de los endpoints requieren un token JWT válido (`@Security("jwt")`).
 * Se validan permisos según el `rol` o `rolEquipo` del usuario.
-
----
-
-## 🔍 Ubicación
-
-`src/controllers/productos.controller.ts`
 
 ---
 

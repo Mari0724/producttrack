@@ -9,17 +9,16 @@ sidebar_label: EquipoController
 Este controlador maneja las operaciones relacionadas con la gestión de usuarios tipo "equipo" en el sistema. Permite crear, actualizar, filtrar, eliminar (lógicamente) y listar miembros del equipo, con base en el rol y tipo de usuario autenticado.
 
 ---
+## 🔍 Ubicación
+
+`src/controllers/equipo.controller.ts`
+
+---
 
 ## 🔐 Seguridad
 
 Todas las rutas están protegidas por JWT (`@Security("jwt")`).  
 Solo los usuarios con **tipoUsuario = EMPRESARIAL** o **rol = ADMIN** pueden realizar acciones sobre los miembros del equipo.
-
----
-
-## 🔍 Ubicación
-
-`src/controllers/equipo.controller.ts`
 
 ---
 
