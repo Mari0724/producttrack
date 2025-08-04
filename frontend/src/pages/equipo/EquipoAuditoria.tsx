@@ -37,7 +37,7 @@ const EquipoAuditoria = () => {
     const cargarMiembros = async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("https://producttrack-production.up.railway.app/equipo", {
+        const res = await axios.get("http://localhost:3000/equipo", {
             headers: { Authorization: `Bearer ${token}` },
         });
         setMiembros(res.data);
@@ -46,7 +46,7 @@ const EquipoAuditoria = () => {
     const filtrar = async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("https://producttrack-production.up.railway.app/equipo/filtrar", {
+        const res = await axios.get("http://localhost:3000/equipo/filtrar", {
             params: {
                 nombreCompleto: filtroNombre,
                 correo: filtroCorreo,
@@ -68,14 +68,14 @@ const EquipoAuditoria = () => {
             // Solo activa si tú lo decides
             if (editar.estado === "inactivo" && activarUsuario) {
                 await axios.put(
-                    `https://producttrack-production.up.railway.app/usuarios/${editar.idUsuario}/reactivar`,
+                    `http://localhost:3000/usuarios/${editar.idUsuario}/reactivar`,
                     {},
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
             }
 
             await axios.put(
-                `https://producttrack-production.up.railway.app/equipo/${editar.idUsuario}`,
+                `http://localhost:3000/equipo/${editar.idUsuario}`,
                 {
                     rolEquipo: nuevoRol,
                     perfilCompleto: nuevoPerfilCompleto,
@@ -100,7 +100,7 @@ const EquipoAuditoria = () => {
 
         try {
             await axios.delete(
-                `https://producttrack-production.up.railway.app/equipo/eliminar-logico/${confirmEliminarId}`,
+                `http://localhost:3000/equipo/eliminar-logico/${confirmEliminarId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }
