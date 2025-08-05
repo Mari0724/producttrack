@@ -4,6 +4,15 @@ import prisma from '../utils/prismaClient';
 @Route('preferencias-notificaciones')
 @Tags('Preferencias de Notificaciones')
 export class PreferenciasNotificacionesController extends Controller {
+  /**
+   * Obtiene las preferencias de notificación de un usuario específico.
+   * Si no existen en la base de datos, se devuelven valores por defecto.
+   *
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/preferencias.controller)
+   * 
+   * @param idUsuario ID del usuario
+   * @returns Objeto con las preferencias de notificación
+   */
   @Get('{idUsuario}')
   public async obtenerPreferencias(
     @Path() idUsuario: number
@@ -27,6 +36,15 @@ export class PreferenciasNotificacionesController extends Controller {
     };
   }
 
+  /**
+   * Crea o actualiza las preferencias de notificación de un usuario.
+   *
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/preferencias.controller)
+   * 
+   * @param idUsuario ID del usuario
+   * @param body Objeto con las preferencias a modificar
+   * @returns Mensaje de confirmación
+   */
   @Put('{idUsuario}')
   public async actualizarPreferencias(
     @Path() idUsuario: number,

@@ -14,7 +14,7 @@ import { NutriScanController } from './../controllers/nutriscan.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { NotificacionesController } from './../controllers/notificaciones.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { AuthController } from './../controllers/log.controller';
+import { LogController } from './../controllers/log.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { HistorialController } from './../controllers/historial.controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1304,22 +1304,22 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsAuthController_login: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsLogController_login: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"LoginRequest"},
         };
         app.post('/auth/login',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.login)),
+            ...(fetchMiddlewares<RequestHandler>(LogController)),
+            ...(fetchMiddlewares<RequestHandler>(LogController.prototype.login)),
 
-            async function AuthController_login(request: ExRequest, response: ExResponse, next: any) {
+            async function LogController_login(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_login, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsLogController_login, request, response });
 
-                const controller = new AuthController();
+                const controller = new LogController();
 
               await templateService.apiHandler({
                 methodName: 'login',
@@ -1334,22 +1334,22 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsAuthController_solicitarReset: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsLogController_solicitarReset: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"SolicitudResetDTO"},
         };
         app.post('/auth/solicitar-reset',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.solicitarReset)),
+            ...(fetchMiddlewares<RequestHandler>(LogController)),
+            ...(fetchMiddlewares<RequestHandler>(LogController.prototype.solicitarReset)),
 
-            async function AuthController_solicitarReset(request: ExRequest, response: ExResponse, next: any) {
+            async function LogController_solicitarReset(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_solicitarReset, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsLogController_solicitarReset, request, response });
 
-                const controller = new AuthController();
+                const controller = new LogController();
 
               await templateService.apiHandler({
                 methodName: 'solicitarReset',
@@ -1364,22 +1364,22 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        const argsAuthController_confirmarReset: Record<string, TsoaRoute.ParameterSchema> = {
+        const argsLogController_confirmarReset: Record<string, TsoaRoute.ParameterSchema> = {
                 body: {"in":"body","name":"body","required":true,"ref":"ConfirmacionResetDTO"},
         };
         app.post('/auth/confirmar-reset',
-            ...(fetchMiddlewares<RequestHandler>(AuthController)),
-            ...(fetchMiddlewares<RequestHandler>(AuthController.prototype.confirmarReset)),
+            ...(fetchMiddlewares<RequestHandler>(LogController)),
+            ...(fetchMiddlewares<RequestHandler>(LogController.prototype.confirmarReset)),
 
-            async function AuthController_confirmarReset(request: ExRequest, response: ExResponse, next: any) {
+            async function LogController_confirmarReset(request: ExRequest, response: ExResponse, next: any) {
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = templateService.getValidatedArgs({ args: argsAuthController_confirmarReset, request, response });
+                validatedArgs = templateService.getValidatedArgs({ args: argsLogController_confirmarReset, request, response });
 
-                const controller = new AuthController();
+                const controller = new LogController();
 
               await templateService.apiHandler({
                 methodName: 'confirmarReset',

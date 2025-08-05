@@ -729,6 +729,7 @@
 						}
 					}
 				},
+				"description": "Obtiene todos los usuarios con filtros opcionales.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)",
 				"tags": [
 					"Usuarios"
 				],
@@ -834,6 +835,7 @@
 						"description": "Datos inválidos"
 					}
 				},
+				"description": "Crea un nuevo usuario.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)",
 				"tags": [
 					"Usuarios"
 				],
@@ -864,6 +866,7 @@
 						}
 					}
 				},
+				"description": "Obtiene un usuario por su ID.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)",
 				"tags": [
 					"Usuarios"
 				],
@@ -899,6 +902,7 @@
 						"description": "Error del servidor"
 					}
 				},
+				"description": "Actualiza los datos de un usuario.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)",
 				"tags": [
 					"Usuarios"
 				],
@@ -945,6 +949,7 @@
 						"description": "Error del servidor"
 					}
 				},
+				"description": "Elimina (soft delete) un usuario por su ID.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)",
 				"tags": [
 					"Usuarios"
 				],
@@ -975,6 +980,7 @@
 						}
 					}
 				},
+				"description": "Obtiene información de una empresa por ID de usuario.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)",
 				"tags": [
 					"Usuarios"
 				],
@@ -1019,7 +1025,7 @@
 						}
 					}
 				},
-				"description": "Cambia la contraseña de un usuario.",
+				"description": "Cambia la contraseña de un usuario.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)",
 				"tags": [
 					"Usuarios",
 					"Usuarios"
@@ -1059,6 +1065,7 @@
 						"description": "Usuario no encontrado"
 					}
 				},
+				"description": "Reactiva un usuario inactivo.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)",
 				"tags": [
 					"Usuarios"
 				],
@@ -1092,6 +1099,7 @@
 						}
 					}
 				},
+				"description": "Obtiene todos los productos con filtros opcionales.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1183,6 +1191,7 @@
 						"description": "Datos inválidos"
 					}
 				},
+				"description": "Crea un nuevo producto en la base de datos.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1193,11 +1202,13 @@
 				],
 				"parameters": [],
 				"requestBody": {
+					"description": "Objeto con los datos del producto",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ProductosDTO"
+								"$ref": "#/components/schemas/ProductosDTO",
+								"description": "Objeto con los datos del producto"
 							}
 						}
 					}
@@ -1229,6 +1240,7 @@
 						}
 					}
 				},
+				"description": "Obtiene las categorías únicas para los productos según tipoUsuario.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1258,6 +1270,7 @@
 						}
 					}
 				},
+				"description": "Devuelve todos los productos en una categoría específica.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1292,6 +1305,7 @@
 						}
 					}
 				},
+				"description": "Devuelve los nombres de los productos registrados por un usuario.\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1322,6 +1336,7 @@
 						}
 					}
 				},
+				"description": "Obtiene la cantidad de productos agrupados por categoría.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1342,6 +1357,7 @@
 						}
 					}
 				},
+				"description": "Obtiene la cantidad de productos agrupados por rangos de precio.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1362,6 +1378,7 @@
 						}
 					}
 				},
+				"description": "Obtiene un producto por su ID.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1391,6 +1408,7 @@
 						}
 					}
 				},
+				"description": "Actualiza un producto existente.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1433,6 +1451,7 @@
 						}
 					}
 				},
+				"description": "Elimina un producto de la base de datos.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)",
 				"tags": [
 					"productos"
 				],
@@ -1459,7 +1478,7 @@
 				"operationId": "ObtenerPreferencias",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Objeto con las preferencias de notificación",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1493,12 +1512,14 @@
 						}
 					}
 				},
+				"description": "Obtiene las preferencias de notificación de un usuario específico.\r\nSi no existen en la base de datos, se devuelven valores por defecto.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/preferencias.controller)",
 				"tags": [
 					"Preferencias de Notificaciones"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID del usuario",
 						"in": "path",
 						"name": "idUsuario",
 						"required": true,
@@ -1513,7 +1534,7 @@
 				"operationId": "ActualizarPreferencias",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Mensaje de confirmación",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -1531,12 +1552,14 @@
 						}
 					}
 				},
+				"description": "Crea o actualiza las preferencias de notificación de un usuario.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/preferencias.controller)",
 				"tags": [
 					"Preferencias de Notificaciones"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID del usuario",
 						"in": "path",
 						"name": "idUsuario",
 						"required": true,
@@ -1547,6 +1570,7 @@
 					}
 				],
 				"requestBody": {
+					"description": "Objeto con las preferencias a modificar",
 					"required": true,
 					"content": {
 						"application/json": {
@@ -1568,7 +1592,8 @@
 										"type": "boolean"
 									}
 								},
-								"type": "object"
+								"type": "object",
+								"description": "Objeto con las preferencias a modificar"
 							}
 						}
 					}
@@ -1655,6 +1680,7 @@
 						"description": "Acceso denegado"
 					}
 				},
+				"description": "Crea un nuevo análisis de producto usando NutriScan.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)",
 				"tags": [
 					"NutriScan"
 				],
@@ -1665,10 +1691,13 @@
 				],
 				"parameters": [],
 				"requestBody": {
+					"description": "Datos del análisis (sin idUsuario).",
 					"required": true,
 					"content": {
 						"application/json": {
-							"schema": {}
+							"schema": {
+								"description": "Datos del análisis (sin idUsuario)."
+							}
 						}
 					}
 				}
@@ -1749,6 +1778,7 @@
 						}
 					}
 				},
+				"description": "Obtiene todos los análisis (admin o desarrollador).\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)",
 				"tags": [
 					"NutriScan"
 				],
@@ -1864,6 +1894,7 @@
 						}
 					}
 				},
+				"description": "Obtiene todos los análisis de un usuario (solo ADMIN).\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)",
 				"tags": [
 					"NutriScan"
 				],
@@ -1874,6 +1905,7 @@
 				],
 				"parameters": [
 					{
+						"description": "ID del usuario.",
 						"in": "path",
 						"name": "usuarioId",
 						"required": true,
@@ -1962,6 +1994,7 @@
 						"description": "Datos inválidos"
 					}
 				},
+				"description": "Obtiene todos los análisis de un usuario (solo ADMIN).\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)",
 				"tags": [
 					"NutriScan"
 				],
@@ -2012,6 +2045,7 @@
 						}
 					}
 				},
+				"description": "Elimina un análisis de NutriScan.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)",
 				"tags": [
 					"NutriScan"
 				],
@@ -2022,6 +2056,7 @@
 				],
 				"parameters": [
 					{
+						"description": "ID del análisis.",
 						"in": "path",
 						"name": "id",
 						"required": true,
@@ -2056,6 +2091,7 @@
 						}
 					}
 				},
+				"description": "Envia notificaciones de productos con stock bajo.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller\r\n)",
 				"tags": [
 					"Notificaciones"
 				],
@@ -2113,6 +2149,7 @@
 						}
 					}
 				},
+				"description": "Envia notificaciones de productos vencidos.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)",
 				"tags": [
 					"Notificaciones"
 				],
@@ -2170,6 +2207,7 @@
 						}
 					}
 				},
+				"description": "Envia notificación de nuevo comentario en producto.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)",
 				"tags": [
 					"Notificaciones"
 				],
@@ -2219,6 +2257,7 @@
 						}
 					}
 				},
+				"description": "Envia notificaciones de productos con recomendación de reposición.",
 				"tags": [
 					"Notificaciones"
 				],
@@ -2276,6 +2315,7 @@
 						}
 					}
 				},
+				"description": "Envia notificaciones de actualizaciones de la aplicación.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)",
 				"tags": [
 					"Notificaciones"
 				],
@@ -2310,7 +2350,7 @@
 				"operationId": "ObtenerNotificacionesPorUsuario",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Lista de notificaciones recibidas.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2353,12 +2393,14 @@
 						}
 					}
 				},
+				"description": "Obtiene las notificaciones asociadas a un usuario.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)",
 				"tags": [
 					"Notificaciones"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID del usuario.",
 						"in": "path",
 						"name": "idUsuario",
 						"required": true,
@@ -2393,12 +2435,14 @@
 						}
 					}
 				},
+				"description": "Marca una notificación como leída.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)",
 				"tags": [
 					"Notificaciones"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID de la notificación.",
 						"in": "path",
 						"name": "idNotificacion",
 						"required": true,
@@ -2433,12 +2477,14 @@
 						}
 					}
 				},
+				"description": "Actualiza las preferencias de notificación de un usuario.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)",
 				"tags": [
 					"Notificaciones"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID del usuario.",
 						"in": "path",
 						"name": "idUsuario",
 						"required": true,
@@ -2482,7 +2528,7 @@
 				"operationId": "Login",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Token de autenticación y datos del usuario.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2492,17 +2538,20 @@
 						}
 					}
 				},
+				"description": "Inicia sesión en el sistema con correo y contraseña.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)",
 				"tags": [
 					"Autenticación"
 				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "Datos de inicio de sesión.",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/LoginRequest"
+								"$ref": "#/components/schemas/LoginRequest",
+								"description": "Datos de inicio de sesión."
 							}
 						}
 					}
@@ -2532,6 +2581,7 @@
 						}
 					}
 				},
+				"description": "Solicita el restablecimiento de contraseña.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)",
 				"tags": [
 					"Autenticación"
 				],
@@ -2572,6 +2622,7 @@
 						}
 					}
 				},
+				"description": "Confirma el restablecimiento de contraseña con el token recibido.\r\n\r\n👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)",
 				"tags": [
 					"Autenticación"
 				],
@@ -2594,7 +2645,7 @@
 				"operationId": "ObtenerHistorialPorUsuario",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Lista de registros de historial.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -2607,12 +2658,14 @@
 						}
 					}
 				},
+				"description": "Obtiene el historial de movimientos del inventario por usuario.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/historial.controller)",
 				"tags": [
 					"Historial"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID del usuario.",
 						"in": "path",
 						"name": "idUsuario",
 						"required": true,
@@ -2739,6 +2792,7 @@
 						}
 					}
 				},
+				"description": "Crea un nuevo miembro del equipo.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)",
 				"tags": [
 					"Equipo"
 				],
@@ -2876,6 +2930,7 @@
 						}
 					}
 				},
+				"description": "Obtiene todos los miembros del equipo de una empresa.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)",
 				"tags": [
 					"Equipo"
 				],
@@ -3005,6 +3060,7 @@
 						}
 					}
 				},
+				"description": "Filtra los miembros del equipo según parámetros.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)",
 				"tags": [
 					"Equipo"
 				],
@@ -3185,6 +3241,7 @@
 						}
 					}
 				},
+				"description": "Obtiene un miembro del equipo por su ID.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)",
 				"tags": [
 					"Equipo"
 				],
@@ -3319,6 +3376,7 @@
 						}
 					}
 				},
+				"description": "Actualiza un miembro del equipo.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)",
 				"tags": [
 					"Equipo"
 				],
@@ -3465,6 +3523,7 @@
 						}
 					}
 				},
+				"description": "Realiza eliminación lógica de un miembro del equipo.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)",
 				"tags": [
 					"Equipo"
 				],
@@ -3509,6 +3568,7 @@
 						}
 					}
 				},
+				"description": "Elimina todos los miembros del equipo de una empresa.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)",
 				"tags": [
 					"Equipo"
 				],
@@ -3535,7 +3595,7 @@
 				"operationId": "GetComentariosPorProducto",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Lista de comentarios.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3548,12 +3608,14 @@
 						}
 					}
 				},
+				"description": "Obtiene los comentarios asociados a un producto.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)",
 				"tags": [
 					"Comentarios"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID del producto.",
 						"in": "path",
 						"name": "productoId",
 						"required": true,
@@ -3570,7 +3632,7 @@
 				"operationId": "CrearComentario",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Comentario creado.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3580,17 +3642,20 @@
 						}
 					}
 				},
+				"description": "Crea un nuevo comentario para un producto.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)",
 				"tags": [
 					"Comentarios"
 				],
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "Datos del comentario.",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CrearComentarioBody"
+								"$ref": "#/components/schemas/CrearComentarioBody",
+								"description": "Datos del comentario."
 							}
 						}
 					}
@@ -3602,7 +3667,7 @@
 				"operationId": "ActualizarComentario",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Comentario actualizado.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3612,12 +3677,14 @@
 						}
 					}
 				},
+				"description": "Actualiza un comentario existente.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)",
 				"tags": [
 					"Comentarios"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID del comentario.",
 						"in": "path",
 						"name": "idComentario",
 						"required": true,
@@ -3628,11 +3695,13 @@
 					}
 				],
 				"requestBody": {
+					"description": "Nuevo contenido del comentario.",
 					"required": true,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ActualizarComentarioBody"
+								"$ref": "#/components/schemas/ActualizarComentarioBody",
+								"description": "Nuevo contenido del comentario."
 							}
 						}
 					}
@@ -3642,7 +3711,7 @@
 				"operationId": "EliminarComentario",
 				"responses": {
 					"200": {
-						"description": "Ok",
+						"description": "Mensaje de confirmación.",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3660,12 +3729,14 @@
 						}
 					}
 				},
+				"description": "Elimina un comentario existente.\r\n\r\n👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)",
 				"tags": [
 					"Comentarios"
 				],
 				"security": [],
 				"parameters": [
 					{
+						"description": "ID del comentario.",
 						"in": "path",
 						"name": "idComentario",
 						"required": true,

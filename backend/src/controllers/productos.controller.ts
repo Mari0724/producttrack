@@ -19,6 +19,11 @@ import { AccionHistorial } from '@prisma/client';
 @Route("/productos")
 @Tags("productos")
 export class ProductosController extends Controller {
+  /**
+   * Obtiene todos los productos con filtros opcionales.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   // Obtener productos con filtros
   @Security("jwt")
   @Middlewares([autenticarToken])
@@ -67,6 +72,11 @@ export class ProductosController extends Controller {
     return await getAllProductos(filters);
   }
 
+  /**
+   * Obtiene las categorías únicas para los productos según tipoUsuario.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   // Obtener categorías únicas
   @Get("/categorias")
   public async obtenerCategorias(
@@ -87,6 +97,11 @@ export class ProductosController extends Controller {
     }
   }
 
+  /**
+   * Devuelve todos los productos en una categoría específica.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   // Obtener productos por categoría
   @Get("/por-categoria")
   public async getByCategoria(@Query() categoria: string): Promise<any> {
@@ -110,6 +125,10 @@ export class ProductosController extends Controller {
     }
   }
 
+  /**
+   * Devuelve los nombres de los productos registrados por un usuario.
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   // Devuelve los nombres de los productos del usuario
   @Get('/nombres/:idUsuario')
   public async getNombresProductosDelUsuario(@Path() idUsuario: number) {
@@ -121,6 +140,11 @@ export class ProductosController extends Controller {
     return productos.map(p => p.nombre);
   }
 
+  /**
+   * Obtiene la cantidad de productos agrupados por categoría.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   // Cantidad de productos por categoría
   @Get("/cantidad-por-categoria")
   public async getCantidadPorCategoria(): Promise<any> {
@@ -137,6 +161,11 @@ export class ProductosController extends Controller {
     }
   }
 
+  /**
+   * Obtiene la cantidad de productos agrupados por rangos de precio.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   // Cantidad de productos por rango de precio
   @Get("/cantidad-por-rango-precio")
   public async getCantidadPorRangoPrecio(): Promise<any> {
@@ -153,6 +182,11 @@ export class ProductosController extends Controller {
     }
   }
 
+  /**
+   * Obtiene un producto por su ID.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   // Obtener producto por ID
   @Get("/{id}")
   public async getById(@Path() id: string): Promise<any> {
@@ -172,6 +206,13 @@ export class ProductosController extends Controller {
     return producto;
   }
 
+  /**
+   * Crea un nuevo producto en la base de datos.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   *
+   * @param requestBody Objeto con los datos del producto
+   */
   // Crear producto
   @SuccessResponse("201", "Producto creado correctamente")
   @Response("400", "Datos inválidos")
@@ -237,7 +278,11 @@ export class ProductosController extends Controller {
     }
   }
 
-
+  /**
+   * Actualiza un producto existente.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   @Put("/{id}")
   @Security("jwt")
   @Middlewares([autenticarToken])
@@ -328,6 +373,11 @@ export class ProductosController extends Controller {
     }
   }
 
+  /**
+   * Elimina un producto de la base de datos.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   */
   // Eliminar producto
   @Delete("/{id}")
   @Security("jwt")

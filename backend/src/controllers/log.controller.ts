@@ -6,7 +6,17 @@ import { SolicitudResetDTO, ConfirmacionResetDTO } from "../models/PasswordReset
 
 @Route("auth")
 @Tags("Autenticación")
-export class AuthController extends Controller {
+export class LogController extends Controller {
+
+  /**
+   * Inicia sesión en el sistema con correo y contraseña.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
+   * 
+   * @param body Datos de inicio de sesión.
+   * @returns Token de autenticación y datos del usuario.
+   *
+   */
   @Post("login")
   public async login(@Body() body: LoginRequest): Promise<LoginResponse> {
     const { user, token, requiereCompletarPerfil } = await validarCredenciales(
@@ -30,6 +40,11 @@ export class AuthController extends Controller {
     };
   }
 
+  /**
+   * Solicita el restablecimiento de contraseña.
+   *
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
+   */
   @Post("solicitar-reset")
   public async solicitarReset(
     @Body() body: SolicitudResetDTO
@@ -38,6 +53,11 @@ export class AuthController extends Controller {
     return await service.solicitarReset(body.correo);
   }
 
+  /**
+   * Confirma el restablecimiento de contraseña con el token recibido.
+   *
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
+   */
   @Post("confirmar-reset")
   public async confirmarReset(
     @Body() body: ConfirmacionResetDTO

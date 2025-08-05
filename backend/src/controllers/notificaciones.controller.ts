@@ -10,6 +10,12 @@ import { TipoNotificacion } from '@prisma/client';
 @Route('notificaciones')
 @Tags('Notificaciones')
 export class NotificacionesController extends Controller {
+  /**
+   * Envia notificaciones de productos con stock bajo.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller
+   * )
+   */
   @Post('/stock-bajo')
   public async enviarNotificacionStockBajo(
     @Body() body?: { productos?: { id: number }[] }
@@ -19,6 +25,11 @@ export class NotificacionesController extends Controller {
     return { mensaje: 'Notificaciones de stock bajo enviadas correctamente' };
   }
 
+  /**
+   * Envia notificaciones de productos vencidos.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   */
   @Post('/producto-vencido')
   public async enviarNotificacionProductoVencido(
     @Body() body?: { productos?: { id: number }[] }
@@ -34,7 +45,11 @@ export class NotificacionesController extends Controller {
     return { mensaje: 'Notificaciones de producto vencido enviadas correctamente' };
   }
 
-
+  /**
+   * Envia notificación de nuevo comentario en producto.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   */
   @Post('/comentario-producto')
   public async enviarNotificacionComentarioProducto(
     @Body() body: { idComentario: number }
@@ -43,6 +58,9 @@ export class NotificacionesController extends Controller {
     return { mensaje: 'Notificaciones de comentario enviadas correctamente' };
   }
 
+  /**
+   * Envia notificaciones de productos con recomendación de reposición.
+   */
   @Post('/reposicion-recomendada')
   public async enviarNotificacionReposicionRecomendada(
     @Body() body?: { productos?: { id: number }[] }
@@ -52,6 +70,11 @@ export class NotificacionesController extends Controller {
     return { mensaje: 'Notificaciones de reposición recomendada enviadas correctamente' };
   }
 
+  /**
+   * Envia notificaciones de actualizaciones de la aplicación.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   */
   @Post('/actualizacion-app')
   public async enviarNotificacionActualizacionApp(
     @Body() body: { titulo: string; mensaje: string }
@@ -61,6 +84,13 @@ export class NotificacionesController extends Controller {
     return { mensaje: 'Notificaciones de actualización de la app enviadas correctamente' };
   }
 
+  /**
+   * Obtiene las notificaciones asociadas a un usuario.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * @param idUsuario ID del usuario.
+   * @returns Lista de notificaciones recibidas.
+   */
   @Get('/usuario/{idUsuario}')
   public async obtenerNotificacionesPorUsuario(
     @Path() idUsuario: number
@@ -118,6 +148,12 @@ export class NotificacionesController extends Controller {
     }));
   }
 
+  /**
+   * Marca una notificación como leída.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * @param idNotificacion ID de la notificación.
+   */
   @Patch('/{idNotificacion}')
   public async marcarComoLeida(
     @Path() idNotificacion: number
@@ -134,6 +170,12 @@ export class NotificacionesController extends Controller {
     return { mensaje: 'Notificación marcada como leída' };
   }
 
+  /**
+   * Actualiza las preferencias de notificación de un usuario.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * @param idUsuario ID del usuario.
+   */
   @Patch('/preferencias/{idUsuario}')
   public async actualizarPreferencias(
     @Path() idUsuario: number,

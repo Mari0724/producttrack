@@ -9,6 +9,13 @@ import { NutriScanSchemaWithoutUserId, NutriScanUpdateSchema, } from "../models/
 export class NutriScanController extends Controller {
   private service = new NutriScanService();
 
+  /**
+   * Crea un nuevo análisis de producto usando NutriScan.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * @param body Datos del análisis (sin idUsuario).
+   * @returns El análisis creado.
+   */
   // Crear análisis
   @SuccessResponse("201", "Registro creado")
   @Response("400", "Datos inválidos")
@@ -46,6 +53,11 @@ export class NutriScanController extends Controller {
     }
   }
 
+  /**
+   * Obtiene todos los análisis (admin o desarrollador).
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   */
   @Security("jwt")
   @Get()
   async findAll(@Request() req: unknown) {
@@ -65,6 +77,12 @@ export class NutriScanController extends Controller {
     };
   }
 
+  /**
+   * Obtiene todos los análisis de un usuario (solo ADMIN).
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * @param usuarioId ID del usuario.
+   */
   @Security("jwt")
   @Get("usuario/{usuarioId}")
   async findByUserId(@Path() usuarioId: number, @Request() req: unknown) {
@@ -78,7 +96,12 @@ export class NutriScanController extends Controller {
     return this.service.findByUserId(usuarioId);
   }
 
-  // Actualizar un análisis
+  /**
+   * Obtiene todos los análisis de un usuario (solo ADMIN).
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * @param usuarioId ID del usuario.
+   */
   @Security("jwt")
   @Put("{id}")
   @Response("400", "Datos inválidos")
@@ -104,6 +127,12 @@ export class NutriScanController extends Controller {
     }
   }
 
+  /**
+   * Elimina un análisis de NutriScan.
+   * 
+   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * @param id ID del análisis.
+   */
   @Security("jwt")
   @Delete("{id}")
   async delete(@Path() id: number, @Request() req: unknown) {

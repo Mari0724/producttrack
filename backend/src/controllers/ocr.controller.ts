@@ -7,6 +7,14 @@ import { gptService } from '../services/gpt.service';
 import prisma from '../utils/prismaClient';
 import { preprocesarImagen } from '../utils/preprocesarImagen';
 
+/**
+ * Extrae texto de una imagen y lo analiza con OCR y GPT.
+ * 
+ * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/ocr.controller)
+ * 
+ * @param req Request de Express con imagen (file) y usuarioId en body.
+ * @param res Response de Express con resultado del análisis.
+ */
 // Endpoint principal OCR con extracción y análisis
 export const extraerTextoDesdeImagen = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -97,6 +105,14 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
   }
 };
 
+/**
+ * Confirma manualmente un nombre de producto y actualiza el análisis.
+ *
+ * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/ocr.controller)
+ * 
+ * @param req Request de Express con registroId y nombreProducto.
+ * @param res Response de Express con actualización del análisis.
+ */
 // Nuevo endpoint: confirmar nombre manual y actualizar registro existente
 export const confirmarNombreManual = async (req: Request, res: Response): Promise<void> => {
   try {

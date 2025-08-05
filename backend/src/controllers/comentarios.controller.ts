@@ -20,6 +20,16 @@ interface ActualizarComentarioBody {
 @Route('comentarios')
 @Tags('Comentarios')
 export class ComentariosController extends Controller {
+
+  /**
+   * Obtiene los comentarios asociados a un producto.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
+   * 
+   * @param productoId ID del producto.
+   * @returns Lista de comentarios.
+   * 
+   */
   @Get('{productoId}')
   public async getComentariosPorProducto(
     @Path() productoId: number
@@ -27,6 +37,15 @@ export class ComentariosController extends Controller {
     return await obtenerComentariosPorProducto(productoId);
   }
 
+  /**
+   * Crea un nuevo comentario para un producto.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
+   * 
+   * @param body Datos del comentario.
+   * @returns Comentario creado.
+   * 
+   */
   @Post('/')
   public async crearComentario(
     @Body() body: CrearComentarioBody
@@ -34,6 +53,15 @@ export class ComentariosController extends Controller {
     return await crearComentario(body.idUsuario, body.idProducto, body.comentario);
   }
 
+  /**
+   * Actualiza un comentario existente.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
+   * 
+   * @param idComentario ID del comentario.
+   * @param body Nuevo contenido del comentario.
+   * @returns Comentario actualizado.
+   */
   @Put('{idComentario}')
   public async actualizarComentario(
     @Path() idComentario: number,
@@ -42,6 +70,14 @@ export class ComentariosController extends Controller {
     return await actualizarComentario(idComentario, body.comentario);
   }
 
+  /**
+   * Elimina un comentario existente.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
+   * 
+   * @param idComentario ID del comentario.
+   * @returns Mensaje de confirmación.
+   */
   @Delete('{idComentario}')
   public async eliminarComentario(
     @Path() idComentario: number

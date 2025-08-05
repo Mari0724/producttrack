@@ -11,6 +11,11 @@ const equipoService = new EquipoService();
 @Tags("Equipo")
 export class EquipoController extends Controller {
 
+  /**
+   * Crea un nuevo miembro del equipo.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   */
   @Security("jwt")
   @Post()
   async crearEquipo(@Body() data: EquipoDTO, @Request() req: any) {
@@ -36,6 +41,11 @@ export class EquipoController extends Controller {
     return creado;
   }
 
+  /**
+   * Obtiene todos los miembros del equipo de una empresa.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   */
   @Security("jwt")
   @Get()
   async obtenerTodosLosEquipos(@Request() req: any) {
@@ -47,6 +57,11 @@ export class EquipoController extends Controller {
     return await equipoService.obtenerTodosLosEquipos(empresaId);
   }
 
+  /**
+   * Filtra los miembros del equipo según parámetros.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   */
   @Security("jwt")
   @Get("filtrar")
   async filtrarEquipos(
@@ -74,6 +89,11 @@ export class EquipoController extends Controller {
     });
   }
 
+  /**
+   * Obtiene un miembro del equipo por su ID.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   */
   @Security("jwt")
   @Get("{id}")
   async obtenerEquipoPorId(@Path() id: number, @Request() req: any) {
@@ -92,6 +112,11 @@ export class EquipoController extends Controller {
     return equipo;
   }
 
+  /**
+   * Actualiza un miembro del equipo.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   */
   @Security("jwt")
   @Put("{id}")
   async actualizarEquipo(@Path() id: number, @Body() data: Partial<EquipoDTO>, @Request() req: any) {
@@ -105,6 +130,11 @@ export class EquipoController extends Controller {
     return await equipoService.actualizarEquipo(id, data, empresaId);
   }
 
+  /**
+   * Realiza eliminación lógica de un miembro del equipo.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   */
   @Security("jwt")
   @Delete("eliminar-logico/{id}")
   async eliminarLogico(@Path() id: number, @Request() req: any) {
@@ -127,6 +157,11 @@ export class EquipoController extends Controller {
     return await equipoService.eliminarLogico(id, req.user.rol === "ADMIN" ? undefined : req.user.id);
   }
 
+  /**
+   * Elimina todos los miembros del equipo de una empresa.
+   * 
+   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   */
   @Security("jwt")
   @Delete("todos/{empresaId}")
   async eliminarTodoElEquipo(@Path() empresaId: number, @Request() req: any) {
