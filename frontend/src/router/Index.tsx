@@ -3,7 +3,6 @@ import { ArrowRight, Users, User, Building2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 import axiosInstance from '../utils/axiosInstance';
-import type { Product } from '../types/Product';
 import type { TeamMember } from '../types/team';
 
 interface EmpresaInfo {
@@ -78,7 +77,7 @@ const Index = () => {
                 setTotalEditores((editores.data as TeamMember[]).filter((u) => u.estado === "activo").length);
                 setTotalComentaristas((comentaristas.data as TeamMember[]).filter((u) => u.estado === "activo").length);
                 setTotalLectores((lectores.data as TeamMember[]).filter((u) => u.estado === "activo").length);
-                
+
             } catch (error) {
                 console.error("❌ Error al cargar resumen del equipo:", error);
             }
@@ -93,7 +92,12 @@ const Index = () => {
 
             try {
                 const res = await axiosInstance.get("/productos");
-                const productos = res.data as Product[];
+                const productos = Array.isArray(res.data) ? res.data : res.data?.data ?? [];
+
+                if (!Array.isArray(productos)) {
+                    console.error("❌ El backend no devolvió un array:", res.data);
+                    return;
+                }
 
                 const filtrados = productos.filter((p) => {
                     if (usuario.tipoUsuario === "INDIVIDUAL") {

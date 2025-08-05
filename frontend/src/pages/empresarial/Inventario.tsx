@@ -37,13 +37,19 @@ const InventarioEmpresarial: React.FC = () => {
       const res = await getProductos();
       const tipoUsuarioActual = localStorage.getItem("tipoUsuario")?.toUpperCase();
 
-      const productosFiltrados = res.data.filter(
-        (p: Product) => p.usuario?.tipoUsuario?.toUpperCase() === tipoUsuarioActual
-      );
+      if (Array.isArray(res.data)) {
+        const productosFiltrados = res.data.filter(
+          (p: Product) => p.usuario?.tipoUsuario?.toUpperCase() === tipoUsuarioActual
+        );
+        setProducts(productosFiltrados);
+      } else {
+        console.warn("⚠️ getProductos() no retornó un array:", res.data);
+        setProducts([]); // Vacío para evitar errores posteriores
+      }
 
-      setProducts(productosFiltrados);
     } catch (error) {
       console.error("Error al cargar productos:", error);
+      setProducts([]); // También previene errores si la API falla
     }
   };
 
@@ -56,9 +62,16 @@ const InventarioEmpresarial: React.FC = () => {
     try {
       const tipoUsuario = localStorage.getItem("tipoUsuario")?.toUpperCase() || "";
       const res = await getCategorias(tipoUsuario);
-      setCategorias(res.data);
+
+      if (Array.isArray(res.data)) {
+        setCategorias(res.data);
+      } else {
+        console.warn("⚠️ Las categorías no son un array:", res.data);
+        setCategorias([]); // prevenir errores de .map
+      }
     } catch (error) {
       console.error("Error al cargar categorías:", error);
+      setCategorias([]); // prevenir errores de .map
     }
   };
 

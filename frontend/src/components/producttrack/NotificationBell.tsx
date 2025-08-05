@@ -64,7 +64,8 @@ const NotificationBell = () => {
             try {
                 const idUsuario = Number(localStorage.getItem("idUsuario"));
                 const data = await getNotificacionesUsuario(idUsuario);
-                setNotifications(data);
+                const notificaciones = Array.isArray(data) ? data : data.notificaciones || [];
+                setNotifications(notificaciones);
 
                 // Traer las preferencias del usuario
                 const prefs = await getPreferenciasUsuario(idUsuario);

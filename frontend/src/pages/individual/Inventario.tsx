@@ -33,7 +33,10 @@ const Inventario: React.FC = () => {
     try {
       const res = await getProductos();
       const tipoUsuarioStorage = localStorage.getItem("tipoUsuario")?.toUpperCase();
-      const soloDelUsuario = res.data.filter(
+
+      const productos = Array.isArray(res.data) ? res.data : [];
+
+      const soloDelUsuario = productos.filter(
         (p) => p.usuario?.tipoUsuario === tipoUsuarioStorage
       );
       setProducts(soloDelUsuario);
@@ -56,7 +59,12 @@ const Inventario: React.FC = () => {
       try {
         const tipoUsuarioStorage = localStorage.getItem("tipoUsuario") || "";
         const res = await getCategorias(tipoUsuarioStorage.toUpperCase());
-        setCategorias(res.data);
+
+        const categoriasObtenidas = Array.isArray(res.data)
+          ? res.data
+          : [];
+
+        setCategorias(categoriasObtenidas);
       } catch (error) {
         console.error(error);
         toast.error('Error al cargar categorías');

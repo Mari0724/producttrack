@@ -1,9 +1,10 @@
 import axios from 'axios';
+import { url } from '../constants';
 
 export const getComentariosPorProducto = (productoId: number) => {
-  return axios.get(`http://localhost:3000/comentarios/${productoId}`);
+  return axios.get(`${url}/comentarios/${productoId}`);
 };
 
 export const crearComentario = (comentario: { idUsuario: number, idProducto: number, comentario: string }) => {
-  return axios.post(`http://localhost:3000/comentarios`, comentario);
+  return axios.post(`${url}/comentarios`, comentario);
 };
