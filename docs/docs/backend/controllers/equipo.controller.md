@@ -4,7 +4,7 @@ title: EquipoController
 sidebar_label: Equipo
 ---
 
-# Controlador de Equipo
+# EquipoController
 
 Este controlador maneja las operaciones relacionadas con la gestión de usuarios tipo "equipo" en el sistema. Permite crear, actualizar, filtrar, eliminar (lógicamente) y listar miembros del equipo, con base en el rol y tipo de usuario autenticado.
 

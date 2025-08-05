@@ -4,7 +4,7 @@ title: Controlador de Autenticación
 sidebar_label: Login
 ---
 
-# Controlador de Autenticación
+# LogController
 
 Este controlador gestiona el proceso de **inicio de sesión** y **restablecimiento de contraseña** para los usuarios registrados. Forma parte del módulo de autenticación de la aplicación y expone tres endpoints principales:
 
