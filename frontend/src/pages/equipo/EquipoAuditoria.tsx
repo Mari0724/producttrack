@@ -3,6 +3,7 @@ import axios from "axios";
 import { useUser } from "../../context/UserContext";
 import { Pencil, Trash } from "lucide-react";
 import { useToast } from "../../hooks/useToast";
+import { url } from '../../constants';
 
 interface MiembroEquipo {
     idUsuario: number;
@@ -37,7 +38,7 @@ const EquipoAuditoria = () => {
     const cargarMiembros = async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("http://localhost:3000/equipo", {
+        const res = await axios.get(`${url}/equipo`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         setMiembros(res.data);
@@ -46,7 +47,7 @@ const EquipoAuditoria = () => {
     const filtrar = async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("http://localhost:3000/equipo/filtrar", {
+        const res = await axios.get(`${url}/equipo/filtrar`, {
             params: {
                 nombreCompleto: filtroNombre,
                 correo: filtroCorreo,
@@ -68,14 +69,14 @@ const EquipoAuditoria = () => {
             // Solo activa si tú lo decides
             if (editar.estado === "inactivo" && activarUsuario) {
                 await axios.put(
-                    `http://localhost:3000/usuarios/${editar.idUsuario}/reactivar`,
+                    `${url}/usuarios/${editar.idUsuario}/reactivar`,
                     {},
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
             }
 
             await axios.put(
-                `http://localhost:3000/equipo/${editar.idUsuario}`,
+                `${url}/equipo/${editar.idUsuario}`,
                 {
                     rolEquipo: nuevoRol,
                     perfilCompleto: nuevoPerfilCompleto,
@@ -100,7 +101,7 @@ const EquipoAuditoria = () => {
 
         try {
             await axios.delete(
-                `http://localhost:3000/equipo/eliminar-logico/${confirmEliminarId}`,
+                `${url}/equipo/eliminar-logico/${confirmEliminarId}`,
                 {
                     headers: { Authorization: `Bearer ${token}` },
                 }

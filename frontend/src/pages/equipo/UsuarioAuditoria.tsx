@@ -3,6 +3,7 @@ import axios from "axios";
 import { useUser } from "../../context/UserContext";
 import { Trash, Pencil } from "lucide-react";
 import { useToast } from "../../hooks/useToast";
+import { url } from '../../constants';
 
 interface Usuario {
     idUsuario: number;
@@ -35,7 +36,7 @@ const UsuarioAuditoria = () => {
         if (!token) return;
 
         try {
-            const res = await axios.get("http://localhost:3000/usuarios", {
+            const res = await axios.get(`${url}/usuarios`, {
                 params: {
                     nombreCompleto: filtroNombre || undefined,
                     correo: filtroCorreo || undefined,
@@ -57,7 +58,7 @@ const UsuarioAuditoria = () => {
     const cargarUsuarios = async () => {
         const token = localStorage.getItem("token");
         if (!token) return;
-        const res = await axios.get("http://localhost:3000/usuarios", {
+        const res = await axios.get(`${url}/usuarios`, {
             headers: { Authorization: `Bearer ${token}` },
         });
         setUsuarios(res.data as Usuario[]);
@@ -72,7 +73,7 @@ const UsuarioAuditoria = () => {
         }
         const token = localStorage.getItem("token");
         try {
-            await axios.delete(`http://localhost:3000/usuarios/${confirmEliminarId}`, {
+            await axios.delete(`${url}/usuarios/${confirmEliminarId}`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
             toast("✅ Usuario marcado como inactivo.");
@@ -88,7 +89,7 @@ const UsuarioAuditoria = () => {
         if (!token) return;
         try {
             await axios.put(
-                `http://localhost:3000/usuarios/${id}/reactivar`,
+                `${url}/usuarios/${id}/reactivar`,
                 {},
                 { headers: { Authorization: `Bearer ${token}` } }
             );

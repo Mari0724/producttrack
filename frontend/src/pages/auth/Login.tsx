@@ -6,6 +6,7 @@ import LandingInfo from "../../components/team/LandingInfo";
 import Footer from "../../components/team/Footer";
 import { useUser } from "../../context/UserContext";
 import { useToast } from '../../hooks/useToast';
+import { url } from '../../constants';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState("");
@@ -22,7 +23,7 @@ const Login: React.FC = () => {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:3000/auth/login", {
+      const response = await fetch(`${url}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ correo: email, password }),

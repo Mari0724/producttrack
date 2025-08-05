@@ -1,6 +1,7 @@
 import type { RespuestaNutriScan } from "../../components/nutriscan/FoodAnalyzer";
 import FoodAnalyzer from "../../components/nutriscan/FoodAnalyzer";
 import axios from "axios";
+import { url } from '../../constants';
 
 const NutriScan = () => {
   const analizarImagen = async (
@@ -24,7 +25,7 @@ const NutriScan = () => {
       }
 
       const response = await axios.post(
-        "http://localhost:3000/api/ocr/nutriscan-ocr",
+        `${url}/api/ocr/nutriscan-ocr`,
         formData,
         {
           headers: {
@@ -52,7 +53,7 @@ const NutriScan = () => {
   ): Promise<RespuestaNutriScan> => {
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/ocr/confirmar-nombre",
+        `${url}/api/ocr/confirmar-nombre`,
         {
           registroId,
           nombreProducto,

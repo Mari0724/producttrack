@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useUser } from "../../context/UserContext";
+import { url } from '../../constants';
 
 interface Respuesta {
   mensaje: string;
@@ -35,7 +36,7 @@ const NutriScanAuditoria = () => {
   const cargarTodos = async () => {
     const token = localStorage.getItem("token");
     if (!token) return;
-    const res = await axios.get<Registro[]>("http://localhost:3000/nutriscan", {
+    const res = await axios.get<Registro[]>(`${url}/nutriscan`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setRegistros(res.data);
@@ -45,7 +46,7 @@ const NutriScanAuditoria = () => {
     if (!usuarioId.trim()) return;
     const token = localStorage.getItem("token");
     if (!token) return;
-    const res = await axios.get<Registro[]>(`http://localhost:3000/nutriscan/usuario/${usuarioId}`, {
+    const res = await axios.get<Registro[]>(`${url}/nutriscan/usuario/${usuarioId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
@@ -92,7 +93,7 @@ const NutriScanAuditoria = () => {
     };
 
     await axios.put(
-      `http://localhost:3000/nutriscan/${registroEditando.id}`,
+      `${url}/nutriscan/${registroEditando.id}`,
       datosActualizados,
       { headers: { Authorization: `Bearer ${token}` } }
     );
@@ -107,7 +108,7 @@ const NutriScanAuditoria = () => {
     if (confirmEliminarId == null) return;
     const token = localStorage.getItem("token");
     if (!token) return;
-    await axios.delete(`http://localhost:3000/nutriscan/${confirmEliminarId}`, {
+    await axios.delete(`${url}/nutriscan/${confirmEliminarId}`, {
       headers: { Authorization: `Bearer ${token}` },
     });
     setConfirmEliminarId(null);

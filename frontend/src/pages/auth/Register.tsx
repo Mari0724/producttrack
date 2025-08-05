@@ -6,6 +6,7 @@ import RegisterForm from "../../components/team/RegisterForm";
 import LandingInfo from "../../components/team/LandingInfo";
 import Footer from "../../components/team/Footer";
 import { useToast } from "../../hooks/useToast";
+import { url } from '../../constants';
 
 interface RegistroUsuario {
   username: string;
@@ -84,7 +85,7 @@ const Register: React.FC = () => {
 
     try {
       setLoading(true);
-      await axios.post("http://localhost:3000/usuarios", datos);
+      await axios.post(`${url}/usuarios`, datos);
       toast.success("Usuario registrado correctamente 🎉");
       navigate("/login");
     } catch (error: unknown) {
