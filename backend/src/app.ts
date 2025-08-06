@@ -1,4 +1,3 @@
-
 import fs from "fs";
 import path from "path";
 import express, { Request, Response } from 'express';
@@ -26,6 +25,8 @@ app.use(cors({
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
+
+app.options('*', cors());
 
 // Middleware Body Parser
 app.use(bodyParser.json({ limit: "3mb" }));
