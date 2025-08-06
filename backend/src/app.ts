@@ -23,7 +23,7 @@ interface MulterRequest extends Request {
 // CORS config
 app.use(cors({
   origin: ['http://localhost:5173', 'http://localhost:5174', 'https://outstanding-strength-production.up.railway.app'],
-  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   credentials: true
 }));
 
