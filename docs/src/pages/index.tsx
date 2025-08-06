@@ -47,9 +47,9 @@ const secciones: Seccion[] = [
         link: "https://docs.google.com/spreadsheets/d/1QM0alTYjRtwsQlgaMctDk3PrSfbfVafa/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       },
       {
-        nombre: "Especificación de Requerimientos (229 páginas)",
-        descripcion: "Contiene historias de usuario, encuestas, cuadros, casos de uso y más.",
-        link: "#"
+        nombre: "Especificación de Requerimientos",
+        descripcion: "Contiene historias de usuario, encuestas, cuadros extendidos de caso de uso, casos de uso y más.",
+        link: "https://docs.google.com/document/d/18bpbQZ78EhaB1OcqpM-FgBub_PNVa3G1/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       }
     ]
   },
@@ -69,12 +69,7 @@ const secciones: Seccion[] = [
         link: "#"
       },
       {
-        nombre: "Proyecto - Requisitos del Sistema",
-        descripcion: "Plantilla enfocada en definir el producto a desarrollar.",
-        link: "#"
-      },
-      {
-        nombre: "Especificación de Requisitos del Sistema (link externo)",
+        nombre: "Especificación de Requisitos del Sistema",
         descripcion: "Documento formal de requisitos usado como base de desarrollo.",
         link: "https://docs.google.com/document/d/1zYcclS05ISGS_wHof4GGGy8nXrH7ooVJ/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       }
@@ -91,14 +86,9 @@ const secciones: Seccion[] = [
       },
       {
         nombre: "Diagramas UML y Técnicos",
-        descripcion: "Casos de uso, clases, paquetes, actividades, ER, arquitectura, priorización, Moscow, secuencias.",
-        link: "#"
+        descripcion: "Casos de uso, clases, paquetes, actividades, arquitectura, priorización, Moscow, secuencias.",
+        link: "https://drive.google.com/drive/folders/17KSSOrEv7QAShLaxOEP-GMBmfEINh4mx?usp=drive_link"
       },
-      {
-        nombre: "Otros Diagramas Utiles",
-        descripcion: "Casos de uso, clases, paquetes, actividades, ER, arquitectura, priorización, Moscow, secuencias.",
-        link: "#"
-      }
     ]
   },
   {
@@ -133,7 +123,7 @@ const secciones: Seccion[] = [
     titulo: "Documentación Técnica",
     items: [
       {
-        nombre: "INFORME FINAL DE ESPECIFICACIONES Y DISEÑO DEL SISTEMA",
+        nombre: "Informe Final de Especificaciones y Diseño del Sistema",
         descripcion: "Informe final con las especificaciones completas del sistema.",
         link: "https://docs.google.com/document/d/1L73wJfaZiF4e91UCTt3Z7WqbbhMicO7s/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       },

@@ -47,7 +47,8 @@ export const NutriScanSchema = z.object({
 | `esAlimento`   | `boolean` | Si el análisis se refiere a un alimento.                             |
 | `consulta`     | `string`  | Texto OCR o nombre proporcionado del producto. No puede estar vacío. |
 | `respuesta`    | `object`  | Objeto con el mensaje generado y quién lo generó (GPT o simulado).   |
-| `tipoAnalisis` | `enum`    | Tipo de flujo usado: `"ocr-gpt-only"` o `"ocr-openfoodfacts-gpt"`.   |
+| `tipoAnalisis` | `enum`    | Tipo de flujo usado: `"ocr-gpt-only"` o `"ocr-openfoodfacts-gpt"`.   | 
+| `isTest`       | `boolean`  | Indica si el análisis fue generado en modo prueba o por un desarrollador. |
 
 ---
 
@@ -129,4 +130,3 @@ try {
 | `NutriScanDTO`                 | Tipo completo del backend.                          |
 | `NutriScanDTOInput`            | Tipo enviado desde el frontend.                     |
 | `NutriScanDTOUpdate`           | Tipo usado al actualizar registros existentes.      |
-

@@ -1,7 +1,7 @@
 ---
 id: nutriscan.service
 title: Servicio NutriScan
-sidebar_label: NutriScanService
+sidebar_label: NutriScan
 ---
 
 # NutriScan

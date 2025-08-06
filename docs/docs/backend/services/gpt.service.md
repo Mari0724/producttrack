@@ -1,7 +1,7 @@
 ---
 id: gpt.service
 title: Servicio GPT
-sidebar_label: GPTService
+sidebar_label: GPT
 ---
 
 Este servicio maneja la interacción con **OpenAI GPT** para generar mensajes nutricionales personalizados a partir de la información obtenida de productos analizados con NutriScan. Funciona como un asistente nutricional digital que transforma datos numéricos en recomendaciones o resúmenes comprensibles.
@@ -36,7 +36,12 @@ import OpenAI from "openai";
 const apiKey = process.env.OPENAI_API_KEY;
 ```
 
-Se obtiene la clave desde el archivo `.env`. Si no se encuentra, el sistema **emitirá una advertencia** y funcionará con respuestas simuladas.
+Se obtiene la clave desde el archivo `.env`. Si no se encuentra, el sistema **emitirá una advertencia** y funcionará con respuestas simuladas. En ese caso:
+
+- No lanza un error ni interrumpe la ejecución.
+- Retorna un mensaje simple basado en los datos locales disponibles del producto (como calorías y azúcares).
+
+Esto permite que el sistema continúe funcionando aunque la clave de OpenAI no esté configurada..
 
 ---
 
@@ -70,6 +75,8 @@ Generar un resumen nutricional del producto utilizando GPT, con base en los valo
 #### 📤 Retorna
 
 Una `Promise<string>` que contiene el **mensaje generado** o un texto alternativo si no hay conexión con GPT.
+El mensaje es generado desde completion.choices[0].message?.content. Si por algún motivo GPT no devuelve contenido válido, se retorna el texto:
+"No se pudo generar el mensaje.
 
 ---
 

@@ -57,7 +57,7 @@ router.post('/nutriscan-ocr', uploadMemory.single('imagen'), extraerTextoDesdeIm
 | Controlador asociado | `extraerTextoDesdeImagen`                                              |
 | Propósito            | Recibe una imagen, la procesa con OCR y devuelve el texto detectado.   |
 
-> 🧠 Ideal para escanear etiquetas de productos alimenticios en tiempo real.
+> 🧠 Ideal para escanear productos alimenticios en tiempo real.
 
 ---
 

@@ -51,12 +51,6 @@ Corrige errores comunes causados por el OCR.
 
 ---
 
-### 🔹 `palabraMasLarga(texto: string): string`
-
-Retorna la palabra más larga del texto. Función útil como **plan B** si no se identifican candidatos válidos de alimentos.
-
----
-
 ### 🔹 `obtenerCandidatosProductos(texto: string): string[]`
 
 Busca coincidencias con una lista de alimentos comunes en español.

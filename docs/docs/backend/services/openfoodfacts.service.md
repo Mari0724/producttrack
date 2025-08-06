@@ -1,7 +1,7 @@
 ---
 id: openfoodfacts.service
 title: Servicio OpenFoodFacts
-sidebar_label: OpenFoodFactsService
+sidebar_label: OpenFoodFacts
 ---
 
 Este servicio proporciona una interfaz para realizar búsquedas de alimentos usando la API pública de **OpenFoodFacts**, con el fin de obtener información nutricional que será utilizada posteriormente por otros módulos como `NutriScanService`.
@@ -66,6 +66,8 @@ Un arreglo con hasta 3 objetos que contienen:
 | `nova_group` | Grado de procesamiento (1-4).        |
 | `imagen`     | URL de la imagen del producto.       |
 | `link`       | Enlace al producto en OpenFoodFacts. |
+
+>Nota: Todos los valores nutricionales son estimados por cada 100g del producto, según lo reportado por OpenFoodFacts.
 
 Ejemplo de un resultado filtrado:
 

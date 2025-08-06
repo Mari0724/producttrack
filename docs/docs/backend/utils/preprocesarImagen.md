@@ -1,7 +1,7 @@
 ---
 id: preprocesarImagen
 title: Preprocesamiento de Imagen
-sidebar_label: preprocesarImagen
+sidebar_label: PreprocesarImagen
 ---
 
 # Pre Procesar Imagen

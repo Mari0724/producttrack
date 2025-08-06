@@ -1,10 +1,8 @@
 ---
 id: utils-ocr
 title: Cliente OCR con Tesseract.js
-sidebar_label: ocr
+sidebar_label: OCR
 ---
-
-# Ocr
 
 Este archivo implementa una función para procesar imágenes y extraer texto utilizando la librería `tesseract.js`. Se utiliza en el backend del sistema NutriScan para realizar reconocimiento óptico de caracteres (OCR) a imágenes cargadas por el usuario.
 
@@ -48,7 +46,7 @@ Una `Promise<string>` que contiene el texto extraído de la imagen.
 ## ⚙️ Flujo Interno
 
 1. **Crear un worker OCR** usando `createWorker()`.
-2. **Cargar los datos del worker** y reinicializarlo con soporte para inglés y español (`eng+spa`).
+2. **Cargar los recursos del worker** con load() y reinicializarlo para usar los idiomas inglés y español (eng+spa)..
 3. **Configurar el modo de segmentación** como `SPARSE_TEXT`, ideal para textos cortos o dispersos.
 4. **Reconocer el texto** de la imagen con `worker.recognize(imagePath)`.
 5. **Devolver** `data.text`, el texto reconocido.
