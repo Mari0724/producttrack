@@ -1,1 +1,1 @@
-export const url = "producttrackbik-production.up.railway.app"
+export const url = import.meta.env.VITE_API_URL;
