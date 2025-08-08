@@ -17,9 +17,9 @@ El componente `HistorialIndividual` muestra el **historial de cambios de inventa
 ## 📦 Dependencias
 
 * **React Hooks:** `useState`, `useEffect`
-* **Componente Interno:** [`InventoryHistory`](../../components/producttrack/InventoryHistory)
-* **API Personalizada:** [`getHistorialInventario`](../../api/historial)
-* **Tipo de Datos:** [`InventoryChange`](../../types/Inventory)
+* **Componente Interno:** [`InventoryHistory`](../../components/producttrack/InventoryHistory.md)
+* **API Personalizada:** [`getHistorialInventario`](../../api/historial.md)
+* **Tipo de Datos:** [`InventoryChange`](../../types/Inventory.md)
 
 ---
 

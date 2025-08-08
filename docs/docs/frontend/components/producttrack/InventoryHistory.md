@@ -16,7 +16,7 @@ El componente `InventoryHistory` muestra un **registro visual de los cambios rea
 
 ## 📦 Dependencias
 
-* [`InventoryHistoryCard`](../components/InventoryHistoryCard.md): Componente para representar visualmente cada cambio individual.
+* [`InventoryHistoryCard`](../producttrack/InventoryHistoryCard.md): Componente para representar visualmente cada cambio individual.
 * `useState` de React para manejar el filtro activo.
 * `InventoryChange` del archivo:
 

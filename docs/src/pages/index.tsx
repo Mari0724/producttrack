@@ -66,7 +66,7 @@ const secciones: Seccion[] = [
       {
         nombre: "Manual Técnico",
         descripcion: "Documento con casos de uso extendidos y modelo entidad-relación inicial.",
-        link: "#"
+        link: "https://docs.google.com/document/d/1hsHTcEttoQsav8lXGdAjeiyIi6jptvc-/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       },
       {
         nombre: "Especificación de Requisitos del Sistema",
@@ -123,15 +123,20 @@ const secciones: Seccion[] = [
     titulo: "Documentación Técnica",
     items: [
       {
+        nombre: "Informe de Viabilidad del Proyecto",
+        descripcion: "Análisis de factibilidad técnica, económica y operativa para ProductTrack.",
+        link: "https://docs.google.com/document/d/1Wu_28kMRqilr2UuNSJmX3FdHy0Zhq9Xv/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
+      },
+        {
         nombre: "Informe Final de Especificaciones y Diseño del Sistema",
         descripcion: "Informe final con las especificaciones completas del sistema.",
         link: "https://docs.google.com/document/d/1L73wJfaZiF4e91UCTt3Z7WqbbhMicO7s/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
       },
-      {
-        nombre: "Informe de Viabilidad del Proyecto",
-        descripcion: "Análisis de factibilidad técnica, económica y operativa para ProductTrack.",
-        link: "https://docs.google.com/document/d/1Wu_28kMRqilr2UuNSJmX3FdHy0Zhq9Xv/edit?usp=sharing&ouid=115095659559693426715&rtpof=true&sd=true"
-      }
+        {
+        nombre: "Diagrama de Despliegue",
+        descripcion: "Representación gráfica de la infraestructura de ejecución del sistema ProductTrack, mostrando servidores, contenedores, bases de datos y conexiones entre componentes, tanto en ambiente de desarrollo como de producción.”",
+        link: "https://www.figma.com/board/UeD7mOAraDxoeYN3ja45AK/Untitled?node-id=0-1&t=YUhsHzG3Vdj0JMMM-1"
+      },
     ]
   },
   {
@@ -155,28 +160,18 @@ const secciones: Seccion[] = [
     titulo: "Calidad y Validación",
     items: [
       {
-        nombre: "Video 01 - Login funcional",
-        descripcion: "Se muestra el requerimiento del login y su funcionamiento completo incluyendo validaciones.",
+        nombre: "Revisión de artefactos",
+        descripcion: "Revisión completa de todos los diagramas y artefactos del proyecto, verificando que estén actualizados y correctos.",
         link: "#"
       },
       {
-        nombre: "Video 02 - Registro de productos",
-        descripcion: "Se explica el requerimiento y se presenta el proceso de agregar un producto con éxito.",
+        nombre: "Revisión de todo el Frontend",
+        descripcion: "Recorrido por cada vista del sistema, validando el funcionamiento y coherencia del frontend en su totalidad.",
         link: "#"
       },
       {
-        nombre: "Video 03 - Alerta de vencimiento",
-        descripcion: "Se valida el cumplimiento del requerimiento de alertas para productos próximos a vencer.",
-        link: "#"
-      },
-      {
-        nombre: "Video 04 - Visualización de inventario",
-        descripcion: "Demostración de cómo los usuarios consultan el inventario según el requerimiento.",
-        link: "#"
-      },
-      {
-        nombre: "Control de Calidad - Evidencia cruzada",
-        descripcion: "Archivo con evidencias cruzadas entre requerimientos y funcionalidades entregadas.",
+        nombre: "Revisión final del Backend",
+        descripcion: "Validación completa del backend desde Swagger, asegurando que toda la documentación y funcionalidades estén actualizadas.",
         link: "#"
       }
     ]
@@ -256,7 +251,7 @@ export default function Home() {
                     <strong>{doc.nombre}</strong>: {doc.descripcion}
                     <br />
                     <a href={doc.link} target="_blank" rel="noopener noreferrer">
-                      (Enlace pendiente)
+                      ProductTrack
                     </a>
                   </li>
                 ))}

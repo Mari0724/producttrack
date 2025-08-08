@@ -65,6 +65,6 @@ async function actualizarContrasena() {
 
 ## 🔗 Dependencias
 
-* [`axiosInstance`](../utils/axiosInstance) → Cliente Axios configurado para manejar peticiones HTTP en el sistema.
+* [`axiosInstance`](../utils/axiosInstance.md) → Cliente Axios configurado para manejar peticiones HTTP en el sistema.
 
 ---

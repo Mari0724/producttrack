@@ -16,9 +16,9 @@ Este servicio se encarga de **notificar a todos los miembros de una empresa** cu
 
 ## 📦 Dependencias utilizadas
 
-- [`prismaClient`](../../utils/prismaClient.ts) — Cliente de Prisma configurado para interactuar con la base de datos.
+- [`prismaClient`](../../utils/prismaClient.md) — Cliente de Prisma configurado para interactuar con la base de datos.
 - [`TipoNotificacion`](https://www.prisma.io/docs/) — Enumeración generada por Prisma para definir tipos de notificaciones.
-- [`puedeNotificar`](../../utils/notificaciones/preferenciasNotificaciones.ts) — Función que verifica si un usuario tiene habilitado recibir cierto tipo de notificación.
+- [`puedeNotificar`](../../utils/notificaciones/preferenciasNotificaciones.md) — Función que verifica si un usuario tiene habilitado recibir cierto tipo de notificación.
 
 ---
 

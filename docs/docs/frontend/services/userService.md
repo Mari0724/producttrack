@@ -98,7 +98,7 @@ if (file) {
 
 ## 🔗 Dependencias
 
-* [`axiosInstance`](../utils/axiosInstance) → Cliente Axios configurado para consumir la API.
+* [`axiosInstance`](../utils/axiosInstance.md) → Cliente Axios configurado para consumir la API.
 * [`UserDTO`](../types/UserDTO) → Definición de tipo para los datos de usuario.
 
 ---
