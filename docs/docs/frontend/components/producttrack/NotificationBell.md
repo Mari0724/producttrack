@@ -2,7 +2,7 @@
 
 id: notification-bell
 title: Campanita de Notificaciones
-sidebar_label: NotificationBell.tsx
+sidebar_label: NotificationBell
 
 ---
 

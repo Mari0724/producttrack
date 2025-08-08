@@ -1,7 +1,7 @@
 ---
 id: add-member-modal
 title: Modal para Agregar Miembro
-sidebar_label: AddMemberModal.tsx
+sidebar_label: AddMemberModal
 
 ---
 

@@ -1,7 +1,7 @@
 ---
 id: ad-modal
 title: Modal de Anuncio Temporizado
-sidebar_label: AdModal.tsx
+sidebar_label: AdModal
 
 ---
 

@@ -20,7 +20,7 @@ Este archivo define una función que interactúa con la API del backend para obt
 import axiosInstance from "../utils/axiosInstance";
 import type { HistorialDTO } from "../types/Historial";
 import type { InventoryChange } from "../types/Inventory";
-````
+```
 
 * **axiosInstance**: Instancia preconfigurada de Axios para realizar las solicitudes HTTP.
 * **HistorialDTO**: Tipo de dato recibido desde el backend con la estructura original del historial.
