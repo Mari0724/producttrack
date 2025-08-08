@@ -1,7 +1,7 @@
 ---
 id: use-toast
 title: Hook de Toast Personalizado
-sidebar_label: useToast.tsx
+sidebar_label: useToast
 
 ---
 

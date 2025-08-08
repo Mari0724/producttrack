@@ -1,7 +1,7 @@
 ---
 id: verificar-codigo
 title: Pantalla de Verificación de Código
-sidebar_label: VerificarCodigo.tsx
+sidebar_label: VerificarCodigo
 ---
 
 El componente `VerificarCodigo` permite a los usuarios **restablecer su contraseña** después de haber recibido un **código de verificación de 6 dígitos**. Incluye validación visual de contraseña, interacción con el backend, y retroalimentación clara para el usuario mediante `toast`.
