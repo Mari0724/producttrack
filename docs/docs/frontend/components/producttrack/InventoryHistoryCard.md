@@ -8,7 +8,7 @@ sidebar_label: InventoryHistoryCard
 
 El componente `InventoryHistoryCard` representa **visualmente un cambio específico en el inventario**, mostrando información relevante como el producto afectado, fecha del cambio, acción (agregado, modificado o eliminado), cantidades, precios anteriores y nuevos.
 
-Está diseñado para usarse dentro del componente padre [`InventoryHistory`](./InventoryHistory.tsx).
+Está diseñado para usarse dentro del componente padre [`InventoryHistory`](./InventoryHistory.md).
 
 ---
 

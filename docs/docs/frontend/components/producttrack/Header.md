@@ -18,7 +18,7 @@ El componente `Header` representa la **barra superior fija del panel de control*
 
 ## 📦 Dependencias
 
-* [`NotificationBell`](./NotificationBell.tsx): Componente de campana de notificaciones, importado y renderizado dentro del header.
+* [`NotificationBell`](./NotificationBell.md): Componente de campana de notificaciones, importado y renderizado dentro del header.
 
 ---
 
