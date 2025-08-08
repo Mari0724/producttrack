@@ -44,6 +44,7 @@ Debe cumplir con el esquema definido en `userSchema`.
   }
 }
 ```
+>⚠️ Nota: El campo fotoPerfil es opcional, el sistema lo maneja como una imagen no obligatoria.
 
 **Errores posibles:**
 

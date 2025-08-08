@@ -130,3 +130,5 @@ try {
 | `NutriScanDTO`                 | Tipo completo del backend.                          |
 | `NutriScanDTOInput`            | Tipo enviado desde el frontend.                     |
 | `NutriScanDTOUpdate`           | Tipo usado al actualizar registros existentes.      |
+
+---

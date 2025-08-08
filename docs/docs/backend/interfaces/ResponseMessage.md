@@ -48,12 +48,37 @@ Campos adicionales
 | Campo	| Tipo	| Descripción | 
 | token	| string	| Token JWT generado (usualmente tras login). | 
 
+
+## 📦 `ResponseMessageWithData<T>`
+
+```ts
+export interface ResponseMessageWithData<T> extends ResponseMessage {
+  data: T;
+}
+```
+
+Descripción
+Extiende ResponseMessage para incluir una propiedad data que contiene datos dinámicos o personalizados según el contexto de la respuesta.
+
+| Campo | Tipo | Descripción                                       |
+| ----- | ---- | ------------------------------------------------- |
+| data  | T    | Cualquier tipo de dato devuelto desde el backend. |
+
+Esta interfaz es útil cuando necesitas devolver datos estructurados además de un mensaje, por ejemplo, al listar elementos, retornar detalles o enviar resultados de operaciones.
+
+---
+
 ## 📝 Uso común
-Estas interfaces son útiles para mantener consistencia en las respuestas de tus controladores y servicios.
+Estas interfaces son útiles para mantener consistencia en las respuestas de controladores y servicios.
 
 ```ts
 const response: ResponseMessageWithToken = {
   message: "Inicio de sesión exitoso",
   token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+};
+
+const responseConDatos: ResponseMessageWithData<UsuarioDTO> = {
+  message: "Usuario encontrado",
+  data: usuario,
 };
 ```

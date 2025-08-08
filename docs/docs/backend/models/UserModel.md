@@ -34,25 +34,31 @@ Define el **esquema de validación** para el modelo de usuario (`userSchema`) ut
 | `rolEquipo`      | `enum(["LECTOR", "COMENTARISTA", "EDITOR"])` *(opcional)* | ❌ No          | Aplica si `rol` es `"EQUIPO"`.                                                                     |
 | `tipoUsuario`    | `enum(["INDIVIDUAL", "EMPRESARIAL"])` *(opcional)*        | ❌ Condicional | Requerido si `rol` es `"USUARIO"`.                                                                 |
 | `empresaId`      | `number().int().positive()` *(opcional)*                  | ❌ Condicional | Requerido si `rol` es `"EQUIPO"`.                                                                  |
+| `perfilCompleto` | `boolean()` *(opcional)*                                  | ❌ No          | Indica si el perfil ha sido completado por el usuario.                                             |
 
 ---
 
 ## ✅ Validaciones adicionales (`.refine()`)
 
-1. **Tipo de usuario obligatorio si el rol es USUARIO**
+1. **`tipoUsuario` obligatorio si el rol es `USUARIO`**
 
-   * 🔒 Si `rol` es `"USUARIO"`, entonces `tipoUsuario` no puede faltar.
-   * 🧠 Mensaje de error: *"El tipo de usuario es obligatorio si el rol es USUARIO."*
+   * 🔒 Si `rol` es `"USUARIO"`, entonces `tipoUsuario` es obligatorio.
+   * 🧠 Mensaje: *"El tipo de usuario es obligatorio si el rol es USUARIO."*
 
-2. **Nombre de empresa y NIT requeridos para tipo EMPRESARIAL**
+2. **`nombreEmpresa` y `nit` requeridos para `EMPRESARIAL`**
 
-   * 🔒 Si `tipoUsuario` es `"EMPRESARIAL"`, debe incluir `nombreEmpresa` y `nit`.
-   * 🧠 Mensaje de error: *"El nombre de la empresa y el NIT son obligatorios para los usuarios empresariales."*
+   * 🔒 Si `tipoUsuario` es `"EMPRESARIAL"`, debe incluir ambos campos.
+   * 🧠 Mensaje: *"El nombre de la empresa y el NIT son obligatorios para los usuarios empresariales."*
 
-3. **`empresaId` obligatorio si el rol es EQUIPO**
+3. **`empresaId` requerido para `EQUIPO`**
 
-   * 🔒 Si `rol` es `"EQUIPO"`, entonces `empresaId` debe existir y ser un número positivo.
-   * 🧠 Mensaje de error: *"El campo 'empresaId' es obligatorio para usuarios con rol EQUIPO."*
+   * 🔒 Si `rol` es `"EQUIPO"`, debe incluir `empresaId` numérico positivo.
+   * 🧠 Mensaje: *"El campo 'empresaId' es obligatorio para usuarios con rol EQUIPO."*
+
+4. **Restricción para `INDIVIDUAL`: no debe tener `nombreEmpresa` ni `nit`**
+
+   * 🔒 Si `tipoUsuario` es `"INDIVIDUAL"`, entonces **NO** debe incluir `nombreEmpresa` ni `nit`.
+   * 🧠 Mensaje: *"Los usuarios individuales no deben tener nombre de empresa ni NIT."*
 
 ---
 
@@ -62,5 +68,4 @@ Define el **esquema de validación** para el modelo de usuario (`userSchema`) ut
 export type ValidatedUser = z.infer<typeof userSchema>;
 ```
 
-Esto genera automáticamente un tipo TypeScript basado en el esquema validado, útil para tipar objetos ya procesados y seguros.
-
+---

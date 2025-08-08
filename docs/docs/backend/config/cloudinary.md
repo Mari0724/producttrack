@@ -4,41 +4,26 @@ title: Configuración Cloudinary
 sidebar_label: cloudinary
 ---
 
-# Cloudinary.ts
 
-Este archivo configura y exporta la instancia de **Cloudinary** para su uso en el proyecto. Cloudinary es un servicio que permite la gestión de imágenes y videos en la nube, y este archivo establece la configuración necesaria para conectarse con su API.
+Este módulo configura e integra el servicio de almacenamiento de imágenes Cloudinary con el backend. Incluye una función personalizada para subir imágenes directamente y un almacenamiento compatible con multer para facilitar la carga desde formularios.
 
 ---
 
 ## 🔍 Ubicación
 
-`src/config/cloudinary.ts`
+src/config/cloudinary.ts
 
 ---
 
 ## 📦 Dependencias utilizadas
 
 ```ts
-import dotenv from "dotenv";
-import path from "path";
-import { v2 as cloudinary } from "cloudinary";
-````
-
-* **dotenv**: Para cargar las variables de entorno definidas en el archivo `.env`.
-* **path**: Para resolver rutas absolutas.
-* **cloudinary**: SDK oficial para interactuar con el servicio Cloudinary.
-
----
-
-## ⚙️ Carga de Variables de Entorno
-
-```ts
-dotenv.config({ path: path.resolve(__dirname, "../../.env") });
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 ```
 
-* Carga el archivo `.env` ubicado dos niveles arriba del archivo actual, asegurando que las variables estén disponibles incluso si se ejecuta desde diferentes ubicaciones.
-
-> ✅ Es útil cuando el archivo se ejecuta desde entornos distintos como producción, pruebas o desarrollo.
+* cloudinary: SDK oficial para interactuar con el servicio Cloudinary.
+* multer-storage-cloudinary: Adaptador para usar Cloudinary como almacenamiento con multer.
 
 ---
 
@@ -52,53 +37,101 @@ cloudinary.config({
 });
 ```
 
-| Variable de entorno     | Descripción                            |
-| ----------------------- | -------------------------------------- |
-| `CLOUDINARY_CLOUD_NAME` | Nombre del Cloud asociado a tu cuenta. |
-| `CLOUDINARY_API_KEY`    | Clave pública de la API.               |
-| `CLOUDINARY_API_SECRET` | Clave secreta de la API.               |
+| Variable de entorno     | Descripción                               |
+| ----------------------- | ----------------------------------------- |
+| CLOUDINARY\_CLOUD\_NAME | Nombre del Cloud en tu cuenta Cloudinary. |
+| CLOUDINARY\_API\_KEY    | Clave pública de la API de Cloudinary.    |
+| CLOUDINARY\_API\_SECRET | Clave privada de la API de Cloudinary.    |
 
-> ⚠️ El operador `!` en TypeScript asegura que las variables no son `undefined`. Es tu responsabilidad asegurarte de que estén correctamente definidas en el archivo `.env`.
+> El operador ! en TypeScript indica que se espera que la variable esté definida.
 
 ---
 
-## 🔍 Debug opcional
+## 📤 Función: subirImagenCloudinary
+
+Sube una imagen a Cloudinary manualmente desde una ruta de archivo local.
 
 ```ts
-console.log("🔍 CLOUDINARY_CLOUD_NAME:", process.env.CLOUDINARY_CLOUD_NAME);
+export const subirImagenCloudinary = async (filePath: string) => {
+  const result = await cloudinary.uploader.upload(filePath, {
+    folder: 'productos',
+  });
+  return result.secure_url;
+};
 ```
 
-Este `console.log` es útil para verificar que la variable `CLOUDINARY_CLOUD_NAME` se haya cargado correctamente.
+| Parámetro | Tipo   | Descripción                     |
+| --------- | ------ | ------------------------------- |
+| filePath  | string | Ruta local del archivo a subir. |
 
-> 🛠️ Puedes eliminarlo en producción si ya verificaste que todo funciona correctamente.
+🔁 Retorna: una `Promise<string>` con la URL segura (https) de la imagen subida.
 
----
-
-## 🚀 Exportación
-
-```ts
-export default cloudinary;
-```
-
-Se exporta la instancia de Cloudinary ya configurada para que se pueda usar en otros módulos del proyecto (por ejemplo, en servicios de subida de imágenes).
+⚠️ Si ocurre un error, se lanza una excepción y se imprime en consola.
 
 ---
 
-## 🧪 Ejemplo de uso
+## 🗂️ Almacenamiento Cloudinary para multer
+
+Este storage se usa para manejar cargas directas desde formularios usando multer.
 
 ```ts
-import cloudinary from "../config/cloudinary";
-
-const resultado = await cloudinary.uploader.upload("ruta/archivo.png", {
-  folder: "mi-carpeta",
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: async (req, file) => {
+    return {
+      folder: 'productos',
+      format: 'jpg',
+      public_id: `${Date.now()}-${file.originalname}`,
+    };
+  },
 });
 ```
 
-Este ejemplo sube una imagen local a Cloudinary y la almacena dentro de la carpeta `mi-carpeta`.
+| Campo      | Descripción                                                             |
+| ---------- | ----------------------------------------------------------------------- |
+| folder     | Carpeta de destino en Cloudinary.                                       |
+| format     | Formato forzado de la imagen (`jpg`).                                   |
+| public\_id | Nombre público generado automáticamente basado en timestamp y filename. |
+
+Este storage se puede usar en el middleware multer como:
+
+```ts
+import multer from 'multer';
+import { storage } from './config/cloudinary';
+
+const upload = multer({ storage });
+```
 
 ---
 
-## 📝 Notas adicionales
+## 🚀 Exportaciones
 
-* Este archivo **centraliza la configuración** de Cloudinary.
-* Nunca subas tus credenciales al repositorio. Asegúrate de tener `.env` en tu `.gitignore`.
+```ts
+export { cloudinary, storage };
+```
+
+Exporta:
+
+* cloudinary: la instancia configurada de Cloudinary.
+* storage: el almacenamiento personalizado para multer.
+
+---
+
+## ✅ Ejemplo de uso
+
+Subida manual:
+
+```ts
+const url = await subirImagenCloudinary("uploads/tmp/imagen.jpg");
+```
+
+Multer middleware:
+
+```ts
+router.post("/cargar", upload.single("imagen"), (req, res) => {
+  res.json({ url: req.file.path });
+});
+```
+
+---
+

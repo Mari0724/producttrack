@@ -89,3 +89,4 @@ const nuevaConsulta: NutriScanDTO = {
 * La propiedad `respuesta` se mantiene como `any` para permitir flexibilidad según el motor de análisis utilizado (GPT, OpenAI, u otro).
 * Puede evolucionar a un tipo más estricto (`RespuestaNutricionalDTO`) en el futuro si se estandarizan los resultados.
 
+---

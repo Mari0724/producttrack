@@ -4,8 +4,6 @@ title: Contiguracion token
 sidebar_label: Token
 ---
 
-# token.ts
-
 Este archivo define y exporta las constantes necesarias para la generación y validación de **JSON Web Tokens (JWT)** en el proyecto.
 
 ## 🔍 Ubicación
@@ -31,21 +29,12 @@ export const TOKEN_EXPIRES_IN = "1d";
 
 🧪 Validación de configuración
 ```ts
-Copiar código
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET no está definido en el archivo .env");
+if (!process.env.JWT_SECRET) {
+  console.warn("Advertencia: JWT_SECRET no está definida");
 }
 ```
-Este bloque asegura que la variable JWT_SECRET esté definida, y lanza un error claro si no se encuentra, evitando errores silenciosos en producción.
-
-📝 Notas adicionales
-La variable `JWT_SECRET` esta definida en el archivo archivo .env:
-
-```ini
-Copiar código
-JWT_SECRET=clave_secreta_segura
-```
-Esta configuración es esencial para los endpoints protegidos por autenticación basada en JWT.
+* Si la variable de entorno JWT_SECRET no está definida, se imprime una advertencia en consola.
+* Esto permite seguir en desarrollo sin detener la ejecución
 
 🚀 Uso en autenticación
 Las constantes de este archivo se usan normalmente en los servicios que generan y validan tokens:

@@ -1,10 +1,8 @@
 ---
 id: token.service
 title: Servicio Token
-sidebar_label: Token Service
+sidebar_label: Token 
 ---
-
-# Token Service
 
 Este archivo proporciona funciones utilitarias para la **generación** y **verificación** de tokens JWT utilizados en el sistema de autenticación de usuarios.
 
@@ -29,9 +27,11 @@ Antes de ejecutar cualquier función, el archivo verifica que la variable de ent
 
 ```ts
 if (!process.env.JWT_SECRET) {
-  throw new Error("Falta la variable JWT_SECRET en el archivo .env");
+  console.warn("Advertencia: JWT_SECRET no está definida");
 }
+const SECRET_KEY = process.env.JWT_SECRET;
 ```
+>Nota: El código actual solo avisa (console.warn) y no lanza una excepción. En entornos de producción es recomendable asegurar que JWT_SECRET esté presente antes de arrancar la app (por ejemplo, fallando el startup), para evitar firmar tokens con una clave indefinida.
 
 ---
 
@@ -105,3 +105,5 @@ Verifica un token JWT y devuelve el contenido decodificado.
 * Este servicio encapsula la lógica JWT para separar responsabilidades.
 * El control sobre el contenido del token permite personalizar la información incluida según el rol del usuario.
 * Su integración es ideal para middlewares y validaciones de seguridad en rutas protegidas.
+
+---

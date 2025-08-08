@@ -1,14 +1,14 @@
 import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 
-// ✅ Configurar Cloudinary
+// Configurar Cloudinary
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME!,
   api_key: process.env.CLOUDINARY_API_KEY!,
   api_secret: process.env.CLOUDINARY_API_SECRET!,
 });
 
-// ✅ Función para subir imagen manualmente
+// Función para subir imagen manualmente
 export const subirImagenCloudinary = async (filePath: string) => {
   try {
     const result = await cloudinary.uploader.upload(filePath, {
@@ -21,7 +21,7 @@ export const subirImagenCloudinary = async (filePath: string) => {
   }
 };
 
-// ✅ Storage para multer
+// Storage para multer
 const storage = new CloudinaryStorage({
   cloudinary,
   params: async (req, file) => {
@@ -33,5 +33,5 @@ const storage = new CloudinaryStorage({
   },
 });
 
-// ✅ Exportaciones ordenadas
+// Exportaciones ordenadas
 export { cloudinary, storage };
