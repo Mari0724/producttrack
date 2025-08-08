@@ -1,16 +1,15 @@
 ---
 id: utils-cloudinary
 title: Utilidades Cloudinary
-sidebar_label: cloudinary
+sidebar_label: Cloudinary
 ---
 
-# Cloudinary
-
-Este archivo contiene funciones auxiliares para la carga de imágenes a **Cloudinary** desde un buffer en memoria, y para la generación de URLs públicas seguras. Se utiliza principalmente en el flujo OCR de NutriScan.
+Este archivo contiene funciones auxiliares para **subir imágenes a Cloudinary desde un buffer en memoria** y para **generar URLs públicas seguras**.  
+Se usa principalmente en el flujo OCR de NutriScan.
 
 ---
 
-## 📌 Ubicación
+## 🔍 Ubicación
 
 `src/utils/cloudinary.ts`
 
@@ -19,8 +18,8 @@ Este archivo contiene funciones auxiliares para la carga de imágenes a **Cloudi
 ## 📦 Dependencias
 
 ```ts
-import cloudinary from '../config/cloudinary'; // Configuración de Cloudinary
-import streamifier from 'streamifier';          // Convierte buffer en stream
+import { cloudinary } from '../config/cloudinary'; // Cliente Cloudinary configurado
+import streamifier from 'streamifier';              // Convierte buffer en stream legible
 ````
 
 ---
@@ -29,23 +28,24 @@ import streamifier from 'streamifier';          // Convierte buffer en stream
 
 ### 📤 `cloudinaryUploadBuffer(buffer: Buffer, folder = 'nutriscan-ocr')`
 
-Carga una imagen a Cloudinary directamente desde un `Buffer` (por ejemplo, proveniente de un archivo subido en memoria).
+Sube una imagen a Cloudinary directamente desde un `Buffer` (por ejemplo, un archivo recibido en memoria con Multer).
 
 #### 🔐 Parámetros
 
-| Parámetro | Tipo     | Descripción                                           |
-| --------- | -------- | ----------------------------------------------------- |
-| `buffer`  | `Buffer` | Contenido binario de la imagen.                       |
-| `folder`  | `string` | Carpeta en Cloudinary (por defecto: `nutriscan-ocr`). |
+| Parámetro | Tipo     | Obligatorio | Descripción                                                                                  |
+| --------- | -------- | ----------- | -------------------------------------------------------------------------------------------- |
+| `buffer`  | `Buffer` | ✅           | Contenido binario de la imagen.                                                              |
+| `folder`  | `string` | ❌           | Carpeta de destino en Cloudinary (por defecto: `"nutriscan-ocr"`). Permite agrupar imágenes. |
 
 #### 📥 Retorno
 
-Una `Promise` que se resuelve con los datos del archivo subido (`result`) o se rechaza con un `error`.
+`Promise<any>` — Se resuelve con el objeto de respuesta de Cloudinary (`UploadApiResponse`) o se rechaza con un error.
 
 #### ⚙️ Internamente
 
-* Crea un `uploadStream` usando `cloudinary.uploader.upload_stream`.
-* Usa `streamifier.createReadStream(buffer)` para convertir el buffer en un flujo legible y lo encadena con `.pipe()`.
+1. Crea un flujo de subida con `cloudinary.uploader.upload_stream`, indicando la carpeta de destino.
+2. Convierte el `Buffer` en un stream con `streamifier.createReadStream(buffer)`.
+3. Encadena el stream para subirlo directamente a Cloudinary.
 
 #### 🧪 Ejemplo de uso
 
@@ -58,17 +58,18 @@ console.log(resultado.secure_url);
 
 ### 🔗 `obtenerUrlPreprocesada(publicId: string)`
 
-Genera una URL pública y segura para un recurso en Cloudinary.
+Genera una URL pública y segura (`https`) para acceder a un recurso en Cloudinary.
+**No aplica transformaciones** a la imagen; devuelve el recurso tal como está almacenado.
 
 #### 🧾 Parámetros
 
-| Parámetro  | Tipo     | Descripción                           |
-| ---------- | -------- | ------------------------------------- |
-| `publicId` | `string` | ID público del archivo en Cloudinary. |
+| Parámetro  | Tipo     | Obligatorio | Descripción                           |
+| ---------- | -------- | ----------- | ------------------------------------- |
+| `publicId` | `string` | ✅           | ID público del archivo en Cloudinary. |
 
 #### 📥 Retorno
 
-Una cadena (`string`) con la URL generada de forma segura (`https`).
+`string` — URL segura generada por Cloudinary.
 
 #### 🧪 Ejemplo
 
@@ -81,16 +82,17 @@ console.log(url); // https://res.cloudinary.com/...
 
 ## 🧾 Resumen
 
-| Función                  | Descripción                                                |
-| ------------------------ | ---------------------------------------------------------- |
-| `cloudinaryUploadBuffer` | Sube una imagen en formato buffer a Cloudinary.            |
-| `obtenerUrlPreprocesada` | Genera una URL segura (`https`) a partir de un `publicId`. |
-| Carpeta por defecto      | `nutriscan-ocr`                                            |
-| Uso principal            | OCR de imágenes para análisis nutricional (`NutriScan`).   |
+| Función                  | Descripción                                                    |
+| ------------------------ | -------------------------------------------------------------- |
+| `cloudinaryUploadBuffer` | Sube una imagen desde un buffer a Cloudinary.                  |
+| `obtenerUrlPreprocesada` | Genera una URL segura (`https`) para un recurso en Cloudinary. |
+| Carpeta por defecto      | `nutriscan-ocr`                                                |
+| Uso principal            | OCR de imágenes para análisis nutricional (`NutriScan`).       |
 
 ---
 
 ## 🛠️ Nota
 
-Estas utilidades requieren una configuración previa del cliente de Cloudinary en `../config/cloudinary.ts`, donde deben cargarse las credenciales (`cloud_name`, `api_key`, `api_secret`) desde variables de entorno.
+Estas utilidades requieren una configuración previa del cliente en [`../config/cloudinary.ts`](../config/cloudinary.md), donde deben cargarse las credenciales (`cloud_name`, `api_key`, `api_secret`) desde variables de entorno.
 
+---

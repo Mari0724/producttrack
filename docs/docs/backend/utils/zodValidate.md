@@ -4,9 +4,6 @@ title: Validacion zod
 sidebar_label: Zod Validate
 ---
 
-
-### 📄 `zodValidate.ts`
-
 Esta utilidad proporciona una función genérica para validar datos con [Zod](https://zod.dev/), simplificando el manejo de errores en controladores y servicios.
 
 ---
@@ -72,3 +69,4 @@ if (!result.success) {
 
 * `Zod.safeParse`: método seguro que evita excepciones y devuelve un objeto de éxito o error.
 * Mapeo de errores personalizados usando `result.error.errors`.
+---

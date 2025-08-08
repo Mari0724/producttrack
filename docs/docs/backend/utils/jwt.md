@@ -1,12 +1,11 @@
 ---
 id: jwt
-title: jwt
-sidebar_label: Autentificacion jwt
+title: Autenticación JWT
+sidebar_label: Autentificación JWT
 ---
 
-# Autenticación JWT
-
-Este módulo define la función `expressAuthentication`, que permite validar tokens JWT en las solicitudes HTTP de Express. Es utilizado principalmente por `tsoa` para proteger rutas con autenticación. Extrae el token desde la cabecera `Authorization`, lo verifica con la clave secreta y devuelve el payload decodificado si es válido.
+Este módulo define la función `expressAuthentication`, utilizada principalmente por `tsoa` para proteger rutas con autenticación.  
+Se encarga de validar tokens JWT presentes en la cabecera `Authorization` de las solicitudes HTTP, verificarlos con la clave secreta y devolver el payload decodificado si es válido.
 
 ---
 
@@ -16,7 +15,6 @@ Este módulo define la función `expressAuthentication`, que permite validar tok
 
 ---
 
-
 ## 🔐 Función: `expressAuthentication`
 
 ```ts
@@ -25,17 +23,17 @@ export async function expressAuthentication(
   securityName: string,
   scopes?: string[]
 ): Promise<any>
-```
+````
 
 ---
 
-### ✅ Propósito:
+### ✅ Propósito
 
-Autentica una solicitud HTTP usando el token JWT incluido en la cabecera `Authorization`.
+Autenticar una solicitud HTTP validando el token JWT incluido en la cabecera `Authorization`.
 
 ---
 
-### 📥 Parámetros:
+### 📥 Parámetros
 
 | Nombre         | Tipo        | Descripción                                                           |
 | -------------- | ----------- | --------------------------------------------------------------------- |
@@ -45,44 +43,51 @@ Autentica una solicitud HTTP usando el token JWT incluido en la cabecera `Author
 
 ---
 
-### 📤 Retorno:
+### 📤 Retorno
 
-* Devuelve el contenido decodificado del token si es válido (ej. `id`, `rol`, `correo`, etc.).
-* Si el token es inválido, faltante o expirado, lanza un error con un mensaje claro.
+* Devuelve el contenido decodificado del token si es válido (por ejemplo: `id`, `rol`, `correo`, etc.).
+* Si el token es inválido, faltante o expirado, **lanza un error** con uno de los siguientes mensajes exactos:
+
+  * `"Token no proporcionado o formato incorrecto"`
+  * `"Token inválido o expirado"`
 
 ---
 
-### 🔍 Comportamiento:
+### 🔍 Comportamiento
 
 1. Verifica que la cabecera `Authorization` exista y comience con `Bearer `.
 2. Extrae el token y lo valida con `jwt.verify` usando la clave `JWT_SECRET`.
-3. Si es válido, el contenido del token se retorna y puede ser utilizado por la app (ej. se asigna a `request['user']`).
-4. Si es inválido, lanza un error manejable.
+3. Si el token es válido, retorna el contenido decodificado.
+
+   > Nota: Esta función **no** asigna el payload a `request['user']` directamente; esa asignación la realiza `tsoa` o el middleware que use este método.
+4. Si el token es inválido o ha expirado, lanza un error con uno de los mensajes indicados en la sección anterior.
 
 ---
 
-### 🔐 Requisitos:
+### 🔐 Requisitos
 
-* Variable `JWT_SECRET` definida en `config/token.ts`.
+* Variable `JWT_SECRET` exportada desde `config/token.ts`, normalmente cargada desde variables de entorno.
 * Token JWT firmado correctamente con el mismo secreto.
 
 ---
 
-### 🧠 Ejemplo de uso con TSOA:
+### 🧠 Ejemplo de uso con TSOA
 
 ```ts
 @Security("jwt")
 @Get("/usuarios/perfil")
 public async obtenerPerfil(@Request() req: Express.Request) {
-  const usuario = req['user']; // ← contiene datos del token
+  const usuario = req['user']; // ← asignado por tsoa a partir del payload retornado
   return this.usuarioService.obtenerPorId(usuario.id);
 }
 ```
 
 ---
 
-## 📦 Dependencias:
+## 📦 Dependencias
 
-* [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken): para verificar el token.
-* [`express`](https://expressjs.com/): para manejar el objeto de solicitud.
-* Clave secreta (`JWT_SECRET`) importada desde configuración.
+* [`jsonwebtoken`](https://www.npmjs.com/package/jsonwebtoken) – para verificar el token.
+* [`express`](https://expressjs.com/) – para manejar el objeto de solicitud.
+* Clave secreta (`JWT_SECRET`) definida en `config/token.ts` y proveniente de variables de entorno.
+
+---
