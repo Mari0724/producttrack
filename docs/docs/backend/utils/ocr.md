@@ -85,3 +85,4 @@ Para mejorar los resultados OCR:
 * Usa imágenes con buena iluminación y resolución.
 * Evita fondos complejos o letras pequeñas.
 * Preprocesa imágenes si es necesario (contraste, binarización, etc.).
+---

@@ -1,12 +1,11 @@
 ---
 id: app
-title: app
+title: Configuración principal de Express
 sidebar_label: app
 ---
 
-# `app.ts`
-
-Este archivo inicializa y configura la aplicación Express. Carga variables de entorno, define middlewares como CORS y `bodyParser`, registra rutas manuales y generadas con TSOA, y configura Swagger para documentación interactiva.
+Este archivo inicializa y configura la aplicación backend utilizando **Express**.  
+Incluye configuración de CORS, middlewares, rutas, documentación Swagger y tareas programadas, además de definir el punto de entrada para iniciar el servidor.
 
 ---
 
@@ -16,111 +15,68 @@ Este archivo inicializa y configura la aplicación Express. Carga variables de e
 
 ---
 
-## 📦 Dependencias
+## 📌 Descripción general
 
-* **dotenv**: Carga variables de entorno desde un archivo `.env`.
-* **reflect-metadata**: Necesario para que TypeScript pueda usar decoradores (utilizado por TSOA).
-* **express**: Framework principal para construir la API.
-* **cors**: Habilita CORS para permitir peticiones desde el frontend.
-* **body-parser**: Middleware para parsear JSON del cuerpo de las peticiones.
-* **swagger-ui-express**: Permite visualizar y probar la documentación generada por Swagger.
-* **swagger.json**: Archivo generado automáticamente por TSOA para la documentación de la API.
-* **ocr.routes.ts**: Ruta personalizada para la funcionalidad NutriScan OCR.
+1. **Importación de módulos clave**  
+   - `express`, `cors`, `body-parser` para el servidor y middlewares.
+   - `swagger-ui-express` para exponer la documentación de API.
+   - `dotenv` para cargar variables de entorno.
+   - `cronJobs` para iniciar tareas programadas.
+   - Rutas manuales (`ocr.routes`, `user.routes`) y rutas generadas automáticamente por **tsoa**.
 
----
+2. **Carga de variables de entorno**  
+   Se utiliza `dotenv.config()` para leer el archivo `.env`.
 
-## 🚀 Inicialización
+3. **Configuración de CORS**  
+   Restringe el acceso a orígenes específicos (`localhost:5173` y `localhost:5174`) y define los métodos y credenciales permitidas.
 
-```ts
-import dotenv from "dotenv";
-dotenv.config();
-````
+4. **Middlewares de parsing**  
+   - `bodyParser.json` y `bodyParser.urlencoded` con límite de 3 MB para manejar datos entrantes en JSON o formularios.
 
-Se cargan las variables de entorno desde un archivo `.env`, como el `JWT_SECRET`, credenciales de la base de datos, el puerto del servidor, etc.
+5. **Registro de rutas**  
+   - `/api/ocr` → Rutas de OCR.
+   - `/api` → Rutas de usuario.
+   - `RegisterRoutes(app)` → Registra las rutas generadas automáticamente con tsoa.
+   
+6. **Documentación Swagger**  
+   - Solo se carga en entornos que **no** sean producción.
+   - Usa el archivo generado `docs/swagger.json`.
 
----
+7. **Subida de imágenes**  
+   Ruta `POST /upload` que usa el middleware `uploadProductos` para subir imágenes a **Cloudinary**.  
+   Devuelve la URL y el `public_id` del archivo subido.
 
-## 🌐 CORS
+8. **Ruta raíz (`/`)**  
+   Devuelve un mensaje de bienvenida e indica cómo probar las rutas en Swagger o Postman según el entorno.
 
-```ts
-app.use(cors({
-  origin: 'http://localhost:5173',
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
-}));
-```
-
-Este middleware permite que el frontend (por ejemplo, una aplicación Vite en `localhost:5173`) pueda comunicarse con esta API respetando las políticas de seguridad del navegador (CORS).
-
----
-
-## 🧩 Middleware
-
-```ts
-app.use(bodyParser.json());
-```
-
-Permite que Express entienda el cuerpo de las peticiones con formato JSON.
+9. **Inicio del servidor**  
+   Escucha en el puerto definido en `process.env.PORT` o en `3000` por defecto.
 
 ---
 
-## 🛣️ Rutas Manuales
+## 🔗 Uso
 
-```ts
-import nutriscanOCRRoutes from './routes/ocr.routes';
-app.use('/', nutriscanOCRRoutes);
-```
-
-Las rutas personalizadas, como las de NutriScan OCR, se deben registrar **antes** de `RegisterRoutes(app)` para evitar conflictos o sobrescritura.
+Este archivo se ejecuta automáticamente cuando se levanta el servidor.  
+En un proyecto TypeScript, normalmente es invocado desde `src/index.ts` o directamente con el comando de inicio (`npm run dev` / `npm start`).
 
 ---
 
-## 🔌 Rutas TSOA
+## 🧩 Relación con otros módulos
 
-```ts
-RegisterRoutes(app);
-```
-
-Registra automáticamente todas las rutas generadas por el decorador TSOA (`@Route`, `@Get`, `@Post`, etc.). Estas rutas se definen en los controladores dentro del proyecto y se agrupan en `routes.ts`.
-
----
-
-## 📚 Swagger UI
-
-```ts
-app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
-```
-
-Este middleware genera una interfaz web interactiva para visualizar y probar tu API con Swagger en la ruta: `http://localhost:<puerto>/docs`.
+* **Rutas manuales:** `ocr.routes.ts`, `user.routes.ts`.
+* **Middleware de subida de archivos:** `allCloudinaryUploads`.
+* **Rutas generadas:** `routes/routes.ts` (producidas por tsoa).
+* **Tareas programadas:** `utils/cronJobs.ts`.
+* **Documentación:** archivo `docs/swagger.json`.
 
 ---
 
-## ✅ Exportación
+## ⚠️ Consideraciones
 
-```ts
-export default app;
-```
-
-Exporta la aplicación configurada para que pueda ser utilizada en `server.ts`, encargándose allí de ponerla en marcha y escuchar el puerto.
-
----
-
-## 📌 Notas
-
-* Las rutas personalizadas deben ir **antes** de `RegisterRoutes`.
-* Este archivo solo configura la aplicación; el archivo `server.ts` es el que inicia el servidor.
-* Puedes agregar middlewares de autenticación, manejo de errores globales o loggers según sea necesario.
+* En producción, el endpoint `/docs` (Swagger UI) está deshabilitado por seguridad.
+* El límite de 3 MB en `bodyParser` puede ajustarse según la necesidad de subida de datos.
+* El CORS está limitado a entornos de desarrollo por dominio; si se despliega en otro dominio, debe actualizarse la configuración.
+* La subida de imágenes requiere que las credenciales de Cloudinary estén correctamente configuradas en el `.env`.
+* El módulo `cronJobs` comienza a ejecutar tareas tan pronto como se importa.
 
 ---
-
-## 🧪 Ejemplo de uso en `server.ts`
-
-```ts
-import app from './src/app';
-
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
-});
-```

@@ -27,7 +27,7 @@ Incluye validación de credenciales, generación de tokens JWT seguros, y envío
   Cliente ORM para interactuar con la base de datos.
 - [`crypto`](https://nodejs.org/api/crypto.html)  
   Para generar tokens aleatorios de recuperación.
-- [`email.service`](./email.service)  
+- [`email.service`](./email.service.md)  
   Para enviar correos electrónicos de restablecimiento.
 - Variables de `config/token`:
   - `JWT_SECRET`: Clave secreta para firmar el token.

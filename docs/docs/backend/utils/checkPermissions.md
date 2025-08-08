@@ -54,6 +54,8 @@ Determina si un rol específico (`rol`) tiene permiso para realizar una determin
 | --------- | ------------------------------------------------------------- |
 | `boolean` | `true` si el rol tiene permiso para la acción, `false` si no. |
 
+>⚠️ Nota: Si la acción proporcionada no existe en el objeto permisos, la función retornará false automáticamente, ya que permisos[accion] será undefined y no contendrá el rol buscado.
+
 ---
 
 ### 🔍 Ejemplo de uso:
@@ -72,3 +74,4 @@ if (!puede("eliminar", usuario.rol)) {
 * Facilita el mantenimiento y escalabilidad del control de acceso.
 * Se puede usar tanto en middleware como directamente en controladores o servicios.
 
+---

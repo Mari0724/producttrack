@@ -32,6 +32,30 @@ La arquitectura se conoce comúnmente como "Arquitectura en capas" (o Layered Ar
 
 ---
 
+## 📦 Dependencias y librerías clave
+
+A continuación, se listan las principales dependencias definidas en `package.json`, junto con su propósito en el backend de **ProductTrack**.
+
+| Librería                                            | Propósito                                                                   |
+| --------------------------------------------------- | --------------------------------------------------------------------------- |
+| **express**                                         | Framework para manejar rutas y middlewares HTTP.                            |
+| **prisma / @prisma/client**                         | ORM para interactuar con PostgreSQL.                                        |
+| **tsoa**                                            | Generador de rutas y documentación Swagger mediante decoradores TypeScript. |
+| **zod**                                             | Validación de datos segura y tipada.                                        |
+| **jsonwebtoken (JWT)**                              | Autenticación basada en tokens.                                             |
+| **bcryptjs**                                        | Hasheo y verificación de contraseñas.                                       |
+| **multer / multer-storage-cloudinary / cloudinary** | Carga y almacenamiento de imágenes en la nube.                              |
+| **tesseract.js**                                    | OCR para reconocimiento de texto en imágenes.                               |
+| **axios**                                           | Cliente HTTP para consumo de APIs externas.                                 |
+| **node-cron**                                       | Programación de tareas automáticas.                                         |
+| **nodemailer**                                      | Envío de correos electrónicos.                                              |
+| **sharp**                                           | Procesamiento y optimización de imágenes.                                   |
+| **jest / supertest**                                | Pruebas unitarias e integración.                                            |
+
+> 💡 **Nota:** El proyecto incluye también dependencias de desarrollo (`devDependencies`) como `@types/*` para tipado en TypeScript, `ts-node-dev` para recarga en caliente y `ts-jest` para ejecución de tests.
+
+---
+
 ## 🧱 Estructura del proyecto
 
 ```
@@ -125,8 +149,6 @@ Para acceder a la documentación Swagger generada por TSOA, puedes agregar `/doc
 ```
 https://producttrack-production.up.railway.app/docs
 ```
-
-> ⚠️ **Nota:** Por motivos de seguridad, la documentación Swagger está deshabilitada en el entorno de producción.
 > Si deseas acceder a Swagger, debes correr el backend **en local** y entrar a:
 
 ```

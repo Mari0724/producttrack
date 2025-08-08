@@ -4,8 +4,6 @@ title: Preprocesamiento de Imagen
 sidebar_label: PreprocesarImagen
 ---
 
-# Pre Procesar Imagen
-
 Este archivo define una función que aplica una serie de transformaciones a una imagen en formato `Buffer` para mejorar su calidad antes de realizar OCR (Reconocimiento Óptico de Caracteres). Se basa en la librería `sharp`.
 
 ---
@@ -88,3 +86,4 @@ Este `bufferPreprocesado` puede ser enviado al módulo OCR (`createOcrClient`) p
 * Utiliza imágenes con texto legible y fondo claro para mejores resultados.
 * Este preprocesamiento es especialmente útil en imágenes tomadas desde móviles donde el contraste es bajo o el fondo es complejo.
 
+---

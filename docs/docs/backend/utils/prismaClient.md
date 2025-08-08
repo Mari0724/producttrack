@@ -4,8 +4,6 @@ title: Prisma Client
 sidebar_label: Prisma Cient
 ---
 
-# Prisma Client
-
 Este módulo encapsula la creación y exportación de una instancia de `PrismaClient`, permitiendo interactuar con la base de datos mediante Prisma ORM. Al centralizar su uso en la aplicación, se previene la creación de múltiples conexiones innecesarias y nos permite exportar el contenido para ser usada a lo largo de la aplicacion.
 
 ---
@@ -47,3 +45,5 @@ const allUsers = await prisma.user.findMany();
 
 * Prisma Client inicia una conexión con la base de datos al ser instanciado.
 * En entornos de producción, es recomendable manejar adecuadamente el cierre de conexiones en procesos largos o al finalizar la app.
+
+---

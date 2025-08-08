@@ -8,7 +8,7 @@ Este módulo contiene funciones auxiliares para el procesamiento, limpieza y an�
 
 ---
 
-## 📌 Ubicación
+## 🔍 Ubicación
 
 `src/utils/texto.ts`
 
@@ -104,3 +104,4 @@ const textoLimpio = limpiarTextoOCR(textoOCR);
 const textoCorregido = corregirErroresOCR(textoLimpio);
 const candidatos = obtenerCandidatosProductos(textoCorregido);
 ```
+---
