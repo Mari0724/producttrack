@@ -4,7 +4,6 @@ title: Middleware de token
 sidebar_label: Token
 ---
 
-#  Middleware: `token.middleware.ts`
 
 Este middleware se encarga de **verificar y autenticar el token JWT** enviado por el cliente en las cabeceras de la solicitud. Si el token es válido, extrae la información del usuario y la adjunta al objeto `req` para su uso en otros middlewares o controladores.
 
@@ -99,8 +98,3 @@ Este middleware depende de:
 * Este middleware debe colocarse antes de cualquier middleware o controlador que requiera información del usuario autenticado.
 
 ---
-
-¿Deseas que documente también `token.service.ts` para completar esta sección?
-
-```
-```

@@ -4,8 +4,6 @@ title: Middleware de Carga en Memoria
 sidebar_label: uploadMemory
 ---
 
-# Middleware: uploadMemory
-
 Este middleware configura `multer` para procesar archivos cargados en la memoria del servidor. Es útil cuando se necesita manipular los archivos directamente (por ejemplo, redimensionar imágenes o realizar OCR) sin almacenarlos en disco.
 
 ---

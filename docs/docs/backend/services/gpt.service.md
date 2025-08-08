@@ -151,3 +151,4 @@ Se exporta una instancia única de `GPTService` lista para usarse en controlador
 * Ideal para integrarse con rutas como `/nutriscan-ocr` y `/confirmar-nombre`.
 * Si el array `resultados` está vacío, se devuelve un mensaje explicativo al usuario.
 
+---

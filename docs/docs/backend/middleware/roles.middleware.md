@@ -5,8 +5,6 @@ sidebar_label: Roles
 ---
 
 
-#  Middleware: `roles.middleware.ts`
-
 Este middleware permite restringir el acceso a rutas basándose en el **rol principal del usuario** (`user.rol`) y, opcionalmente, en su **rol dentro de un equipo** (`user.rolEquipo`). También permite verificar si el usuario pertenece al tipo `EMPRESARIAL`.
 
 ---
@@ -33,7 +31,7 @@ import { Response, NextFunction } from "express";
 import { AuthenticatedRequest } from "./token.middleware";
 ````
 
-* `AuthenticatedRequest` es una extensión de `Request` que incluye la propiedad `user`, añadida previamente por el middleware de autenticación (`token.middleware`).
+* `AuthenticatedRequestTocken` es una extensión de `Request` que incluye la propiedad `user`, añadida previamente por el middleware de autenticación (`token.middleware`).
 
 ---
 
