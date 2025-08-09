@@ -173,6 +173,11 @@ const secciones: Seccion[] = [
         nombre: "Revisión final del Backend",
         descripcion: "Validación completa del backend desde Swagger, asegurando que toda la documentación y funcionalidades estén actualizadas.",
         link: "#"
+      },
+      {
+        nombre: "Revisión de Despliegue",
+        descripcion: "Presentar el despliegue del sistema, mencionando errores encontrados y cómo fueron solucionados.",
+        link: "https://drive.google.com/file/d/117GB2yLlwDphGZUh6KwB6IBfVujy-jHl/view?usp=sharing"
       }
     ]
   },

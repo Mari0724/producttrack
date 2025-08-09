@@ -1,7 +1,7 @@
 ---
-id: index
-title: 📦 Frontend
-sidebar_label: 📦 Frontend
+id: indexFront
+title: 💻 Frontend - ProductTrack
+sidebar_label: 💻 Frontend
 ---
 
 # 💻 Frontend - ProductTrack
