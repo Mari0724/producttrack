@@ -142,7 +142,7 @@ npx tsoa routes && spec     # Genera rutas y Swagger a partir de decoradores
 
 El backend de ProductTrack está desplegado en:
 
-👉 [`https://producttrack-production.up.railway.app/`](https://producttrack-production.up.railway.app/)
+👉 [`https://producttrackbik-production.up.railway.app/`](https://producttrackbik-production.up.railway.app/)
 
 Para acceder a la documentación Swagger generada por TSOA, puedes agregar `/docs` al final de la URL:
 
