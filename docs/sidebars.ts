@@ -21,7 +21,7 @@ const sidebars: SidebarsConfig = {
       label: 'Frontend',
       link: {
         type: 'doc',
-        id: 'frontend/index', // Este archivo lo debes crear: docs/frontend/index.md
+        id: 'frontend/indexFront',
       },
       items: [
         {
@@ -29,6 +29,11 @@ const sidebars: SidebarsConfig = {
           dirName: 'frontend',
         },
       ],
+    },
+    {
+      type: 'doc',
+      id: 'intro',
+      label: 'Sobre el proyecto',
     },
   ],
 };

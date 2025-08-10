@@ -1,7 +1,7 @@
 ---
-id: index
-title: 📦 Frontend
-sidebar_label: 📦 Frontend
+id: indexFront
+title: 💻 Frontend - ProductTrack
+sidebar_label: 💻 Frontend
 ---
 
 # 💻 Frontend - ProductTrack
@@ -114,3 +114,13 @@ npm run dev         # Modo desarrollo
 npm run build       # Build para producción
 npm run preview     # Previsualizar el build
 ```
+
+---
+
+## 🌐 Ver demo en línea
+
+Puedes acceder a la versión desplegada de **ProductTrack** en Vercel a través del siguiente enlace:
+
+🔗 **[Abrir ProductTrack en línea](https://producttrackft.vercel.app/)**
+
+Esta versión refleja el estado más reciente del proyecto y permite explorar sus funcionalidades sin necesidad de instalación local.

@@ -69,6 +69,7 @@ const config: Config = {
         src: 'img/loguito.png',
       },
       items: [
+        { to: '/docs/intro', label: 'Sobre el proyecto', position: 'left' },
         { to: '/docs/backend', label: 'Backend', position: 'left' },
         { to: '/docs/frontend', label: 'Frontend', position: 'left' },
         {
@@ -102,7 +103,7 @@ const config: Config = {
           items: [
             {
               label: 'Sobre ProductTrack',
-              to: '/',
+              to: '/docs/intro'
             },
           ],
         },

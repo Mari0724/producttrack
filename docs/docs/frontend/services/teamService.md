@@ -133,6 +133,6 @@ await deleteTeamMember(1);
 
 ## 🔗 Dependencias
 
-* [`axiosInstance`](../utils/axiosInstance) → Cliente Axios configurado para interactuar con la API.
+* [`axiosInstance`](../utils/axiosInstance.md) → Cliente Axios configurado para interactuar con la API.
 
 ---
