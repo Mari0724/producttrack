@@ -9,7 +9,7 @@ export class HistorialController extends Controller {
   /**
    * Obtiene el historial de movimientos del inventario por usuario.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/historial.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/historial.controller)
    * 
    * @param idUsuario ID del usuario.
    * @returns Lista de registros de historial.

@@ -10,7 +10,7 @@ import { preprocesarImagen } from '../utils/preprocesarImagen';
 /**
  * Extrae texto de una imagen y lo analiza con OCR y GPT.
  * 
- * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/ocr.controller)
+ * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/ocr.controller)
  * 
  * @param req Request de Express con imagen (file) y usuarioId en body.
  * @param res Response de Express con resultado del análisis.
@@ -108,7 +108,7 @@ export const extraerTextoDesdeImagen = async (req: Request, res: Response): Prom
 /**
  * Confirma manualmente un nombre de producto y actualiza el análisis.
  *
- * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/ocr.controller)
+ * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/ocr.controller)
  * 
  * @param req Request de Express con registroId y nombreProducto.
  * @param res Response de Express con actualización del análisis.

@@ -15,7 +15,7 @@ export class UserController extends Controller {
   /**
    * Obtiene todos los usuarios con filtros opcionales.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
    */
   // Obtener 
   @Get("/")
@@ -61,7 +61,7 @@ export class UserController extends Controller {
   /**
    * Obtiene un usuario por su ID.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
    */
   // Obtener un usuario por ID
   @Get("/{id}")
@@ -88,7 +88,7 @@ export class UserController extends Controller {
   /**
    * Crea un nuevo usuario.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
    */
   // Crear usuario
   @SuccessResponse("201", "Usuario creado correctamente")
@@ -137,7 +137,7 @@ export class UserController extends Controller {
   /**
    * Obtiene información de una empresa por ID de usuario.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
    */
   //buscar por empresa 
   @Security("jwt")
@@ -167,7 +167,7 @@ export class UserController extends Controller {
   /**
   * Cambia la contraseña de un usuario.
   * 
-  * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
+  * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
   */
 
   @Put("/cambiarContrasena")
@@ -197,7 +197,7 @@ export class UserController extends Controller {
   /**
    * Actualiza los datos de un usuario.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
    */
   // Modificar usuaro con su ID
   @Put("{id}")
@@ -237,7 +237,7 @@ export class UserController extends Controller {
   /**
    * Reactiva un usuario inactivo.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
    */
   //Reactivar usuario
   @Put("/{id}/reactivar")
@@ -267,7 +267,7 @@ export class UserController extends Controller {
   /**
    * Elimina (soft delete) un usuario por su ID.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/user.controller)
    */
   @Delete("{id}")
   @SuccessResponse("200", "Usuario eliminado")

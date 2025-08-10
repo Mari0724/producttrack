@@ -12,7 +12,7 @@ export class NutriScanController extends Controller {
   /**
    * Crea un nuevo análisis de producto usando NutriScan.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
    * @param body Datos del análisis (sin idUsuario).
    * @returns El análisis creado.
    */
@@ -56,7 +56,7 @@ export class NutriScanController extends Controller {
   /**
    * Obtiene todos los análisis (admin o desarrollador).
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
    */
   @Security("jwt")
   @Get()
@@ -80,7 +80,7 @@ export class NutriScanController extends Controller {
   /**
    * Obtiene todos los análisis de un usuario (solo ADMIN).
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
    * @param usuarioId ID del usuario.
    */
   @Security("jwt")
@@ -99,7 +99,7 @@ export class NutriScanController extends Controller {
   /**
    * Obtiene todos los análisis de un usuario (solo ADMIN).
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
    * @param usuarioId ID del usuario.
    */
   @Security("jwt")
@@ -130,7 +130,7 @@ export class NutriScanController extends Controller {
   /**
    * Elimina un análisis de NutriScan.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/nutriscan.controller)
    * @param id ID del análisis.
    */
   @Security("jwt")

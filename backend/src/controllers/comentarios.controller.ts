@@ -24,7 +24,7 @@ export class ComentariosController extends Controller {
   /**
    * Obtiene los comentarios asociados a un producto.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
    * 
    * @param productoId ID del producto.
    * @returns Lista de comentarios.
@@ -40,7 +40,7 @@ export class ComentariosController extends Controller {
   /**
    * Crea un nuevo comentario para un producto.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
    * 
    * @param body Datos del comentario.
    * @returns Comentario creado.
@@ -56,7 +56,7 @@ export class ComentariosController extends Controller {
   /**
    * Actualiza un comentario existente.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
    * 
    * @param idComentario ID del comentario.
    * @param body Nuevo contenido del comentario.
@@ -73,7 +73,7 @@ export class ComentariosController extends Controller {
   /**
    * Elimina un comentario existente.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/comentarios.controller)
    * 
    * @param idComentario ID del comentario.
    * @returns Mensaje de confirmación.

@@ -11,7 +11,7 @@ export class LogController extends Controller {
   /**
    * Inicia sesión en el sistema con correo y contraseña.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
    * 
    * @param body Datos de inicio de sesión.
    * @returns Token de autenticación y datos del usuario.
@@ -43,7 +43,7 @@ export class LogController extends Controller {
   /**
    * Solicita el restablecimiento de contraseña.
    *
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
    */
   @Post("solicitar-reset")
   public async solicitarReset(
@@ -56,7 +56,7 @@ export class LogController extends Controller {
   /**
    * Confirma el restablecimiento de contraseña con el token recibido.
    *
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/log.controller)
    */
   @Post("confirmar-reset")
   public async confirmarReset(

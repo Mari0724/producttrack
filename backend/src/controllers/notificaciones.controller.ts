@@ -13,7 +13,7 @@ export class NotificacionesController extends Controller {
   /**
    * Envia notificaciones de productos con stock bajo.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller
    * )
    */
   @Post('/stock-bajo')
@@ -28,7 +28,7 @@ export class NotificacionesController extends Controller {
   /**
    * Envia notificaciones de productos vencidos.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
    */
   @Post('/producto-vencido')
   public async enviarNotificacionProductoVencido(
@@ -48,7 +48,7 @@ export class NotificacionesController extends Controller {
   /**
    * Envia notificación de nuevo comentario en producto.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
    */
   @Post('/comentario-producto')
   public async enviarNotificacionComentarioProducto(
@@ -73,7 +73,7 @@ export class NotificacionesController extends Controller {
   /**
    * Envia notificaciones de actualizaciones de la aplicación.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
    */
   @Post('/actualizacion-app')
   public async enviarNotificacionActualizacionApp(
@@ -87,7 +87,7 @@ export class NotificacionesController extends Controller {
   /**
    * Obtiene las notificaciones asociadas a un usuario.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
    * @param idUsuario ID del usuario.
    * @returns Lista de notificaciones recibidas.
    */
@@ -151,7 +151,7 @@ export class NotificacionesController extends Controller {
   /**
    * Marca una notificación como leída.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
    * @param idNotificacion ID de la notificación.
    */
   @Patch('/{idNotificacion}')
@@ -173,7 +173,7 @@ export class NotificacionesController extends Controller {
   /**
    * Actualiza las preferencias de notificación de un usuario.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/notificaciones.controller)
    * @param idUsuario ID del usuario.
    */
   @Patch('/preferencias/{idUsuario}')

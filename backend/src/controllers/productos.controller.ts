@@ -22,7 +22,7 @@ export class ProductosController extends Controller {
   /**
    * Obtiene todos los productos con filtros opcionales.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   // Obtener productos con filtros
   @Security("jwt")
@@ -75,7 +75,7 @@ export class ProductosController extends Controller {
   /**
    * Obtiene las categorías únicas para los productos según tipoUsuario.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   // Obtener categorías únicas
   @Get("/categorias")
@@ -100,7 +100,7 @@ export class ProductosController extends Controller {
   /**
    * Devuelve todos los productos en una categoría específica.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   // Obtener productos por categoría
   @Get("/por-categoria")
@@ -127,7 +127,7 @@ export class ProductosController extends Controller {
 
   /**
    * Devuelve los nombres de los productos registrados por un usuario.
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   // Devuelve los nombres de los productos del usuario
   @Get('/nombres/:idUsuario')
@@ -143,7 +143,7 @@ export class ProductosController extends Controller {
   /**
    * Obtiene la cantidad de productos agrupados por categoría.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   // Cantidad de productos por categoría
   @Get("/cantidad-por-categoria")
@@ -164,7 +164,7 @@ export class ProductosController extends Controller {
   /**
    * Obtiene la cantidad de productos agrupados por rangos de precio.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   // Cantidad de productos por rango de precio
   @Get("/cantidad-por-rango-precio")
@@ -185,7 +185,7 @@ export class ProductosController extends Controller {
   /**
    * Obtiene un producto por su ID.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   // Obtener producto por ID
   @Get("/{id}")
@@ -209,7 +209,7 @@ export class ProductosController extends Controller {
   /**
    * Crea un nuevo producto en la base de datos.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    *
    * @param requestBody Objeto con los datos del producto
    */
@@ -281,7 +281,7 @@ export class ProductosController extends Controller {
   /**
    * Actualiza un producto existente.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   @Put("/{id}")
   @Security("jwt")
@@ -376,7 +376,7 @@ export class ProductosController extends Controller {
   /**
    * Elimina un producto de la base de datos.
    * 
-   * 👉 [Documentación general en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
+   * 👉 [Documentación general](https://mari0724.github.io/producttrack/docs/backend/controllers/productos.controller)
    */
   // Eliminar producto
   @Delete("/{id}")

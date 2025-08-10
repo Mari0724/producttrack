@@ -14,7 +14,7 @@ export class EquipoController extends Controller {
   /**
    * Crea un nuevo miembro del equipo.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
    */
   @Security("jwt")
   @Post()
@@ -44,7 +44,7 @@ export class EquipoController extends Controller {
   /**
    * Obtiene todos los miembros del equipo de una empresa.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
    */
   @Security("jwt")
   @Get()
@@ -60,7 +60,7 @@ export class EquipoController extends Controller {
   /**
    * Filtra los miembros del equipo según parámetros.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
    */
   @Security("jwt")
   @Get("filtrar")
@@ -92,7 +92,7 @@ export class EquipoController extends Controller {
   /**
    * Obtiene un miembro del equipo por su ID.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
    */
   @Security("jwt")
   @Get("{id}")
@@ -115,7 +115,7 @@ export class EquipoController extends Controller {
   /**
    * Actualiza un miembro del equipo.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
    */
   @Security("jwt")
   @Put("{id}")
@@ -133,7 +133,7 @@ export class EquipoController extends Controller {
   /**
    * Realiza eliminación lógica de un miembro del equipo.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
    */
   @Security("jwt")
   @Delete("eliminar-logico/{id}")
@@ -160,7 +160,7 @@ export class EquipoController extends Controller {
   /**
    * Elimina todos los miembros del equipo de una empresa.
    * 
-   * 👉 [Documentación completa del controlador en GitHub](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
+   * 👉 [Documentación completa](https://mari0724.github.io/producttrack/docs/backend/controllers/equipo.controller)
    */
   @Security("jwt")
   @Delete("todos/{empresaId}")
