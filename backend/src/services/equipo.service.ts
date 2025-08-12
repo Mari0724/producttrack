@@ -39,6 +39,7 @@ export class EquipoService {
     return nuevoEquipo;
   }
 
+
   // Obtener todos los usuarios equipo (sin filtros)
   async obtenerTodosLosEquipos(empresaId?: number) {
     return await prisma.users.findMany({
