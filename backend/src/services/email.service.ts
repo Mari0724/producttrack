@@ -10,11 +10,18 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+const shouldSendRealEmails = process.env.NODE_ENV !== 'test';
+
 export const sendTeamWelcomeEmail = async (
   to: string,
   tempPassword: string,
   companyName: string
 ) => {
+  if (!shouldSendRealEmails) {
+    console.log(`[TEST] Simulación de envío de bienvenida a ${to}`);
+    return;
+  }
+
   const mailOptions = {
     from: `"ProductTrack" <${process.env.EMAIL_USER}>`,
     to,
@@ -34,7 +41,7 @@ export const sendTeamWelcomeEmail = async (
         <p style="font-size: 12px; color: gray; margin-top: 10px;">
             *Este enlace estará disponible cuando se despliegue la aplicación.
         </p>
-        </div>
+      </div>
     `,
   };
 
@@ -42,6 +49,11 @@ export const sendTeamWelcomeEmail = async (
 };
 
 export const sendPasswordResetEmail = async (to: string, token: string) => {
+  if (!shouldSendRealEmails) {
+    console.log(`[TEST] Simulación de envío de reset password a ${to} con token ${token}`);
+    return;
+  }
+
   const mailOptions = {
     from: `"ProductTrack" <${process.env.EMAIL_USER}>`,
     to,
