@@ -3,23 +3,23 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+    },
 });
 
 export const sendTeamWelcomeEmail = async (
-  to: string,
-  tempPassword: string,
-  companyName: string
+    to: string,
+    tempPassword: string,
+    companyName: string
 ) => {
-  const mailOptions = {
-    from: `"ProductTrack" <${process.env.EMAIL_USER}>`,
-    to,
-    subject: '¡Te han creado una cuenta en ProductTrack!',
-    html: `
+    const mailOptions = {
+        from: `"ProductTrack" <${process.env.EMAIL_USER}>`,
+        to,
+        subject: '¡Te han creado una cuenta en ProductTrack!',
+        html: `
       <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ccc; border-radius: 10px;">
         <h2 style="color: #800020;">¡Bienvenido a ProductTrack!</h2>
         <p>Tu empresa <strong>${companyName}</strong> ha creado una cuenta para ti.</p>
@@ -36,10 +36,11 @@ export const sendTeamWelcomeEmail = async (
         </p>
         </div>
     `,
-  };
+    };
 
-  await transporter.sendMail(mailOptions);
+    await transporter.sendMail(mailOptions);
 };
+
 
 export const sendPasswordResetEmail = async (to: string, token: string) => {
   const mailOptions = {
