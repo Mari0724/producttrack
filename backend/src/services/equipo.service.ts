@@ -14,7 +14,7 @@ export class EquipoService {
     const { empresaId: _omitEmpresaId, ...datosSinEmpresaId } = datosValidados;
     datosSinEmpresaId.perfilCompleto ??= false;
 
-    // 🔍 Buscar nombre real de la empresa
+    // Buscar nombre real de la empresa
     const empresa = await prisma.users.findUnique({
       where: { idUsuario: empresaId },
     });
@@ -29,7 +29,7 @@ export class EquipoService {
       },
     });
 
-    // 💌 Enviar correo con nombre real de la empresa
+    // Enviar correo con nombre real de la empresa
     await sendTeamWelcomeEmail(
       nuevoEquipo.correo,
       datosValidados.password,
@@ -38,6 +38,7 @@ export class EquipoService {
 
     return nuevoEquipo;
   }
+
 
   // Obtener todos los usuarios equipo (sin filtros)
   async obtenerTodosLosEquipos(empresaId?: number) {
@@ -143,7 +144,7 @@ export class EquipoService {
       where: {
         rol: "EQUIPO",
         empresaId,
-        estado: "activo",
+        estado: "activo", // para no repetir lógica si ya están inactivos
         deletedAt: null
       },
       data: {
