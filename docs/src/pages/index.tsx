@@ -162,17 +162,17 @@ const secciones: Seccion[] = [
       {
         nombre: "Revisión de artefactos",
         descripcion: "Revisión completa de todos los diagramas y artefactos del proyecto, verificando que estén actualizados y correctos.",
-        link: "#"
+        link: "https://drive.google.com/file/d/1-DTgFfY_xZlXnTsESD18qzgjCxEvaOTm/view?usp=sharing"
       },
       {
         nombre: "Revisión de todo el Frontend",
         descripcion: "Recorrido por cada vista del sistema, validando el funcionamiento y coherencia del frontend en su totalidad.",
-        link: "#"
+        link: "https://drive.google.com/file/d/11rHsNVo_FUnnfqYd4VKzgHfFutdYRrPt/view?usp=sharing"
       },
       {
         nombre: "Revisión final del Backend",
         descripcion: "Validación completa del backend desde Swagger, asegurando que toda la documentación y funcionalidades estén actualizadas.",
-        link: "#"
+        link: "https://drive.google.com/file/d/1jnfpcNiLbZW4neHznAwsyF2WhBrhWeoT/view?usp=sharing"
       },
       {
         nombre: "Revisión de Despliegue",
