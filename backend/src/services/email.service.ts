@@ -10,6 +10,8 @@ const transporter = nodemailer.createTransport({
     },
 });
 
+
+// TODO ♦️💎💖🍁 🤓lanzamiento del html theme del correo electrónico
 export const sendTeamWelcomeEmail = async (
     to: string,
     tempPassword: string,

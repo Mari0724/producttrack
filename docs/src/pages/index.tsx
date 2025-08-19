@@ -157,7 +157,7 @@ const secciones: Seccion[] = [
   },
   {
     icono: "✅",
-    titulo: "Calidad y Validación",
+    titulo: "Calidad y Manual Técnico",
     items: [
       {
         nombre: "Revisión de artefactos",
